@@ -27,13 +27,45 @@ function App() {
   return (
     <div>
       {left}
-      <button onClick={handleLeftClick}>left</button>
-      <button onClick={handleRightClick}>right</button>
+      <Button onClick={handleLeftClick} text="left" />
+      <Button onClick={handleRightClick} text="right" />
       {right}
-      <p>{allClicks.join(" ")}</p>
-      <p>total {total}</p>
+      <History allClicks={allClicks} />
     </div>
   );
 }
+
+function AppTwo() {
+  const [value, setValue] = useState(10);
+
+  const hello = (who) => () => console.log("hello", who);
+  const setToValue = (newValue) => {
+    console.log("value now", newValue); // print the new value to console
+    setValue(newValue);
+  };
+
+  return (
+    <div>
+      {/* <button onClick={hello("world")}>button</button>
+      <button onClick={hello("react")}>button</button>
+      <button onClick={hello("function")}>button</button> */}
+      <Display value={value} />
+      <button onClick={() => setToValue(1000)}>thousand</button>
+      <button onClick={() => setToValue(0)}>reset</button>
+      <button onClick={() => setToValue(value + 1)}>increment</button>
+    </div>
+  );
+}
+
+const Display = ({ value }) => <div>{value}</div>;
+
+const History = ({ allClicks }) => {
+  if (allClicks.length === 0) {
+    return <div>the app is used by pressing the buttons</div>;
+  }
+  return <div>button press history: {allClicks.join(" ")}</div>;
+};
+
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 export default App;
