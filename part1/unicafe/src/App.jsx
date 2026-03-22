@@ -85,30 +85,36 @@ const Statistics = ({ feedbackItems }) => {
   return (
     <div>
       <h1>statistics</h1>
-      <StatisticItem
-        text={feedbackItems.good.name}
-        amount={feedbackItems.good.amount}
-      />
-      <StatisticItem
-        text={feedbackItems.neutral.name}
-        amount={feedbackItems.neutral.amount}
-      />
-      <StatisticItem
-        text={feedbackItems.bad.name}
-        amount={feedbackItems.bad.amount}
-      />
-      <StatisticItem
-        text={feedbackItems.all.name}
-        amount={feedbackItems.all.amount}
-      />
-      <StatisticItem
-        text={feedbackItems.average.name}
-        amount={feedbackItems.average.amount}
-      />
-      <StatisticItem
-        text={feedbackItems.goodPercentage.name}
-        amount={feedbackItems.goodPercentage.amount}
-      />
+      {feedbackItems.all.amount === 0 ? (
+        <p>No feedback given</p>
+      ) : (
+        <>
+          <StatisticItem
+            text={feedbackItems.good.name}
+            amount={feedbackItems.good.amount}
+          />
+          <StatisticItem
+            text={feedbackItems.neutral.name}
+            amount={feedbackItems.neutral.amount}
+          />
+          <StatisticItem
+            text={feedbackItems.bad.name}
+            amount={feedbackItems.bad.amount}
+          />
+          <StatisticItem
+            text={feedbackItems.all.name}
+            amount={feedbackItems.all.amount}
+          />
+          <StatisticItem
+            text={feedbackItems.average.name}
+            amount={feedbackItems.average.amount}
+          />
+          <StatisticItem
+            text={feedbackItems.goodPercentage.name}
+            amount={feedbackItems.goodPercentage.amount}
+          />
+        </>
+      )}
     </div>
   );
 };
