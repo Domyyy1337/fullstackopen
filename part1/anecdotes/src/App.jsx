@@ -15,6 +15,15 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const [scores, setScores] = useState({});
 
+  let highestNumber = 0;
+  let highestIndex = 0;
+  for (const [key, value] of Object.entries(scores)) {
+    if (value > highestNumber) {
+      highestNumber = value;
+      highestIndex = key;
+    }
+  }
+
   const handleNextAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomIndex);
@@ -29,13 +38,21 @@ const App = () => {
 
   return (
     <div>
-      {anecdotes[selected]}<br />
+      <h1>Anecdote of the day</h1>
+      <Anecdote text={anecdotes[selected]} />
+      <br />
       has {scores[selected] ? scores[selected] : 0} votes
       <br />
       <button onClick={handleVote}>vote</button>
       <button onClick={handleNextAnecdote}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <Anecdote text={anecdotes[highestIndex]} />
     </div>
   );
+};
+
+const Anecdote = ({ text }) => {
+  return <div>{text}</div>;
 };
 
 export default App;
