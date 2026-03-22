@@ -88,32 +88,34 @@ const Statistics = ({ feedbackItems }) => {
       {feedbackItems.all.amount === 0 ? (
         <p>No feedback given</p>
       ) : (
-        <>
-          <StatisticItem
-            text={feedbackItems.good.name}
-            amount={feedbackItems.good.amount}
-          />
-          <StatisticItem
-            text={feedbackItems.neutral.name}
-            amount={feedbackItems.neutral.amount}
-          />
-          <StatisticItem
-            text={feedbackItems.bad.name}
-            amount={feedbackItems.bad.amount}
-          />
-          <StatisticItem
-            text={feedbackItems.all.name}
-            amount={feedbackItems.all.amount}
-          />
-          <StatisticItem
-            text={feedbackItems.average.name}
-            amount={feedbackItems.average.amount}
-          />
-          <StatisticItem
-            text={feedbackItems.goodPercentage.name}
-            amount={feedbackItems.goodPercentage.amount}
-          />
-        </>
+        <table>
+          <tbody>
+            <StatisticLine
+              text={feedbackItems.good.name}
+              amount={feedbackItems.good.amount}
+            />
+            <StatisticLine
+              text={feedbackItems.neutral.name}
+              amount={feedbackItems.neutral.amount}
+            />
+            <StatisticLine
+              text={feedbackItems.bad.name}
+              amount={feedbackItems.bad.amount}
+            />
+            <StatisticLine
+              text={feedbackItems.all.name}
+              amount={feedbackItems.all.amount}
+            />
+            <StatisticLine
+              text={feedbackItems.average.name}
+              amount={feedbackItems.average.amount}
+            />
+            <StatisticLine
+              text={feedbackItems.goodPercentage.name}
+              amount={feedbackItems.goodPercentage.amount}
+            />
+          </tbody>
+        </table>
       )}
     </div>
   );
@@ -121,10 +123,11 @@ const Statistics = ({ feedbackItems }) => {
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
-const StatisticItem = ({ text, amount }) => (
-  <p>
-    {text} {amount}
-  </p>
+const StatisticLine = ({ text, amount }) => (
+  <tr>
+    <td>{text} </td>
+    <td>{amount}</td>
+  </tr>
 );
 
 export default App;
