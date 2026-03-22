@@ -35,6 +35,7 @@ const App = () => {
       [selected]: scores[selected] ? scores[selected] + 1 : 1,
     });
   };
+  
 
   return (
     <div>
