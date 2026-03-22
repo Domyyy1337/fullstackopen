@@ -32,6 +32,14 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const handleDeleteItem = (id, name) => {
+    if (confirm(`Delete ${name}?`)) {
+      personService.remove(id).then((deletedPerson) => {
+        setPersons(persons.filter((person) => person.id !== deletedPerson.id));
+      });
+    }
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
     if (persons.find((person) => person.name === newName)) {
@@ -57,24 +65,25 @@ const App = () => {
         onSubmit={addPerson}
       />
       <h2>Numbers</h2>
-      <PhoneBook persons={filteredPersons} />
+      <PhoneBook persons={filteredPersons} handleDelete={handleDeleteItem} />
     </div>
   );
 };
 
-const PhoneBook = ({ persons }) => {
+const PhoneBook = ({ persons, handleDelete }) => {
   return (
     <ul>
       {persons.map((person) => (
-        <Person key={person.name} person={person} />
+        <Person key={person.id} person={person} handleDelete={handleDelete} />
       ))}
     </ul>
   );
 };
 
-const Person = ({ person }) => (
+const Person = ({ person, handleDelete }) => (
   <li>
-    {person.name} - {person.number}
+    {person.name} - {person.number}{" "}
+    <button onClick={() => handleDelete(person.id, person.name)}>delete</button>
   </li>
 );
 
