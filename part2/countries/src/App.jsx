@@ -56,16 +56,34 @@ const Result = ({ value }) => {
   return <div>{value}</div>;
 };
 
-const CountryList = ({ countries }) => (
-  <ul>
-    {countries.map((country) => (
-      <li key={country.name.common}>{country.name.common}</li>
-    ))}
-  </ul>
-);
+const CountryList = ({ countries }) => {
+  return (
+    <ul>
+      {countries.map((country) => (
+        <CountryListItem country={country} />
+      ))}
+    </ul>
+  );
+};
+
+const CountryListItem = ({ country }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpand = () => {
+    setExpanded(!expanded);
+  };
+
+  return (
+    <li key={country.name.common}>
+      {country.name.common}
+      <button onClick={handleExpand}>{expanded ? "Hide" : "Show"}</button>
+      {!expanded ? null : <CountryDetail country={country} />}
+    </li>
+  );
+};
 
 const CountryDetail = ({ country }) => {
-  const altText = `Flag of ${country.name.common}`
+  const altText = `Flag of ${country.name.common}`;
   return (
     <div>
       <div>
