@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import personService from "./services/persons.js";
+import Notification from "./components/Notification.jsx";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState({
+    text: null,
+    isError: false,
+  });
 
   useEffect(() => {
     personService.getAll().then((persons) => {
@@ -39,12 +44,18 @@ const App = () => {
           setPersons(
             persons.filter((person) => person.id !== deletedPerson.id),
           );
+          sendNotification(`Deleted ${deletedPerson.name}`);
         })
         .catch((error) => {
-          alert(`${name} is already deleted`);
           setPersons(persons.filter((person) => person.id !== id));
+          sendNotification(`${name} is already deleted`, true);
         });
     }
+  };
+
+  const sendNotification = (text, isError = false) => {
+    setNotification({ text, isError });
+    setTimeout(() => setNotification({ text: null, isError: false }), 5000);
   };
 
   const addPerson = (event) => {
@@ -61,14 +72,17 @@ const App = () => {
       const id = persons.find((person) => person.name === newName).id;
       personService
         .update(id, person)
-        .then((updatedPerson) =>
+        .then((updatedPerson) => {
           setPersons(
             persons.map((person) =>
               person.id === updatedPerson.id ? updatedPerson : person,
             ),
-          ),
-        )
-        .catch((error) => alert("The entry could not be updated"));
+          );
+          sendNotification(`Updated ${updatedPerson.name}`);
+        })
+        .catch((error) =>
+          sendNotification(`Could not update ${newName}`, true),
+        );
 
       return;
     }
@@ -77,11 +91,13 @@ const App = () => {
       .then((newPerson) => setPersons(persons.concat(newPerson)));
     setNewName("");
     setNewNumber("");
+    sendNotification(`Added ${newName}`);
   };
 
   return (
     <div>
       <h2>PhoneBook</h2>
+      <Notification text={notification.text} isError={notification.isError} />
       <Filter onChange={handleFilterChange} value={filter} />
       <Form
         nameValue={newName}
