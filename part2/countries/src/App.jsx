@@ -6,21 +6,31 @@ import service from "./services/service.js";
 const App = () => {
   const [filter, setFilter] = useState("");
   const [countries, setCountries] = useState([]);
+  const [filteredCountries, setFilteredCountries] = useState(countries);
+
+  useEffect(() => {
+    axios
+      .get("https://studies.cs.helsinki.fi/restcountries/api/all")
+      .then((response) => setCountries(response.data));
+  }, []);
 
   let result = <p>Enter a Country</p>;
-  if (countries.length > 10) {
+  if (filteredCountries.length > 10) {
     result = <p>Too many matches, specify another filter</p>;
-  } else if (countries.length === 1) {
-    result = <CountryDetail country={countries[0]} />;
+  } else if (filteredCountries.length === 1) {
+    result = <CountryDetail country={filteredCountries[0]} />;
   } else {
-    result = <CountryList countries={countries} />;
+    result = <CountryList countries={filteredCountries} />;
   }
 
-  const handleFilterChange = async (event) => {
+  const handleFilterChange = (event) => {
     const value = event.target.value;
-    setFilter(event.target.value);
-    const filtered = await service.getCountries(value);
-    setCountries(filtered);
+    setFilter(value);
+    setFilteredCountries(
+      countries.filter((country) =>
+        country.name.common.toLowerCase().includes(value.toLowerCase()),
+      ),
+    );
   };
 
   return (
@@ -94,14 +104,22 @@ const CountryDetail = ({ country }) => {
 };
 
 const Weather = ({ country }) => {
+  const [weather, setWeather] = useState(null);
+
   useEffect(() => {
-    const lat = country.latlng[0];
-    const long = country.latlng[1];
-    service.getWeather(lat, long).then((weather) => console.log(weather));
+    const lat = country.capitalInfo.latlng[0];
+    const long = country.capitalInfo.latlng[1];
+    service.getWeather(lat, long).then((weather) => setWeather(weather));
   }, [country]);
+
   return (
     <div>
-      <h2>Weather</h2>
+      <h2>Weather for {country.capital[0]}</h2>
+      <div>
+        <p>Temperature: {weather ? weather.main.temp : null} ° Celsius</p>
+        <img src={weather ?  `https://openweathermap.org/payload/api/media/file/${weather.weather[0].icon}.png` : null} alt={weather ? weather.weather[0].description: null} />
+        <p>Wind: {weather ? weather.wind.speed : null} km/h</p>
+      </div>
     </div>
   );
 };
