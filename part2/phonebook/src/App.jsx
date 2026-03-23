@@ -48,7 +48,7 @@ const App = () => {
         })
         .catch((error) => {
           setPersons(persons.filter((person) => person.id !== id));
-          sendNotification(`${name} is already deleted`, true);
+          sendNotification(`Information of ${name} has already been removed from server`, true);
         });
     }
   };
