@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import axios from "axios";
 import personService from "./services/persons.js";
 
 const App = () => {
@@ -34,20 +33,47 @@ const App = () => {
 
   const handleDeleteItem = (id, name) => {
     if (confirm(`Delete ${name}?`)) {
-      personService.remove(id).then((deletedPerson) => {
-        setPersons(persons.filter((person) => person.id !== deletedPerson.id));
-      });
+      personService
+        .remove(id)
+        .then((deletedPerson) => {
+          setPersons(
+            persons.filter((person) => person.id !== deletedPerson.id),
+          );
+        })
+        .catch((error) => {
+          alert(`${name} is already deleted`);
+          setPersons(persons.filter((person) => person.id !== id));
+        });
     }
   };
 
   const addPerson = (event) => {
+    const person = { name: newName, number: newNumber };
     event.preventDefault();
     if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        !confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`,
+        )
+      ) {
+        return;
+      }
+      const id = persons.find((person) => person.name === newName).id;
+      personService
+        .update(id, person)
+        .then((updatedPerson) =>
+          setPersons(
+            persons.map((person) =>
+              person.id === updatedPerson.id ? updatedPerson : person,
+            ),
+          ),
+        )
+        .catch((error) => alert("The entry could not be updated"));
+
       return;
     }
     personService
-      .create({ name: newName, number: newNumber })
+      .create(person)
       .then((newPerson) => setPersons(persons.concat(newPerson)));
     setNewName("");
     setNewNumber("");
