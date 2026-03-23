@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
+import service from "./services/service.js";
 
 const App = () => {
   const [filter, setFilter] = useState("");
@@ -18,21 +19,8 @@ const App = () => {
   const handleFilterChange = async (event) => {
     const value = event.target.value;
     setFilter(event.target.value);
-    const filtered = await getCountries(value);
+    const filtered = await service.getCountries(value);
     setCountries(filtered);
-  };
-
-  const getCountries = async (filter) => {
-    const request = axios.get(
-      "https://studies.cs.helsinki.fi/restcountries/api/all",
-    );
-    const result = await request;
-    const countries = await result.data;
-    const filteredCountries = countries.filter((country) =>
-      country.name.common.toLowerCase().includes(filter.toLowerCase()),
-    );
-    console.log(filteredCountries);
-    return filteredCountries;
   };
 
   return (
@@ -60,7 +48,7 @@ const CountryList = ({ countries }) => {
   return (
     <ul>
       {countries.map((country) => (
-        <CountryListItem country={country} />
+        <CountryListItem key={country.name.common} country={country} />
       ))}
     </ul>
   );
@@ -99,7 +87,21 @@ const CountryDetail = ({ country }) => {
           ))}
         </ul>
         <img src={country.flags.png} alt={altText} />
+        <Weather country={country} />
       </div>
+    </div>
+  );
+};
+
+const Weather = ({ country }) => {
+  useEffect(() => {
+    const lat = country.latlng[0];
+    const long = country.latlng[1];
+    service.getWeather(lat, long).then((weather) => console.log(weather));
+  }, [country]);
+  return (
+    <div>
+      <h2>Weather</h2>
     </div>
   );
 };
