@@ -20,6 +20,20 @@ app.get("/api/persons", (req, res) => {
   res.json(data.getPhoneBook());
 });
 
+app.post("/api/persons", (req, res) => {
+  const entry = req.body;
+
+  const id = String(Math.floor(Math.random() * 100000000));
+  const person = {
+    id: id,
+    name: entry.name,
+    number: entry.number,
+  };
+  data.addPerson(person);
+  const addedPerson = data.getPersonById(id);
+  res.json(addedPerson);
+});
+
 app.get("/api/persons/:personId", (req, res) => {
   const { personId } = req.params;
   const entry = data.getPersonById(personId);

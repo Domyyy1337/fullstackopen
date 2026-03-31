@@ -28,6 +28,10 @@ const deletePerson = (id) => {
   return initialSize !== phoneBook.length;
 };
 
+const addPerson = (person) => {
+  phoneBook = phoneBook.concat(person);
+};
+
 const getPersonById = (id) => {
   return phoneBook.find((entry) => entry.id === id);
 };
@@ -36,4 +40,4 @@ const getPhoneBook = () => {
   return phoneBook;
 };
 
-module.exports = { getPhoneBook, deletePerson, getPersonById };
+module.exports = { getPhoneBook, deletePerson, getPersonById, addPerson };
