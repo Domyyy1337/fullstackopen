@@ -13,6 +13,13 @@ app.get("/api/persons", (req, res) => {
   res.json(data.phonebook);
 });
 
+app.get("/info", (req, res) => {
+  const size = data.phonebook.length;
+  res.send(
+    `Phonebook has info for ${size} people\n${new Date().toUTCString()}`,
+  );
+});
+
 app.listen(3001, (error) => {
   if (error) throw error;
 
