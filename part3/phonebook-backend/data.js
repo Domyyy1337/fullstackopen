@@ -1,4 +1,4 @@
-const phonebook = [
+const phoneBook = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -21,4 +21,4 @@ const phonebook = [
   },
 ];
 
-module.exports = { phonebook };
+module.exports = { phoneBook };
