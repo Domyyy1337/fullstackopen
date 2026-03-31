@@ -29,9 +29,13 @@ app.post("/api/persons", (req, res) => {
     name: entry.name,
     number: entry.number,
   };
-  data.addPerson(person);
-  const addedPerson = data.getPersonById(id);
-  res.json(addedPerson);
+  const addPerson = data.addPerson(person);
+
+  if (!addPerson.added) {
+    return res.status(400).json(addPerson);
+  }
+
+  res.status(201).json(addPerson.addedPerson);
 });
 
 app.get("/api/persons/:personId", (req, res) => {

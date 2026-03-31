@@ -29,11 +29,42 @@ const deletePerson = (id) => {
 };
 
 const addPerson = (person) => {
+  if (!person.name) {
+    return {
+      added: false,
+      error: "name must be specified",
+    };
+  }
+
+  if (!person.number) {
+    return {
+      added: false,
+      error: "number must be specified",
+    };
+  }
+
+  if (getPersonByName(person.name)) {
+    return {
+      added: false,
+      error: "name must be unique",
+    };
+  }
+
   phoneBook = phoneBook.concat(person);
+
+  return {
+    added: true,
+    error: null,
+    addedPerson: getPersonById(person.id),
+  };
 };
 
 const getPersonById = (id) => {
   return phoneBook.find((entry) => entry.id === id);
+};
+
+const getPersonByName = (name) => {
+  return phoneBook.find((entry) => entry.name === name);
 };
 
 const getPhoneBook = () => {
