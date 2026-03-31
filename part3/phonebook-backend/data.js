@@ -1,4 +1,4 @@
-const phoneBook = [
+let phoneBook = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -21,4 +21,19 @@ const phoneBook = [
   },
 ];
 
-module.exports = { phoneBook };
+const deletePerson = (id) => {
+  const initialSize = phoneBook.length;
+  phoneBook = phoneBook.filter((entry) => entry.id !== id);
+
+  return initialSize !== phoneBook.length;
+};
+
+const getPersonById = (id) => {
+  return phoneBook.find((entry) => entry.id === id);
+};
+
+const getPhoneBook = () => {
+  return phoneBook;
+};
+
+module.exports = { getPhoneBook, deletePerson, getPersonById };

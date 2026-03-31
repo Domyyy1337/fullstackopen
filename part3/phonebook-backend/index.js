@@ -10,25 +10,35 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/info", (req, res) => {
-  const size = data.phoneBook.length;
+  const size = data.getPhoneBook().length;
   res.send(
     `Phonebook has info for ${size} people\n${new Date().toUTCString()}`,
   );
 });
 
 app.get("/api/persons", (req, res) => {
-  res.json(data.phoneBook);
+  res.json(data.getPhoneBook());
 });
 
 app.get("/api/persons/:personId", (req, res) => {
   const { personId } = req.params;
-  const entry = data.phoneBook.find((entry) => entry.id === personId);
+  const entry = data.getPersonById(personId);
 
   if (!entry) {
     return res.sendStatus(404);
   }
 
   res.json(entry);
+});
+
+app.delete("/api/persons/:personId", (req, res) => {
+  const { personId } = req.params;
+
+  if (data.deletePerson(personId)) {
+    return res.json(data.getPhoneBook());
+  }
+
+  res.sendStatus(404);
 });
 
 app.listen(3001, (error) => {
