@@ -4,6 +4,13 @@ const data = require("./data.js");
 const app = express();
 
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log("Method: ", req.method);
+  console.log("Path: ", req.path);
+  console.log("Body: ", req.body);
+  console.log("---");
+  next();
+});
 
 app.get("/api", (req, res) => {
   res.send("PhoneBook API");
@@ -57,6 +64,10 @@ app.delete("/api/persons/:personId", (req, res) => {
   }
 
   res.sendStatus(404);
+});
+
+app.use((req, res) => {
+  res.status(404).send({ error: "unknown endpoint" });
 });
 
 app.listen(3001, (error) => {
