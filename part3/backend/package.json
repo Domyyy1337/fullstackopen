@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "notes-backend",
   "version": "0.0.1",
   "description": "",
   "license": "MIT",
@@ -12,6 +12,7 @@
     "dev": "node --watch --env-file-if-exists=.env index.js"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   }
 }
