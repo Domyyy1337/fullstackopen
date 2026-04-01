@@ -1,5 +1,6 @@
 const express = require("express");
 const data = require("./data.js");
+const morgan = require("morgan");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use((req, res, next) => {
   console.log("---");
   next();
 });
+app.use(morgan("tiny"));
 
 app.get("/api", (req, res) => {
   res.send("PhoneBook API");
