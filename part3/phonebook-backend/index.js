@@ -4,15 +4,10 @@ const morgan = require("morgan");
 
 const app = express();
 
+morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+
 app.use(express.json());
-app.use((req, res, next) => {
-  console.log("Method: ", req.method);
-  console.log("Path: ", req.path);
-  console.log("Body: ", req.body);
-  console.log("---");
-  next();
-});
-app.use(morgan("tiny"));
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :type"));
 
 app.get("/api", (req, res) => {
   res.send("PhoneBook API");
