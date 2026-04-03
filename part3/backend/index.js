@@ -1,4 +1,6 @@
+require("dotenv").config();
 const express = require("express");
+const Note = require("./models/note.js");
 
 const app = express();
 
@@ -29,18 +31,15 @@ app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
 });
 
-app.get("/api/notes", (req, res) => {
+app.get("/api/notes", async (req, res) => {
+  const notes = await Note.find({});
   res.json(notes);
 });
 
-app.get("/api/notes/:id", (req, res) => {
+app.get("/api/notes/:id", async (req, res) => {
   const { id } = req.params;
-  const note = notes.find((note) => note.id === id);
-  if (note) {
-    res.json(note);
-  } else {
-    res.status(404).end();
-  }
+  const note = await Note.findById(id);
+  res.json(note);
 });
 
 app.delete("/api/notes/:id", (req, res) => {
@@ -50,13 +49,7 @@ app.delete("/api/notes/:id", (req, res) => {
   res.status(204).end();
 });
 
-const generateId = () => {
-  const maxId =
-    notes.length > 0 ? Math.max(...notes.map((n) => Number(n.id))) : 0;
-  return String(maxId + 1);
-};
-
-app.post("/api/notes", (req, res) => {
+app.post("/api/notes", async (req, res) => {
   const body = req.body;
 
   if (!body.content) {
@@ -65,15 +58,14 @@ app.post("/api/notes", (req, res) => {
     });
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: body.important || false,
-    id: generateId(),
-  };
+  });
 
-  notes = notes.concat(note);
+  const savedNote = await note.save();
 
-  res.json(note);
+  res.json(savedNote);
 });
 
 app.listen(PORT, () => {
