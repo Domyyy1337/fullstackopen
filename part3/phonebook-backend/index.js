@@ -4,10 +4,14 @@ const morgan = require("morgan");
 
 const app = express();
 
-morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+morgan.token("type", function (req, res) {
+  return JSON.stringify(req.body);
+});
 
 app.use(express.json());
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms :type"));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :type"),
+);
 
 app.get("/api", (req, res) => {
   res.send("PhoneBook API");
@@ -55,9 +59,10 @@ app.get("/api/persons/:personId", (req, res) => {
 
 app.delete("/api/persons/:personId", (req, res) => {
   const { personId } = req.params;
+  const deletedPerson = data.deletePerson(personId);
 
-  if (data.deletePerson(personId)) {
-    return res.json(data.getPhoneBook());
+  if (deletedPerson) {
+    return res.json(deletedPerson);
   }
 
   res.sendStatus(404);

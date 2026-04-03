@@ -15,7 +15,6 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((persons) => {
-      console.log(persons);
       setPersons(persons);
     });
   }, []);
@@ -48,7 +47,10 @@ const App = () => {
         })
         .catch((error) => {
           setPersons(persons.filter((person) => person.id !== id));
-          sendNotification(`Information of ${name} has already been removed from server`, true);
+          sendNotification(
+            `Information of ${name} has already been removed from server`,
+            true,
+          );
         });
     }
   };

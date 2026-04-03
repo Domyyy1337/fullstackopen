@@ -22,10 +22,10 @@ let phoneBook = [
 ];
 
 const deletePerson = (id) => {
-  const initialSize = phoneBook.length;
+  const person = phoneBook.find((entry) => entry.id === id);
   phoneBook = phoneBook.filter((entry) => entry.id !== id);
 
-  return initialSize !== phoneBook.length;
+  return person;
 };
 
 const addPerson = (person) => {
