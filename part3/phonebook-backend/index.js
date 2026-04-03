@@ -3,6 +3,7 @@ const data = require("./data.js");
 const morgan = require("morgan");
 
 const app = express();
+const PORT = process.env.port || 3001;
 
 morgan.token("type", function (req, res) {
   return JSON.stringify(req.body);
@@ -72,8 +73,8 @@ app.use((req, res) => {
   res.status(404).send({ error: "unknown endpoint" });
 });
 
-app.listen(3001, (error) => {
+app.listen(PORT, (error) => {
   if (error) throw error;
 
-  console.log("App listening on port 3001");
+  console.log(`App listening on port ${PORT}`);
 });
