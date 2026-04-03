@@ -1,0 +1,11 @@
+form {
+  display: flex;
+  flex-flow: column wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: start;
+}
+
+button {
+  padding: 0.5rem 1rem;
+}
