@@ -80,4 +80,23 @@ const getPhoneBook = async () => {
   return persons;
 };
 
-module.exports = { getPhoneBook, deletePerson, getPersonById, addPerson };
+const updatePerson = async (id, name, number) => {
+  const person = await getPersonById(id);
+
+  if (!person) throw new Error(`person with id ${id} could not be found`);
+
+  person.name = name;
+  person.number = number;
+
+  const updatedPerson = await person.save();
+
+  return updatedPerson;
+};
+
+module.exports = {
+  getPhoneBook,
+  deletePerson,
+  getPersonById,
+  addPerson,
+  updatePerson,
+};

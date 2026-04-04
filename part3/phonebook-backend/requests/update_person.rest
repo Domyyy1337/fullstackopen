@@ -1,0 +1,30 @@
+// Update with non-UUID
+PUT http://localhost:3001/api/persons/1
+Content-Type: application/json
+
+{
+  "name": "Mister Flex",
+  "number": "1234"
+}
+
+###
+
+// Update with valid UUID
+PUT http://localhost:3001/api/persons/69d15f5baa29a656b7597e92
+Content-Type: application/json
+
+{
+  "name": "Mister Flex",
+  "number": "1234"
+}
+
+###
+
+// Update with non existing UUID
+PUT http://localhost:3001/api/persons/69d15f5baa29a656b7597e93
+Content-Type: application/json
+
+{
+  "name": "Mister Flex",
+  "number": "1234"
+}

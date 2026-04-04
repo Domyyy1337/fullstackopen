@@ -73,6 +73,22 @@ app.delete("/api/persons/:personId", async (req, res, next) => {
   }
 });
 
+app.put("/api/persons/:personId", async (req, res, next) => {
+  const { personId } = req.params;
+  const { name, number } = req.body;
+
+  if (!name) return res.status(400).send({ error: "name must be specified" });
+  if (!number)
+    return res.status(400).send({ error: "number must be specified" });
+
+  try {
+    const updatedPerson = await data.updatePerson(personId, name, number);
+    res.json(updatedPerson);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.use((req, res) => {
   res.status(404).send({ error: "unknown endpoint" });
 });
