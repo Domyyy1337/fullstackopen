@@ -1,6 +1,13 @@
+// Get Non-UUID Note
 GET http://localhost:3001/api/notes/1
 
 ###
 
+// Get Non-existing note
+GET http://localhost:3001/api/notes/5c41c90e84d891c15dfa3431 
+
+###
+
+// Get existing note
 GET http://localhost:3001/api/notes/69cfe2f97717d0fc382b4b13
 
