@@ -1,5 +1,4 @@
 const Notification = ({ text, isError }) => {
-  console.log(text);
   if (text === null) return null;
 
   /** @type {import('react').CSSProperties} */

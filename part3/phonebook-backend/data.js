@@ -23,11 +23,10 @@ let phoneBook = [
   },
 ];
 
-const deletePerson = (id) => {
-  const person = phoneBook.find((entry) => entry.id === id);
-  phoneBook = phoneBook.filter((entry) => entry.id !== id);
+const deletePerson = async (id) => {
+  const result = await Person.findByIdAndDelete(id);
 
-  return person;
+  return result;
 };
 
 const addPerson = async (person) => {

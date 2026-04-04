@@ -1,9 +1,12 @@
-DELETE http://localhost:3001/api/persons/1
+// Existing UUID (or not)
+DELETE http://localhost:3001/api/persons/69d15c399760c477df0c0aa7
 
 ###
 
-DELETE http://localhost:3001/api/persons/100
+// Non-existing UUID
+DELETE http://localhost:3001/api/persons/69d0f9d0e1c4e5ea152ab43a
 
 ###
 
+// malformatted ID
 GET http://localhost:3001/api/persons/1

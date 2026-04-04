@@ -46,7 +46,7 @@ app.post("/api/persons", async (req, res) => {
   res.status(201).json(addPerson.addedPerson);
 });
 
-app.get("/api/persons/:personId", (req, res) => {
+app.get("/api/persons/:personId", async (req, res) => {
   const { personId } = req.params;
   const entry = data.getPersonById(personId);
 
@@ -57,19 +57,33 @@ app.get("/api/persons/:personId", (req, res) => {
   res.json(entry);
 });
 
-app.delete("/api/persons/:personId", (req, res) => {
+app.delete("/api/persons/:personId", async (req, res, next) => {
   const { personId } = req.params;
-  const deletedPerson = data.deletePerson(personId);
 
-  if (deletedPerson) {
-    return res.json(deletedPerson);
+  try {
+    const deletedPerson = await data.deletePerson(personId);
+
+    if (deletedPerson) {
+      return res.status(204).send();
+    }
+
+    return res.status(404).send({ error: "No person with this ID found" });
+  } catch (error) {
+    next(error);
   }
-
-  res.sendStatus(404);
 });
 
 app.use((req, res) => {
   res.status(404).send({ error: "unknown endpoint" });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.message);
+
+  if (err.name === "CastError")
+    return res.status(400).send({ error: "malformatted id" });
+
+  next(err);
 });
 
 app.listen(PORT, (error) => {

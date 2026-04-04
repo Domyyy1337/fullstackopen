@@ -39,11 +39,9 @@ const App = () => {
     if (confirm(`Delete ${name}?`)) {
       personService
         .remove(id)
-        .then((deletedPerson) => {
-          setPersons(
-            persons.filter((person) => person.id !== deletedPerson.id),
-          );
-          sendNotification(`Deleted ${deletedPerson.name}`);
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+          sendNotification(`Deleted ${name}`);
         })
         .catch((error) => {
           setPersons(persons.filter((person) => person.id !== id));
