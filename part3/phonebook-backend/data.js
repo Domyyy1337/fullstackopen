@@ -1,3 +1,5 @@
+const Person = require("./models/person");
+
 let phoneBook = [
   {
     id: "1",
@@ -67,8 +69,9 @@ const getPersonByName = (name) => {
   return phoneBook.find((entry) => entry.name === name);
 };
 
-const getPhoneBook = () => {
-  return phoneBook;
+const getPhoneBook = async () => {
+  const persons = await Person.find({});
+  return persons;
 };
 
 module.exports = { getPhoneBook, deletePerson, getPersonById, addPerson };

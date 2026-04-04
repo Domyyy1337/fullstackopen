@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const data = require("./data.js");
 const morgan = require("morgan");
@@ -26,8 +27,8 @@ app.get("/info", (req, res) => {
   );
 });
 
-app.get("/api/persons", (req, res) => {
-  res.json(data.getPhoneBook());
+app.get("/api/persons", async (req, res) => {
+  res.json(await data.getPhoneBook());
 });
 
 app.post("/api/persons", (req, res) => {
