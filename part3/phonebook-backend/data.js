@@ -30,7 +30,7 @@ const deletePerson = (id) => {
   return person;
 };
 
-const addPerson = (person) => {
+const addPerson = async (person) => {
   if (!person.name) {
     return {
       added: false,
@@ -52,17 +52,24 @@ const addPerson = (person) => {
     };
   }
 
-  phoneBook = phoneBook.concat(person);
+  const personToAdd = new Person({
+    name: person.name,
+    number: person.number,
+  });
+
+  const result = await personToAdd.save();
+  console.log("person saved: ", result);
 
   return {
     added: true,
     error: null,
-    addedPerson: getPersonById(person.id),
+    addedPerson: result,
   };
 };
 
-const getPersonById = (id) => {
-  return phoneBook.find((entry) => entry.id === id);
+const getPersonById = async (id) => {
+  const person = Person.findById(id);
+  return person;
 };
 
 const getPersonByName = (name) => {

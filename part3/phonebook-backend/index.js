@@ -31,16 +31,13 @@ app.get("/api/persons", async (req, res) => {
   res.json(await data.getPhoneBook());
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", async (req, res) => {
   const entry = req.body;
-
-  const id = String(Math.floor(Math.random() * 100000000));
   const person = {
-    id: id,
     name: entry.name,
     number: entry.number,
   };
-  const addPerson = data.addPerson(person);
+  const addPerson = await data.addPerson(person);
 
   if (!addPerson.added) {
     return res.status(400).json(addPerson);
