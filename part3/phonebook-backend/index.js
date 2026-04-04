@@ -20,8 +20,8 @@ app.get("/api", (req, res) => {
   res.send("PhoneBook API");
 });
 
-app.get("/info", (req, res) => {
-  const size = data.getPhoneBook().length;
+app.get("/info", async (req, res) => {
+  const size = await data.getSize();
   res.send(
     `Phonebook has info for ${size} people\n${new Date().toUTCString()}`,
   );
@@ -46,15 +46,15 @@ app.post("/api/persons", async (req, res) => {
   res.status(201).json(addPerson.addedPerson);
 });
 
-app.get("/api/persons/:personId", async (req, res) => {
+app.get("/api/persons/:personId", async (req, res, next) => {
   const { personId } = req.params;
-  const entry = data.getPersonById(personId);
 
-  if (!entry) {
-    return res.sendStatus(404);
+  try {
+    const entry = await data.getPersonById(personId);
+    res.json(entry);
+  } catch (error) {
+    next(error);
   }
-
-  res.json(entry);
 });
 
 app.delete("/api/persons/:personId", async (req, res, next) => {

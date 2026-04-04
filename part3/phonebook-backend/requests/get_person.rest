@@ -1,5 +1,12 @@
+// Get person with invalid UUID
 GET http://localhost:3001/api/persons/1
 
 ###
 
-GET http://localhost:3001/api/persons/100
+// Get person with valid, but non-existing UUID
+GET http://localhost:3001/api/persons/69d15f5baa29a656b7597e93
+
+###
+
+// Get person with existing UUID
+GET http://localhost:3001/api/persons/69d15f5baa29a656b7597e92

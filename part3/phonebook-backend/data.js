@@ -67,7 +67,8 @@ const addPerson = async (person) => {
 };
 
 const getPersonById = async (id) => {
-  const person = Person.findById(id);
+  const person = await Person.findById(id);
+  if (!person) throw new Error(`person with id ${id} could not be found`);
   return person;
 };
 
@@ -80,17 +81,21 @@ const getPhoneBook = async () => {
   return persons;
 };
 
+const getSize = async () => {
+  const persons = await Person.find({});
+  return persons.length;
+};
+
 const updatePerson = async (id, name, number) => {
-  const person = await getPersonById(id);
-
-  if (!person) throw new Error(`person with id ${id} could not be found`);
-
-  person.name = name;
-  person.number = number;
-
-  const updatedPerson = await person.save();
-
-  return updatedPerson;
+  try {
+    const person = await getPersonById(id);
+    person.name = name;
+    person.number = number;
+    const updatedPerson = await person.save();
+    return updatedPerson;
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = {
@@ -99,4 +104,5 @@ module.exports = {
   getPersonById,
   addPerson,
   updatePerson,
+  getSize,
 };
