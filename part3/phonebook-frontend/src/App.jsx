@@ -80,15 +80,20 @@ const App = () => {
           );
           sendNotification(`Updated ${updatedPerson.name}`);
         })
-        .catch((error) =>
-          sendNotification(`Could not update ${newName}`, true),
-        );
+        .catch((error) => {
+          console.error(error.response.data.error);
+          sendNotification(error.response.data.error, true);
+        });
 
       return;
     }
     personService
       .create(person)
-      .then((newPerson) => setPersons(persons.concat(newPerson)));
+      .then((newPerson) => setPersons(persons.concat(newPerson)))
+      .catch((error) => {
+        console.error(error.response.data.error);
+        sendNotification(error.response.data.error, true);
+      });
     setNewName("");
     setNewNumber("");
     sendNotification(`Added ${newName}`);
