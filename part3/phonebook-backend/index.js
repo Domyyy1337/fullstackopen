@@ -31,19 +31,17 @@ app.get("/api/persons", async (req, res) => {
   res.json(await data.getPhoneBook());
 });
 
-app.post("/api/persons", async (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const entry = req.body;
   const person = {
     name: entry.name,
     number: entry.number,
   };
-  const addPerson = await data.addPerson(person);
 
-  if (!addPerson.added) {
-    return res.status(400).json(addPerson);
-  }
-
-  res.status(201).json(addPerson.addedPerson);
+  data
+    .addPerson(person)
+    .then((addedPerson) => res.status(201).json(addedPerson))
+    .catch((err) => next(err));
 });
 
 app.get("/api/persons/:personId", async (req, res, next) => {
@@ -96,10 +94,14 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.message);
 
-  if (err.name === "CastError")
-    return res.status(400).send({ error: "malformatted id" });
-
-  next(err);
+  switch (err.name) {
+    case "CastError":
+      return res.status(400).send({ error: "malformatted id" });
+    case "ValidationError":
+      return res.status(400).send({ error: err.message });
+    default:
+      next(err);
+  }
 });
 
 app.listen(PORT, (error) => {

@@ -30,40 +30,31 @@ const deletePerson = async (id) => {
 };
 
 const addPerson = async (person) => {
-  if (!person.name) {
-    return {
-      added: false,
-      error: "name must be specified",
-    };
-  }
+  // if (!person.name) {
+  //   return {
+  //     added: false,
+  //     error: "name must be specified",
+  //   };
+  // }
 
-  if (!person.number) {
-    return {
-      added: false,
-      error: "number must be specified",
-    };
-  }
+  // if (!person.number) {
+  //   return {
+  //     added: false,
+  //     error: "number must be specified",
+  //   };
+  // }
 
-  if (getPersonByName(person.name)) {
-    return {
-      added: false,
-      error: "name must be unique",
-    };
-  }
+  if (getPersonByName(person.name)) throw new Error("Name must be unique");
 
   const personToAdd = new Person({
     name: person.name,
     number: person.number,
   });
 
-  const result = await personToAdd.save();
-  console.log("person saved: ", result);
+  const addedPerson = await personToAdd.save();
+  console.log("person saved: ", addedPerson);
 
-  return {
-    added: true,
-    error: null,
-    addedPerson: result,
-  };
+  return addedPerson;
 };
 
 const getPersonById = async (id) => {
