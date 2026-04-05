@@ -1,9 +1,21 @@
+// Valid number
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "name": "Mr. Wayne",
-  "number": "823894729"
+  "name": "Mr. Wayne5",
+  "number": "111-3894729"
+}
+
+###
+
+// Invalid number
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Mr. Wayne56",
+  "number": "111-3894729gh"
 }
 
 ###
