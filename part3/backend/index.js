@@ -62,23 +62,19 @@ app.put("/api/notes/:id", async (req, res, next) => {
   }
 });
 
-app.post("/api/notes", async (req, res) => {
+app.post("/api/notes", (req, res, next) => {
   const body = req.body;
-
-  if (!body.content) {
-    return res.status(400).json({
-      error: "content missing",
-    });
-  }
-
   const note = new Note({
     content: body.content,
     important: body.important || false,
   });
 
-  const savedNote = await note.save();
-
-  res.json(savedNote);
+  note
+    .save()
+    .then((savedNote) => {
+      res.json(savedNote);
+    })
+    .catch((err) => next(err));
 });
 
 app.use((req, res) => {
@@ -88,10 +84,16 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.message);
 
-  if (err.name === "CastError")
-    return res.status(400).send({ error: "malformatted id" });
+  switch (err.name) {
+    case "CastError":
+      return res.status(400).send({ error: "malformatted id" });
+    case "ValidationError":
+      return res.status(400).json({ error: err.message });
+    default:
+      next(err);
+  }
 
-  next(err);
+  if (err.name === "CastError") next(err);
 });
 
 app.listen(PORT, () => {
