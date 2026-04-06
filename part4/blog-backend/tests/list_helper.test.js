@@ -75,11 +75,37 @@ describe('total likes', () => {
 })
 
 describe('favorite blog', () => {
-  test('handles no blogs properly', () => assert.deepStrictEqual(listHelper.favoriteBlog([]), null))
+  test('handles no blogs properly', () => assert(!listHelper.favoriteBlog([])))
 
   test('when list has only one blog, is that blog', () =>
     assert.deepStrictEqual(listHelper.favoriteBlog(singleBlog), singleBlog[0]))
 
   test('of a bigger blog is determined correctly', () =>
     assert.deepStrictEqual(listHelper.favoriteBlog(blogs), blogs[2]))
+})
+
+describe('most blogs', () => {
+  test('handles no blog with falsy value', () => assert(!listHelper.mostBlogs([])))
+
+  test('when only one blog is specified is the author of that blog', () =>
+    assert.deepStrictEqual(listHelper.mostBlogs(singleBlog), { author: singleBlog.author, blogs: 1 }))
+
+  test('of a bigger list is calculated right', () =>
+    assert.deepStrictEqual(listHelper.mostBlogs(blogs), { author: 'Robert C. Martin', blogs: 3 }))
+})
+
+describes('most likes', () => {
+  test('handles no blogs with falsy value', () => assert(!listHelper.mostLikes([])))
+
+  test('when only one blog is specified is the likes of that blog', () =>
+    assert.deepStrictEqual(listHelper.mostLikes(singleBlog), {
+      author: singleBlog[0].author,
+      likes: singleBlog[0].likes,
+    }))
+
+  test('of a bigger list is determined correctly', () =>
+    assert.deepStrictEqual(listHelper.mostLikes(blogs), {
+      author: 'Edsger W. Dijkstra',
+      likes: 17,
+    }))
 })
