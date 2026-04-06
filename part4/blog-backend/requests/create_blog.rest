@@ -1,0 +1,10 @@
+// Add valid blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "My First Blog",
+  "author": "Domyyy",
+  "url": "https://google.com",
+  "likes": 10
+}
