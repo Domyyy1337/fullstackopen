@@ -51,6 +51,13 @@ describe('single blog', () => {
     assert(titles.includes(newBlog.title))
   })
 
+  test('has unique identifier id', async () => {
+    const response = await api.get('/api/blogs')
+    const blog = Object.keys(response.body[0])
+
+    assert(blog.includes('id'))
+  })
+
   // test('without title is not valid', async () => {
   //   const newBlog = {
   //     author: 'Mustermann',
