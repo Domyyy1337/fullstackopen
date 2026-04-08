@@ -16,7 +16,7 @@ notesRouter.get('/:id', async (req, res) => {
   }
 })
 
-notesRouter.post('/', async (req, res, next) => {
+notesRouter.post('/', async (req, res) => {
   const { content, important = false } = req.body
 
   const note = new Note({
