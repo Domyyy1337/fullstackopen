@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
+/**
+ * @type {mongoose.SchemaDefinitionProperty}
+ */
 const blogSchema = mongoose.Schema({
   title: {
     type: String,

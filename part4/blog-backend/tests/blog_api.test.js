@@ -96,14 +96,14 @@ describe('single blog', () => {
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
   })
 
-  // test('can be viewed', async () => {
-  //   const blogs = await helper.blogsInDb()
-  //   const blog = blogs[0]
+  test('can be viewed', async () => {
+    const blogs = await helper.blogsInDb()
+    const blog = blogs[0]
 
-  //   const resultBlog = await api.get(`/api/blogs/${blog.id}`).expect(200).expect('Content-Type', ctJson)
+    const resultBlog = await api.get(`/api/blogs/${blog.id}`).expect(200).expect('Content-Type', ctJson)
 
-  //   assert.deepStrictEqual(resultBlog.body, blog)
-  // })
+    assert.deepStrictEqual(resultBlog.body, blog)
+  })
 })
 
 after(async () => await mongoose.connection.close())
