@@ -58,6 +58,18 @@ describe('single blog', () => {
     assert(blog.includes('id'))
   })
 
+  test('with no likes posted has 0 likes', async () => {
+    const newBlog = {
+      title: 'My New Blog',
+      author: 'Mustermann',
+      url: 'https://facebook.com',
+    }
+
+    const response = await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', ctJson)
+
+    assert.strictEqual(response.body.likes, 0)
+  })
+
   // test('without title is not valid', async () => {
   //   const newBlog = {
   //     author: 'Mustermann',
