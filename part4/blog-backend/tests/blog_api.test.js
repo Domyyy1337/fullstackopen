@@ -104,6 +104,19 @@ describe('single blog', () => {
 
     assert.deepStrictEqual(resultBlog.body, blog)
   })
+
+  test('can be deleted', async () => {
+    const blogs = await helper.blogsInDb()
+    const blog = blogs[0]
+
+    await api.delete(`/api/blogs/${blog.id}`).expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const ids = blogsAtEnd.map(b => b.id)
+
+    assert(!ids.includes(blog.id))
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  })
 })
 
 after(async () => await mongoose.connection.close())

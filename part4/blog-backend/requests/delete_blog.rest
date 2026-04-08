@@ -1,0 +1,7 @@
+// Delete valid blog
+DELETE http://localhost:3003/api/blogs/69d3680ebdbb716e3ac8bfd7
+
+###
+
+// Delete invalid UUID
+DELETE http://localhost:3003/api/blogs/69
