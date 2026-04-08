@@ -70,18 +70,31 @@ describe('single blog', () => {
     assert.strictEqual(response.body.likes, 0)
   })
 
-  // test('without title is not valid', async () => {
-  //   const newBlog = {
-  //     author: 'Mustermann',
-  //     url: 'https://facebook.com',
-  //     likes: 0,
-  //   }
+  test('without title is not valid', async () => {
+    const newBlog = {
+      author: 'Mustermann',
+      url: 'https://facebook.com',
+      likes: 0,
+    }
 
-  //   await api.post('/api/blogs').send(newBlog).expect(400)
+    await api.post('/api/blogs').send(newBlog).expect(400)
 
-  //   const blogsAtEnd = await helper.blogsInDb()
-  //   expect.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
-  // })
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  })
+
+  test('without url is not valid', async () => {
+    const newBlog = {
+      title: 'My invalid Blog',
+      author: 'Mustermann',
+      likes: 0,
+    }
+
+    await api.post('/api/blogs').send(newBlog).expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  })
 
   // test('can be viewed', async () => {
   //   const blogs = await helper.blogsInDb()
