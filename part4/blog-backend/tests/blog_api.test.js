@@ -117,6 +117,21 @@ describe('single blog', () => {
     assert(!ids.includes(blog.id))
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
   })
+
+  test('can be updated with new likes', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const id = blogsAtStart[0].id
+
+    const blogBeforeUpdate = await api.get(`/api/blogs/${id}`)
+    const blog = blogBeforeUpdate.body
+
+    blog.likes = 9999
+
+    await api.put(`/api/blogs/${id}`).send(blog).expect(200)
+
+    const blogAfterUpdate = await api.get(`/api/blogs/${id}`).expect(200)
+    assert.strictEqual(blogAfterUpdate.body.likes, 9999)
+  })
 })
 
 after(async () => await mongoose.connection.close())
