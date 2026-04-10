@@ -5,10 +5,20 @@ const initialNotes = [
   {
     content: 'HTML is easy',
     important: false,
+    user: '69d7c118b283b9b0b6c4c9ae',
   },
   {
     content: 'Browser can only execute JavaScript',
     important: true,
+    user: '69d7c118b283b9b0b6c4c9ae',
+  },
+]
+
+const initialUsers = [
+  {
+    username: 'dominik',
+    name: 'Dominik',
+    passwordHash: 'cookies',
   },
 ]
 
@@ -30,9 +40,29 @@ const usersInDb = async () => {
   return users.map(user => user.toJSON())
 }
 
+const getUser = async () => {
+  const users = await usersInDb()
+  return users[0]
+}
+
+const getNote = async () => {
+  const notes = await notesInDb()
+  return notes[0]
+}
+
+const getUserAndNote = async () => {
+  const user = await getUser()
+  const note = await getNote()
+  return { user, note }
+}
+
 module.exports = {
   initialNotes,
+  initialUsers,
   nonExistingId,
   notesInDb,
   usersInDb,
+  getUser,
+  getNote,
+  getUserAndNote,
 }
