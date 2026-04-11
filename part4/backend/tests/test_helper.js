@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const Note = require('../models/note')
 const User = require('../models/user')
 
@@ -28,12 +29,14 @@ const initializeDb = async () => {
 
   const user = await User.insertOne(initialUsers[0])
   const validUserId = user._id.toString()
+  const token = jwt.sign({ username: user.username, id: user._id }, process.env.SECRET)
 
   for (const note of initialNotes) {
     note.user = validUserId
   }
 
   await Note.insertMany(initialNotes)
+  return token
 }
 
 const nonExistingId = async () => {

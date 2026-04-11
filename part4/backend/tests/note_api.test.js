@@ -8,10 +8,11 @@ const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
+let token
 
 describe('when there is initially some notes saved', () => {
   beforeEach(async () => {
-    await helper.initializeDb()
+    token = await helper.initializeDb()
   })
 
   test('notes are returned as json', async () => {
@@ -72,6 +73,7 @@ describe('when there is initially some notes saved', () => {
 
       await api
         .post('/api/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send(newNote)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -88,7 +90,7 @@ describe('when there is initially some notes saved', () => {
         important: true,
       }
 
-      await api.post('/api/notes').send(newNote).expect(400)
+      await api.post('/api/notes').set('Authorization', `Bearer ${token}`).send(newNote).expect(400)
 
       const notesAtEnd = await helper.notesInDb()
 
@@ -101,7 +103,7 @@ describe('when there is initially some notes saved', () => {
       const notesAtStart = await helper.notesInDb()
       const noteToDelete = notesAtStart[0]
 
-      await api.delete(`/api/notes/${noteToDelete.id}`).expect(204)
+      await api.delete(`/api/notes/${noteToDelete.id}`).set('Authorization', `Bearer ${token}`).expect(204)
 
       const notesAtEnd = await helper.notesInDb()
 
