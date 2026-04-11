@@ -1,16 +1,20 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const config = require('../utils/config')
+const { expressjwt: jwt } = require('express-jwt')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   res.json(blogs)
 })
 
-blogsRouter.post('/', async (req, res) => {
+blogsRouter.post('/', jwt(config.JWT_CONFIG), async (req, res) => {
   const { author, likes, title, url } = req.body
-  const users = await User.find({})
-  const user = users[0]
+
+  const user = await User.findOne({ username: '1' })
+
+  if (!user) return res.status(400).json({ error: 'userId missing or not valid' })
 
   const blog = new Blog({
     author,
