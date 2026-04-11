@@ -9,6 +9,8 @@ usersRouter.get('/', async (req, res) => {
 
 usersRouter.post('/', async (req, res) => {
   const { username, name, password } = req.body
+  if (!password) return res.status(400).send({ error: 'password required' })
+  if (password.length < 3) return res.status(400).send({ error: 'password too short (min: 3 characters)' })
   const passwordHash = await bcrypt.hash(password, 10)
 
   const user = new User({

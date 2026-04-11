@@ -66,4 +66,36 @@ const nonExistingId = async () => {
   return user._id.toString()
 }
 
-module.exports = { initialBlogs, initialUsers, blogsInDb, initializeDb, usersInDb, getUser, nonExistingId }
+const user = {
+  valid: {
+    username: 'jason',
+    password: 'puppies',
+    name: 'Jason Long',
+  },
+  invalid: {
+    noUsername: {
+      password: 'puppies',
+      name: 'Jason Long',
+    },
+    noPassword: {
+      username: 'jason',
+      name: 'Jason Long',
+    },
+    noName: {
+      username: 'jason',
+      password: 'puppies',
+    },
+    usernameTooShort: {
+      username: 'j',
+      password: 'puppies',
+      name: 'Jason Long',
+    },
+    passwordTooShort: {
+      username: 'jason',
+      name: 'Jason Long',
+      password: 'p',
+    },
+  },
+}
+
+module.exports = { initialBlogs, initialUsers, user, blogsInDb, initializeDb, usersInDb, getUser, nonExistingId }

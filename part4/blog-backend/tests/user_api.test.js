@@ -56,14 +56,44 @@ describe('in a db with existing users', () => {
 
   describe('creating a single user', () => {
     test('with valid data succeeds', async () => {
-      const newUser = {
-        username: 'peterino',
-        name: 'Peter John',
-        password: 'password',
-      }
-      await api.post('/api/users').send(newUser).expect(201).expect('Content-Type', ctJson)
+      await api.post('/api/users').send(helper.user.valid).expect(201).expect('Content-Type', ctJson)
       const usersAfter = await helper.usersInDb()
       assert.strictEqual(helper.initialUsers.length + 1, usersAfter.length)
+    })
+
+    test('without a password fails', async () => {
+      await api.post('/api/users').send(helper.user.invalid.noPassword).expect(400)
+      const usersAfter = await helper.usersInDb()
+      assert.strictEqual(helper.initialUsers.length, usersAfter.length)
+    })
+
+    test('without a username fails', async () => {
+      await api.post('/api/users').send(helper.user.invalid.noUsername).expect(400)
+      const usersAfter = await helper.usersInDb()
+      assert.strictEqual(helper.initialUsers.length, usersAfter.length)
+    })
+
+    test('without a name fails', async () => {
+      await api.post('/api/users').send(helper.user.invalid.noName).expect(400)
+      const usersAfter = await helper.usersInDb()
+      assert.strictEqual(helper.initialUsers.length, usersAfter.length)
+    })
+
+    test('with a username that is too short fails', async () => {
+      await api.post('/api/users').send(helper.user.invalid.usernameTooShort).expect(400)
+      const usersAfter = await helper.usersInDb()
+      assert.strictEqual(helper.initialUsers.length, usersAfter.length)
+    })
+
+    test('with a password that is too short fails', async () => {
+      await api.post('/api/users').send(helper.user.invalid.passwordTooShort).expect(400)
+      const usersAfter = await helper.usersInDb()
+      assert.strictEqual(helper.initialUsers.length, usersAfter.length)
+    })
+
+    test('with a username that is not unique fails', async () => {
+      await api.post('/api/users').send(helper.user.valid).expect(201)
+      await api.post('/api/users').send(helper.user.valid).expect(400)
     })
   })
 })
