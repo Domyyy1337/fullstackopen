@@ -11,10 +11,7 @@ const api = supertest(app)
 
 describe('when there is initially some notes saved', () => {
   beforeEach(async () => {
-    await User.deleteMany({})
-    await User.insertMany(helper.initialUsers)
-    await Note.deleteMany({})
-    await Note.insertMany(helper.initialNotes)
+    await helper.initializeDb()
   })
 
   test('notes are returned as json', async () => {

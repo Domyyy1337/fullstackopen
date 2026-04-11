@@ -22,6 +22,20 @@ const initialUsers = [
   },
 ]
 
+const initializeDb = async () => {
+  await User.deleteMany({})
+  await Note.deleteMany({})
+
+  const user = await User.insertOne(initialUsers[0])
+  const validUserId = user._id.toString()
+
+  for (const note of initialNotes) {
+    note.user = validUserId
+  }
+
+  await Note.insertMany(initialNotes)
+}
+
 const nonExistingId = async () => {
   const note = new Note({ content: 'willremovethissoon' })
   await note.save()
@@ -65,4 +79,5 @@ module.exports = {
   getUser,
   getNote,
   getUserAndNote,
+  initializeDb,
 }
