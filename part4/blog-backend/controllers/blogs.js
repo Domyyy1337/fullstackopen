@@ -3,18 +3,16 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const config = require('../utils/config')
 const { expressjwt: jwt } = require('express-jwt')
+const middleware = require('../utils/middleware')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   res.json(blogs)
 })
 
-blogsRouter.post('/', jwt(config.JWT_CONFIG), async (req, res) => {
+blogsRouter.post('/', jwt(config.JWT_CONFIG), middleware.userExtractor, async (req, res) => {
   const { author, likes, title, url } = req.body
-
-  const user = await User.findOne({ username: req.auth.username })
-
-  if (!user) return res.status(400).json({ error: 'userId missing or not valid' })
+  const user = req.user
 
   const blog = new Blog({
     author,
@@ -41,12 +39,13 @@ blogsRouter.get('/:id', async (req, res) => {
   }
 })
 
-blogsRouter.delete('/:id', jwt(config.JWT_CONFIG), async (req, res) => {
+blogsRouter.delete('/:id', jwt(config.JWT_CONFIG), middleware.userExtractor, async (req, res) => {
   const blog = await Blog.findById(req.params.id)
+  const user = req.user
 
   if (!blog) return res.status(404).json({ error: 'blog does not exist' })
 
-  if (blog.user.toString() !== req.auth.id) return res.status(401).json({ error: 'only creator of blog can delete it' })
+  if (blog.user.toString() !== user.id) return res.status(401).json({ error: 'only creator of blog can delete it' })
 
   await blog.deleteOne()
 

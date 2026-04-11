@@ -1,3 +1,4 @@
+const User = require('../models/user')
 const logger = require('./logger')
 
 const requestLogger = (req, res, next) => {
@@ -22,8 +23,16 @@ const errorHandler = (err, req, res, next) => {
   next(err)
 }
 
+const userExtractor = async (req, res, next) => {
+  const user = await User.findOne({ username: req.auth.username })
+  if (!user) return res.status(400).json({ error: 'userId missing or not valid' })
+  req.user = user.toJSON()
+  next()
+}
+
 module.exports = {
   requestLogger,
   errorHandler,
   unknownEndpoint,
+  userExtractor,
 }
