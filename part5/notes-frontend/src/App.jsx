@@ -6,6 +6,7 @@ import Footer from './components/Footer.jsx'
 import loginService from './services/login'
 import NoteForm from './components/NoteForm.jsx'
 import LoginForm from './components/LoginForm.jsx'
+import FormItem from './components/FormItem.jsx'
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -58,7 +59,7 @@ const App = () => {
       .then(returnedNote => {
         setNotes(notes.map(note => (note.id === id ? returnedNote : note)))
       })
-      .catch(error => {
+      .catch(() => {
         setErrorMessage(`the note '${note.content}' was already deleted from the server`)
         setTimeout(() => setErrorMessage(null), 5000)
         setNotes(notes.filter(n => n.id !== id))
@@ -74,14 +75,20 @@ const App = () => {
 
   const loginForm = () => (
     <LoginForm onSubmit={handleLogin}>
-      <div>
-        <label htmlFor='username'>username:</label>
-        <input type='text' value={username} onChange={({ target }) => setUsername(target.value)} id='username' />
-      </div>
-      <div>
-        <label htmlFor='password'>password:</label>
-        <input type='password' value={password} onChange={({ target }) => setPassword(target.value)} id='password' />
-      </div>
+      <FormItem
+        id='username'
+        text='username'
+        type='text'
+        value={username}
+        onChange={({ target }) => setUsername(target.value)}
+      />
+      <FormItem
+        id='password'
+        text='password'
+        type='password'
+        value={password}
+        onChange={({ target }) => setPassword(target.value)}
+      />
     </LoginForm>
   )
 
