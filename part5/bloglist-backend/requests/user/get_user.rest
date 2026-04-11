@@ -1,0 +1,12 @@
+// Get user with valid ID
+GET http://localhost:3003/api/users/69da27fafa55b19c2ca87482
+
+###
+
+// Get user with invalid ID
+GET http://localhost:3003/api/users/1
+
+###
+
+// Get user with non-existing ID
+GET http://localhost:3003/api/users/69da27fafa55b19c2ca87483

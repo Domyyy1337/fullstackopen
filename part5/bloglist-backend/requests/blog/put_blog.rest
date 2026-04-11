@@ -1,0 +1,10 @@
+// Update existing blog
+PUT http://localhost:3003/api/blogs/69d52c3e011f14b4c318169f
+Content-Type: application/json
+
+{
+    "title": "My First Blog",
+    "author": "Domyyy",
+    "url": "https://google.com",
+    "likes": 1999
+}

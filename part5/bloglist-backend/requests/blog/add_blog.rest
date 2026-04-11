@@ -1,0 +1,11 @@
+// Add valid blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlcmN1bGVzIiwiaWQiOiI2OWRhMzQzNDdiMTVlOTFkMTRiNzkwNmEiLCJpYXQiOjE3NzU5MTE0NDl9.5KH4OdPEMF4UWKruSc0pPsOhVwO5qY6HmgxB_1YWpuE
+
+{
+  "title": "My First Blog",
+  "author": "Domyyy",
+  "url": "https://google.com",
+  "likes": 10
+}
