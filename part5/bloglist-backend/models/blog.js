@@ -6,35 +6,16 @@ mongoose.set('strictQuery', false)
  * @type {mongoose.SchemaDefinitionProperty}
  */
 const blogSchema = mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    minLength: 5,
-  },
-  author: {
-    type: String,
-    required: true,
-    minLength: 5,
-  },
-  url: {
-    type: String,
-    required: true,
-    minLength: 5,
-  },
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
+  title: { type: String, required: true, minLength: 5 },
+  author: { type: String, required: true, minLength: 5 },
+  url: { type: String, required: true, minLength: 5 },
+  likes: { type: Number, default: 0 },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 })
 
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
-    returnedObject.user = returnedObject.user.id.toString()
     delete returnedObject._id
     delete returnedObject.__v
   },

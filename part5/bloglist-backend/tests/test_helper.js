@@ -38,7 +38,7 @@ const initialUsers = [
 
 const blogsInDb = async () => {
   const notes = await Blog.find({})
-  return notes.map(note => note.toJSON())
+  return notes.map(blog => blog.toJSON())
 }
 
 const usersInDb = async () => {

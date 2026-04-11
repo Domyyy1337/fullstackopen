@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import blogService from './services/blogs'
 import Blogs from './components/Blogs'
-import LoginForm from './components/LoginForm'
 import FormItem from './components/FormItem'
 import loginService from './services/login'
+import Form from './components/Form'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +13,9 @@ const App = () => {
     const savedUser = window.localStorage.getItem('savedBlogsUser')
     return savedUser ? JSON.parse(savedUser) : null
   })
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs))
@@ -43,9 +46,18 @@ const App = () => {
     }
   }
 
+  const handleCreate = async event => {
+    event.preventDefault()
+    const returnedBlog = await blogService.create({ title, author, url })
+    setBlogs(blogs.concat(returnedBlog))
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
   if (!user) {
     return (
-      <LoginForm onSubmit={handleLogin}>
+      <Form onSubmit={handleLogin} title='Login' buttonText='login'>
         <FormItem
           id='username'
           text='username:'
@@ -59,7 +71,7 @@ const App = () => {
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
-      </LoginForm>
+      </Form>
     )
   }
 
@@ -69,7 +81,12 @@ const App = () => {
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
-      {user && <Blogs blogs={blogs} user={user} />}
+      <Blogs blogs={blogs} user={user} />
+      <Form title='create new' buttonText='create' onSubmit={handleCreate}>
+        <FormItem id='title' text='title:' value={title} onChange={({ target }) => setTitle(target.value)} />
+        <FormItem id='author' text='author:' value={author} onChange={({ target }) => setAuthor(target.value)} />
+        <FormItem id='url' text='url:' value={url} onChange={({ target }) => setUrl(target.value)} />
+      </Form>
     </div>
   )
 }

@@ -26,13 +26,9 @@ const errorHandler = (err, req, res, next) => {
 const userExtractor = async (req, res, next) => {
   const user = await User.findOne({ username: req.auth.username })
   if (!user) return res.status(400).json({ error: 'userId missing or not valid' })
-  req.user = user.toJSON()
+  req.user = user
+
   next()
 }
 
-module.exports = {
-  requestLogger,
-  errorHandler,
-  unknownEndpoint,
-  userExtractor,
-}
+module.exports = { requestLogger, errorHandler, unknownEndpoint, userExtractor }
