@@ -1,0 +1,29 @@
+// Valid User
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "salainen"
+}
+
+###
+
+// Invalid User
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "rot",
+  "password": "salainen"
+}
+
+###
+
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "slainen"
+}

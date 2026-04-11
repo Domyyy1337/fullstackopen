@@ -1,0 +1,35 @@
+{
+  "name": "notes-backend",
+  "version": "0.0.1",
+  "description": "",
+  "license": "MIT",
+  "author": "domyyy1337",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test node --test",
+    "test-users": "cross-env NODE_ENV=test node --test -- tests/user_api.test.js",
+    "test-notes": "cross-env NODE_ENV=test node --test -- tests/note_api.test.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "lint": "eslint .",
+    "mongo": "node --env-file-if-exists=.env mongo.js",
+    "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.2.0",
+    "globals": "^17.4.0",
+    "supertest": "^7.2.2"
+  }
+}
