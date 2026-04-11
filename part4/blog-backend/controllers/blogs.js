@@ -12,7 +12,7 @@ blogsRouter.get('/', async (req, res) => {
 blogsRouter.post('/', jwt(config.JWT_CONFIG), async (req, res) => {
   const { author, likes, title, url } = req.body
 
-  const user = await User.findOne({ username: '1' })
+  const user = await User.findOne({ username: req.auth.username })
 
   if (!user) return res.status(400).json({ error: 'userId missing or not valid' })
 
@@ -41,8 +41,15 @@ blogsRouter.get('/:id', async (req, res) => {
   }
 })
 
-blogsRouter.delete('/:id', async (req, res) => {
-  await Blog.findByIdAndDelete(req.params.id)
+blogsRouter.delete('/:id', jwt(config.JWT_CONFIG), async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+
+  if (!blog) return res.status(404).json({ error: 'blog does not exist' })
+
+  if (blog.user.toString() !== req.auth.id) return res.status(401).json({ error: 'only creator of blog can delete it' })
+
+  await blog.deleteOne()
+
   res.status(204).end()
 })
 
