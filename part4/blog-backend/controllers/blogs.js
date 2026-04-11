@@ -44,6 +44,7 @@ blogsRouter.delete('/:id', jwt(config.JWT_CONFIG), middleware.userExtractor, asy
   const user = req.user
 
   if (!blog) return res.status(404).json({ error: 'blog does not exist' })
+  if (!blog.user) return res.status(400).json({ error: 'blog has no owner' })
 
   if (blog.user.toString() !== user.id) return res.status(401).json({ error: 'only creator of blog can delete it' })
 

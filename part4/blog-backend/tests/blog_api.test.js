@@ -9,9 +9,10 @@ const helper = require('./test_helper')
 const api = supertest(app)
 const ctJson = /application\/json/
 
+let token
+
 beforeEach(async () => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+  token = await helper.initializeDb()
 })
 
 describe('all blogs', () => {
@@ -34,6 +35,20 @@ describe('all blogs', () => {
 })
 
 describe('single blog', () => {
+  test('returns 401 when being added without token', async () => {
+    const newBlog = {
+      title: 'My New Blog',
+      author: 'Mustermann',
+      url: 'https://facebook.com',
+      likes: 0,
+    }
+
+    await api.post('/api/blogs').send(newBlog).expect(401).expect('Content-Type', ctJson)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  })
+
   test('that is valid can be added', async () => {
     const newBlog = {
       title: 'My New Blog',
@@ -42,7 +57,12 @@ describe('single blog', () => {
       likes: 0,
     }
 
-    await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', ctJson)
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', ctJson)
 
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
@@ -65,7 +85,12 @@ describe('single blog', () => {
       url: 'https://facebook.com',
     }
 
-    const response = await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', ctJson)
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', ctJson)
 
     assert.strictEqual(response.body.likes, 0)
   })
@@ -77,7 +102,7 @@ describe('single blog', () => {
       likes: 0,
     }
 
-    await api.post('/api/blogs').send(newBlog).expect(400)
+    await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
@@ -90,7 +115,7 @@ describe('single blog', () => {
       likes: 0,
     }
 
-    await api.post('/api/blogs').send(newBlog).expect(400)
+    await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
@@ -102,6 +127,9 @@ describe('single blog', () => {
 
     const resultBlog = await api.get(`/api/blogs/${blog.id}`).expect(200).expect('Content-Type', ctJson)
 
+    console.log(blog)
+    console.log(resultBlog.body)
+
     assert.deepStrictEqual(resultBlog.body, blog)
   })
 
@@ -109,7 +137,7 @@ describe('single blog', () => {
     const blogs = await helper.blogsInDb()
     const blog = blogs[0]
 
-    await api.delete(`/api/blogs/${blog.id}`).expect(204)
+    await api.delete(`/api/blogs/${blog.id}`).set('Authorization', `Bearer ${token}`).expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
     const ids = blogsAtEnd.map(b => b.id)

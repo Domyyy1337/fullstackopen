@@ -1,5 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const initialBlogs = [
   {
@@ -54,8 +55,16 @@ const initializeDb = async () => {
   await Blog.deleteMany({})
   await User.deleteMany({})
 
+  const users = await User.insertMany(initialUsers)
+  const validUserId = users[0]._id.toString()
+  const token = jwt.sign({ username: users[0].username, id: users[0]._id }, process.env.SECRET)
+
+  for (const blog of initialBlogs) {
+    blog.user = validUserId
+  }
+
   await Blog.insertMany(initialBlogs)
-  await User.insertMany(initialUsers)
+  return token
 }
 
 const nonExistingId = async () => {
