@@ -1,8 +1,12 @@
-const FormItem = ({ id, text, type = text, value, onChange }) => {
+import { useId } from 'react'
+
+const FormItem = ({ label, type = 'text', value, onChange }) => {
+  const id = useId()
+
   return (
     <div>
-      <label htmlFor={id}>{text}</label>
-      <input type={type} value={value} onChange={onChange} />
+      <label htmlFor={id}>{label}</label>
+      <input id={id} type={type} value={value} onChange={onChange} />
     </div>
   )
 }
