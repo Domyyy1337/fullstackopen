@@ -1,16 +1,16 @@
 import { useState } from 'react'
 
-const Blogs = ({ blogs }) => {
+const Blogs = ({ blogs, like }) => {
   return (
     <div>
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} like={() => like(blog)} />
       ))}
     </div>
   )
 }
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, like }) => {
   const [visible, setVisible] = useState(false)
 
   /**
@@ -28,7 +28,7 @@ const Blog = ({ blog }) => {
             <p>{blog.url}</p>
             <p>
               likes {blog.likes}
-              <button>like</button>
+              <button onClick={like}>like</button>
             </p>
             <p>{blog.author}</p>
           </>

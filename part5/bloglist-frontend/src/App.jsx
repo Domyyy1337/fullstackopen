@@ -62,7 +62,20 @@ const App = () => {
       setError(true)
       setNotification(error?.response?.data?.error)
     }
+  }
 
+  const like = async blog => {
+    try {
+      const newBlog = { ...blog, likes: blog.likes + 1 }
+      await blogService.update(blog.id, newBlog)
+      const newBlogs = blogs.map(b => (b.id === blog.id ? newBlog : b))
+      setBlogs(newBlogs)
+      setError(false)
+      setNotification(`You liked ${blog.title} by ${blog.author}`)
+    } catch (error) {
+      console.error(error?.response?.data?.error)
+      setError(true)
+    }
     setTimeout(() => setNotification(null), 5000)
   }
 
@@ -89,7 +102,7 @@ const App = () => {
         <BlogForm create={createBlog} ref={blogFormRef} />
       </Togglable>
 
-      <Blogs blogs={blogs} user={user} />
+      <Blogs blogs={blogs} user={user} like={like} />
     </div>
   )
 }
