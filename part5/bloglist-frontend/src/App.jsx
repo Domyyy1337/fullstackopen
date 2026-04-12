@@ -21,7 +21,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs))
+    blogService.getAll().then(blogs => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
   }, [])
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const App = () => {
       const newBlog = { ...blog, likes: blog.likes + 1 }
       await blogService.update(blog.id, newBlog)
       const newBlogs = blogs.map(b => (b.id === blog.id ? newBlog : b))
-      setBlogs(newBlogs)
+      setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
       setError(false)
       setNotification(`You liked ${blog.title} by ${blog.author}`)
     } catch (error) {
