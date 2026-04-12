@@ -4,6 +4,7 @@ import Blogs from './components/Blogs'
 import FormItem from './components/FormItem'
 import loginService from './services/login'
 import Form from './components/Form'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -16,6 +17,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs))
@@ -41,23 +44,38 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch {
-      console.error('wrong credentials')
+      setNotification(`successfully logged in as ${user.username}`)
+    } catch (error) {
+      console.error(error?.response?.data?.error)
+      setError(true)
+      setNotification(error?.response?.data?.error)
     }
+    setTimeout(() => setNotification(null), 5000)
   }
 
   const handleCreate = async event => {
     event.preventDefault()
-    const returnedBlog = await blogService.create({ title, author, url })
-    setBlogs(blogs.concat(returnedBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    try {
+      const returnedBlog = await blogService.create({ title, author, url })
+      setBlogs(blogs.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setError(false)
+      setNotification(`a new blog ${title} by ${author} added`)
+    } catch (error) {
+      console.error(error?.response?.data?.error)
+      setError(true)
+      setNotification(error?.response?.data?.error)
+    }
+
+    setTimeout(() => setNotification(null), 5000)
   }
 
   if (!user) {
     return (
       <Form onSubmit={handleLogin} title='Login' buttonText='login'>
+        <Notification message={notification} error={error} />
         <FormItem
           id='username'
           text='username:'
@@ -78,6 +96,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification message={notification} error={error} />
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
