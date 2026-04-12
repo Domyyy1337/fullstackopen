@@ -41,6 +41,7 @@ const App = () => {
       window.localStorage.setItem('savedBlogsUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
+      setError(false)
       setNotification(`successfully logged in as ${user.username}`)
     } catch (error) {
       console.error(error?.response?.data?.error)
@@ -75,6 +76,19 @@ const App = () => {
     } catch (error) {
       console.error(error?.response?.data?.error)
       setError(true)
+      setNotification(error?.response?.data?.error)
+    }
+    setTimeout(() => setNotification(null), 5000)
+  }
+
+  const remove = async blog => {
+    try {
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+    } catch (error) {
+      console.error(error?.response?.data?.error)
+      setError(true)
+      setNotification(error?.response?.data?.error)
     }
     setTimeout(() => setNotification(null), 5000)
   }
@@ -102,7 +116,7 @@ const App = () => {
         <BlogForm create={createBlog} ref={blogFormRef} />
       </Togglable>
 
-      <Blogs blogs={blogs} user={user} like={like} />
+      <Blogs blogs={blogs} user={user} like={like} remove={remove} />
     </div>
   )
 }
