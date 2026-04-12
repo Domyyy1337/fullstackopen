@@ -23,15 +23,12 @@ const Blog = ({ blog, like, remove, user }) => {
     remove()
   }
 
-  console.log(user, blog);
-  
-
   return (
     <div style={blogStyle}>
       <div>
         {blog.title}
         <button onClick={() => setVisible(!visible)}>{visible ? 'hide' : 'view'}</button>
-        {visible ?
+        {visible ? (
           <>
             <p>{blog.url}</p>
             <p>
@@ -39,11 +36,9 @@ const Blog = ({ blog, like, remove, user }) => {
               <button onClick={like}>like</button>
             </p>
             <p>{blog.author}</p>
-            {user && user.username === blog.user.username ?
-              <button onClick={removeBlog}>remove</button>
-            : null}
+            {user && user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
           </>
-        : null}
+        ) : null}
       </div>
     </div>
   )
