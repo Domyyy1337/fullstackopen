@@ -109,8 +109,7 @@ describe('single blog', () => {
   })
 
   test('can be deleted', async () => {
-    const blogs = await helper.blogsInDb()
-    const blog = blogs[0]
+    const blog = await helper.getBlog()
 
     await api.delete(`/api/blogs/${blog.id}`).set('Authorization', `Bearer ${token}`).expect(204)
 
@@ -134,6 +133,18 @@ describe('single blog', () => {
 
     const blogAfterUpdate = await api.get(`/api/blogs/${id}`).expect(200)
     assert.strictEqual(blogAfterUpdate.body.likes, 9999)
+  })
+
+  describe('when updated', () => {
+    test('with valid data returns the updated blog', async () => {
+      const blog = await helper.getBlog()
+
+      blog.title = 'I have an update'
+
+      const response = await api.put(`/api/blogs/${blog.id}`).send(blog).expect(200)
+
+      assert.deepStrictEqual(response.body.title, blog.title)
+    })
   })
 })
 

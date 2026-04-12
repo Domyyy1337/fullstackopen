@@ -48,14 +48,17 @@ blogsRouter.delete('/:id', jwt(config.JWT_CONFIG), middleware.userExtractor, asy
 })
 
 blogsRouter.put('/:id', async (req, res) => {
-  const { title, author, url, likes } = req.body
+  const { title, author, url, likes, user } = req.body
 
   const blog = await Blog.findById(req.params.id)
+
+  if (!blog) res.status(404).end()
 
   blog.title = title
   blog.author = author
   blog.url = url
   blog.likes = likes
+  blog.user = user
 
   const updatedBlog = await blog.save()
 
