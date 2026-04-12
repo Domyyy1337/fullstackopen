@@ -13,8 +13,6 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser')
     return loggedUserJSON ? JSON.parse(loggedUserJSON) : null
@@ -33,16 +31,12 @@ const App = () => {
     noteService.create(noteObject).then(returnedNote => setNotes(notes.concat(returnedNote)))
   }
 
-  const handleLogin = async event => {
-    event.preventDefault()
+  const login = async (username, password) => {
     try {
       const user = await loginService.login({ username, password })
-
       window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -69,15 +63,7 @@ const App = () => {
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
-  const loginForm = () => (
-    <LoginForm
-      handleSubmit={handleLogin}
-      username={username}
-      password={password}
-      handlePasswordChange={({ target }) => setPassword(target.value)}
-      handleUsernameChange={({ target }) => setUsername(target.value)}
-    />
-  )
+  const loginForm = () => <LoginForm login={login} />
 
   const noteForm = () => {
     return (
