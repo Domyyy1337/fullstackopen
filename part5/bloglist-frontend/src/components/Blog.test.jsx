@@ -32,7 +32,21 @@ describe('<Blog />', () => {
 
     screen.getByText(blog.url)
     screen.getByText(`likes ${blog.likes}`)
+  })
 
-    screen.debug()
+  test('clicking like twice calls the event handler twice', async () => {
+    const like = vi.fn()
+
+    render(<Blog blog={blog} like={like} />)
+
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(like.mock.calls).toHaveLength(2)
   })
 })
