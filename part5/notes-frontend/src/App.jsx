@@ -67,7 +67,13 @@ const App = () => {
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
-  const loginForm = () => <LoginForm login={login} />
+  const loginForm = () => {
+    return (
+      <Togglable buttonLabel='login'>
+        <LoginForm login={login} />
+      </Togglable>
+    )
+  }
 
   const noteForm = () => {
     return (

@@ -7,9 +7,8 @@ const setToken = newToken => (token = `Bearer ${newToken}`)
 
 const getAll = async () => {
   const request = axios.get(baseUrl)
-  const nonExisting = { id: 10000, content: 'This note is not saved to server', important: true }
   const response = await request
-  return response.data.concat(nonExisting)
+  return response.data
 }
 
 const create = async newObject => {
