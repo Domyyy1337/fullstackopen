@@ -36,12 +36,7 @@ describe('all blogs', () => {
 
 describe('single blog', () => {
   test('returns 401 when being added without token', async () => {
-    const newBlog = {
-      title: 'My New Blog',
-      author: 'Mustermann',
-      url: 'https://facebook.com',
-      likes: 0,
-    }
+    const newBlog = { title: 'My New Blog', author: 'Mustermann', url: 'https://facebook.com', likes: 0 }
 
     await api.post('/api/blogs').send(newBlog).expect(401).expect('Content-Type', ctJson)
 
@@ -50,12 +45,7 @@ describe('single blog', () => {
   })
 
   test('that is valid can be added', async () => {
-    const newBlog = {
-      title: 'My New Blog',
-      author: 'Mustermann',
-      url: 'https://facebook.com',
-      likes: 0,
-    }
+    const newBlog = { title: 'My New Blog', author: 'Mustermann', url: 'https://facebook.com', likes: 0 }
 
     await api
       .post('/api/blogs')
@@ -79,11 +69,7 @@ describe('single blog', () => {
   })
 
   test('with no likes posted has 0 likes', async () => {
-    const newBlog = {
-      title: 'My New Blog',
-      author: 'Mustermann',
-      url: 'https://facebook.com',
-    }
+    const newBlog = { title: 'My New Blog', author: 'Mustermann', url: 'https://facebook.com' }
 
     const response = await api
       .post('/api/blogs')
@@ -96,11 +82,7 @@ describe('single blog', () => {
   })
 
   test('without title is not valid', async () => {
-    const newBlog = {
-      author: 'Mustermann',
-      url: 'https://facebook.com',
-      likes: 0,
-    }
+    const newBlog = { author: 'Mustermann', url: 'https://facebook.com', likes: 0 }
 
     await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
 
@@ -109,11 +91,7 @@ describe('single blog', () => {
   })
 
   test('without url is not valid', async () => {
-    const newBlog = {
-      title: 'My invalid Blog',
-      author: 'Mustermann',
-      likes: 0,
-    }
+    const newBlog = { title: 'My invalid Blog', author: 'Mustermann', likes: 0 }
 
     await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
 
@@ -126,9 +104,6 @@ describe('single blog', () => {
     const blog = blogs[0]
 
     const resultBlog = await api.get(`/api/blogs/${blog.id}`).expect(200).expect('Content-Type', ctJson)
-
-    console.log(blog)
-    console.log(resultBlog.body)
 
     assert.deepStrictEqual(resultBlog.body, blog)
   })

@@ -13,6 +13,9 @@ const Blog = ({ blog, like, remove, user }) => {
     remove()
   }
 
+  console.log(user)
+  console.log(blog)
+
   return (
     <div style={blogStyle}>
       <div>

@@ -19,12 +19,13 @@ blogsRouter.post('/', jwt(config.JWT_CONFIG), middleware.userExtractor, async (r
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
+  await savedBlog.populate('user', { username: 1, name: 1 })
 
   res.status(201).json(savedBlog)
 })
 
 blogsRouter.get('/:id', async (req, res) => {
-  const blog = await Blog.findById(req.params.id)
+  const blog = await Blog.findById(req.params.id).populate('user', { username: 1, name: 1 })
 
   if (blog) {
     res.json(blog)
@@ -58,7 +59,7 @@ blogsRouter.put('/:id', async (req, res) => {
   blog.author = author
   blog.url = url
   blog.likes = likes
-  blog.user = user
+  blog.user = user.id
 
   const updatedBlog = await blog.save()
 

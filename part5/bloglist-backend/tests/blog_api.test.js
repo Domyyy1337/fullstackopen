@@ -129,6 +129,8 @@ describe('single blog', () => {
 
     blog.likes = 9999
 
+    console.log(blog)
+
     await api.put(`/api/blogs/${id}`).send(blog).expect(200)
 
     const blogAfterUpdate = await api.get(`/api/blogs/${id}`).expect(200)
