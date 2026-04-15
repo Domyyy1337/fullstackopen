@@ -15,8 +15,8 @@ const LoginForm = ({ login }) => {
 
   return (
     <Form title='login' onSubmit={handleLogin} buttonText='login'>
-      <FormItem text='username:' value={username} onChange={e => setUsername(e.target.value)} />
-      <FormItem text='password:' type='password' value={password} onChange={e => setPassword(e.target.value)} />
+      <FormItem label='username:' value={username} onChange={e => setUsername(e.target.value)} />
+      <FormItem label='password:' type='password' value={password} onChange={e => setPassword(e.target.value)} />
     </Form>
   )
 }
