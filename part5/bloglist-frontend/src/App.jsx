@@ -97,7 +97,7 @@ const App = () => {
     return (
       <>
         <Notification message={notification} error={error} />
-        <Togglable buttonLabel='login'>
+        <Togglable buttonLabel='login' defaultVisible={true}>
           <LoginForm login={login} />
         </Togglable>
       </>

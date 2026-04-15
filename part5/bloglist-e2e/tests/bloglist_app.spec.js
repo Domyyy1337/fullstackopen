@@ -1,5 +1,5 @@
 const { test, expect, describe, beforeEach } = require('@playwright/test')
-const { loginWith } = require('./helper')
+const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -35,6 +35,22 @@ describe('Blog app', () => {
 
       await expect(page.getByText('Matti Luukkainen logged in')).not.toBeVisible()
       await expect(page.getByText('invalid username or password')).toBeVisible()
+    })
+  })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => await loginWith(page, 'mluukkai', 'salainen'))
+
+    /**
+     * Exercise 5.19
+     */
+    test('a new blog can be created', async ({ page }) => {
+      const blog = { title: 'My Test Blog', author: 'Jonathan', url: 'http://test.com' }
+      await createBlog(page, blog)
+
+      const listItem = page.getByText(`'${blog.title}' by ${blog.author}`)
+
+      expect(listItem).toBeVisible()
     })
   })
 })
