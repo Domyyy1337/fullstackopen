@@ -12,3 +12,7 @@ export const createBlog = async (page, blog) => {
   await page.getByRole('button', { name: 'create' }).click()
   await page.getByText(`'${blog.title}' by ${blog.author}`).waitFor()
 }
+
+export const logout = async page => {
+  await page.getByRole('button', { name: 'logout' }).click()
+}

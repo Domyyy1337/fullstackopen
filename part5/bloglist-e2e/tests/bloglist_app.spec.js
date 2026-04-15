@@ -1,10 +1,11 @@
 const { test, expect, describe, beforeEach } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper')
+const { loginWith, createBlog, logout } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
     await request.post('/api/testing/reset')
     await request.post(`/api/users`, { data: { name: 'Matti Luukkainen', username: 'mluukkai', password: 'salainen' } })
+    await request.post(`/api/users`, { data: { name: 'John Don', username: 'johndon', password: 'johndon' } })
 
     await page.goto('/')
   })
@@ -73,12 +74,26 @@ describe('Blog app', () => {
         await expect(page.getByText('likes 1')).toBeVisible()
       })
 
+      /**
+       * Exercise 5.21
+       */
       test('the user that created the blog can delete it', async ({ page }) => {
         page.on('dialog', dialog => dialog.accept())
         await page.getByRole('button', { name: 'view' }).click()
         await page.getByRole('button', { name: 'remove' }).click()
 
         expect(page.getByRole('listitem')).not.toBeVisible()
+      })
+
+      /**
+       * Execise 5.22
+       */
+      test('another user can not remove that blog', async ({ page }) => {
+        await logout(page)
+        await loginWith(page, 'johndon', 'johndon')
+        await page.getByRole('button', { name: 'view' }).click()
+
+        expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
       })
     })
   })
