@@ -106,23 +106,25 @@ describe('Blog app', () => {
       })
 
       test('they are ordered by amount of likes', async ({ page }) => {
-        const text = await page.getByTestId('blog').nth(3).textContent()
+        const blog4 = page.getByTestId('blog').filter({ hasText: "'I am Blog Number 4' by Author" })
+        const blog3 = page.getByTestId('blog').filter({ hasText: "'I am Blog Number 3' by Author" })
 
-        await page.getByRole('button', { name: 'view' }).nth(3).click()
-        await page.getByRole('button', { name: 'like' }).click()
-        await page.getByRole('button', { name: 'hide' }).click()
+        await blog4.getByRole('button', { name: 'view' }).click()
+        await blog4.getByRole('button', { name: 'like' }).click()
+        await expect(blog4.getByText('likes 1')).toBeVisible()
+        await blog4.getByRole('button', { name: 'hide' }).click()
 
-        expect(await page.getByTestId('blog').first().textContent()).toEqual(text)
+        await expect(page.getByTestId('blog').first()).toContainText("'I am Blog Number 4' by Author")
 
-        const secondText = await page.getByTestId('blog').nth(3).textContent()
+        await blog3.getByRole('button', { name: 'view' }).click()
+        await blog3.getByRole('button', { name: 'like' }).click()
+        await expect(blog3.getByText('likes 1')).toBeVisible()
+        await blog3.getByRole('button', { name: 'like' }).click()
+        await expect(blog3.getByText('likes 2')).toBeVisible()
+        await blog3.getByRole('button', { name: 'hide' }).click()
 
-        await page.getByRole('button', { name: 'view' }).nth(3).click()
-        await page.getByRole('button', { name: 'like' }).click()
-        await page.getByRole('button', { name: 'like' }).click()
-        await page.getByRole('button', { name: 'hide' }).click()
-
-        expect(await page.getByTestId('blog').first().textContent()).toEqual(secondText)
-        expect(await page.getByTestId('blog').nth(1).textContent()).toEqual(text)
+        await expect(page.getByTestId('blog').first()).toContainText("'I am Blog Number 3' by Author")
+        await expect(page.getByTestId('blog').nth(1)).toContainText("'I am Blog Number 4' by Author")
       })
     })
   })

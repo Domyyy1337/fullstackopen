@@ -59,7 +59,7 @@ blogsRouter.put('/:id', async (req, res) => {
   blog.author = author
   blog.url = url
   blog.likes = likes
-  blog.user = user.id
+  blog.user = user
 
   const updatedBlog = await blog.save()
 
