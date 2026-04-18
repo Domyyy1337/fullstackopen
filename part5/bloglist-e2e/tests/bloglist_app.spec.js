@@ -96,5 +96,34 @@ describe('Blog app', () => {
         expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
       })
     })
+
+    describe('and several blogs exist', () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(page, { title: 'I am Blog Number 1', author: 'Author', url: 'http://google.com' })
+        await createBlog(page, { title: 'I am Blog Number 2', author: 'Author', url: 'http://google.com' })
+        await createBlog(page, { title: 'I am Blog Number 3', author: 'Author', url: 'http://google.com' })
+        await createBlog(page, { title: 'I am Blog Number 4', author: 'Author', url: 'http://google.com' })
+      })
+
+      test('they are ordered by amount of likes', async ({ page }) => {
+        const text = await page.getByTestId('blog').nth(3).textContent()
+
+        await page.getByRole('button', { name: 'view' }).nth(3).click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await page.getByRole('button', { name: 'hide' }).click()
+
+        expect(await page.getByTestId('blog').first().textContent()).toEqual(text)
+
+        const secondText = await page.getByTestId('blog').nth(3).textContent()
+
+        await page.getByRole('button', { name: 'view' }).nth(3).click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await page.getByRole('button', { name: 'hide' }).click()
+
+        expect(await page.getByTestId('blog').first().textContent()).toEqual(secondText)
+        expect(await page.getByTestId('blog').nth(1).textContent()).toEqual(text)
+      })
+    })
   })
 })

@@ -14,7 +14,7 @@ const Blog = ({ blog, like, remove, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-testid='blog'>
       <div>
         <span>
           '{blog.title}' by {blog.author}
