@@ -1,35 +1,36 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Blog = ({ blog, like, remove, user }) => {
-  const [visible, setVisible] = useState(false)
+  const navigate = useNavigate()
+
+  if (!blog) return null
 
   /**
    * @type {import("react").CSSProperties}
    */
-  const blogStyle = { paddingTop: 10, paddingLeft: 2, border: 'solid', borderWidth: 1, marginBottom: 5 }
+  const blogStyle = { paddingTop: 10, paddingLeft: 2, marginBottom: 5 }
 
   const removeBlog = () => {
     if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) return
-    remove()
+    remove(blog)
+    navigate('/')
   }
 
   return (
     <div style={blogStyle} data-testid='blog'>
       <div>
-        <span>
-          '{blog.title}' by {blog.author}
-        </span>
-        <button onClick={() => setVisible(!visible)}>{visible ? 'hide' : 'view'}</button>
-        {visible ? (
-          <>
-            <p>{blog.url}</p>
-            <p>
-              <span>likes {blog.likes}</span>
-              <button onClick={like}>like</button>
-            </p>
-            {user && user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
-          </>
-        ) : null}
+        <h3>
+          {blog.author}: {blog.title}
+        </h3>
+        <div>
+          <a href={blog.url}>{blog.url}</a>
+          <p>
+            <span>likes {blog.likes}</span>
+            {user ? <button onClick={() => like(blog)}>like</button> : null}
+          </p>
+          <p>Added by {blog.user.name}</p>
+          {user && user.username === blog.user.username ? <button onClick={removeBlog}>remove</button> : null}
+        </div>
       </div>
     </div>
   )

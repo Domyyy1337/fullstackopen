@@ -1,14 +1,16 @@
-import Blog from './Blog'
+import { Link } from 'react-router-dom'
 
-const Blogs = ({ blogs, like, remove, user }) => {
+const Blogs = ({ blogs }) => {
   return (
     <div>
       <h2>Blogs</h2>
-      <div>
-        {blogs.map(blog => (
-          <Blog key={blog.id} blog={blog} like={() => like(blog)} remove={() => remove(blog)} user={user} />
+      <ul>
+        {blogs.map(b => (
+          <li key={b.id}>
+            <Link to={`/blogs/${b.id}`}>{b.title}</Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   )
 }

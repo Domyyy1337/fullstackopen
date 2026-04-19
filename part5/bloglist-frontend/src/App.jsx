@@ -8,7 +8,8 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
-import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import { Link, Route, Routes, useMatch, useNavigate } from 'react-router-dom'
+import Blog from './components/Blog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -21,6 +22,7 @@ const App = () => {
 
   const blogFormRef = useRef()
   const navigate = useNavigate()
+  const match = useMatch('/blogs/:id')
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
@@ -100,6 +102,8 @@ const App = () => {
 
   const padding = { padding: 5 }
 
+  const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
+
   return (
     <div>
       <div>
@@ -119,13 +123,10 @@ const App = () => {
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p> */}
 
-      {/* <Togglable buttonLabel='create new blog' ref={blogFormRef}>
-        <BlogForm create={createBlog} ref={blogFormRef} />
-      </Togglable> */}
-
       <Routes>
         <Route path='/' element={<Blogs blogs={blogs} user={user} like={like} remove={remove} />} />
         <Route path='/login' element={<LoginForm login={login} />} />
+        <Route path='/blogs/:id' element={<Blog blog={blog} like={like} remove={remove} user={user} />} />
       </Routes>
     </div>
   )
