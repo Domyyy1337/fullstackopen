@@ -8,6 +8,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -19,6 +20,7 @@ const App = () => {
   const [error, setError] = useState(false)
 
   const blogFormRef = useRef()
+  const navigate = useNavigate()
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
@@ -31,6 +33,7 @@ const App = () => {
 
   const handleLogout = async () => {
     window.localStorage.clear()
+    navigate('/')
     setUser(null)
   }
 
@@ -43,12 +46,14 @@ const App = () => {
       setUser(user)
       setError(false)
       setNotification(`successfully logged in as ${user.username}`)
+      return true
     } catch (error) {
       console.error(error?.response?.data?.error)
       setError(true)
       setNotification(error?.response?.data?.error)
+      setTimeout(() => setNotification(null), 5000)
+      return false
     }
-    setTimeout(() => setNotification(null), 5000)
   }
 
   const createBlog = async ({ title, author, url }) => {
@@ -93,30 +98,35 @@ const App = () => {
     setTimeout(() => setNotification(null), 5000)
   }
 
-  if (!user) {
-    return (
-      <>
-        <Notification message={notification} error={error} />
-        <Togglable buttonLabel='login' defaultVisible={true}>
-          <LoginForm login={login} />
-        </Togglable>
-      </>
-    )
-  }
+  const padding = { padding: 5 }
 
   return (
     <div>
-      <h2>Blogs</h2>
+      <div>
+        <Link to='/' style={padding}>
+          blogs
+        </Link>
+        {!user ? (
+          <Link to='/login' style={padding}>
+            login
+          </Link>
+        ) : (
+          <button onClick={handleLogout}>logout</button>
+        )}
+      </div>
       <Notification message={notification} error={error} />
-      <p>
+      {/* <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
-      </p>
+      </p> */}
 
-      <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+      {/* <Togglable buttonLabel='create new blog' ref={blogFormRef}>
         <BlogForm create={createBlog} ref={blogFormRef} />
-      </Togglable>
+      </Togglable> */}
 
-      <Blogs blogs={blogs} user={user} like={like} remove={remove} />
+      <Routes>
+        <Route path='/' element={<Blogs blogs={blogs} user={user} like={like} remove={remove} />} />
+        <Route path='/login' element={<LoginForm login={login} />} />
+      </Routes>
     </div>
   )
 }
