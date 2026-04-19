@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import blogService from './services/blogs'
 import Blogs from './components/Blogs'
 import FormItem from './components/FormItem'
@@ -20,7 +20,6 @@ const App = () => {
   const [notification, setNotification] = useState(null)
   const [error, setError] = useState(false)
 
-  const blogFormRef = useRef()
   const navigate = useNavigate()
   const match = useMatch('/blogs/:id')
 
@@ -37,6 +36,7 @@ const App = () => {
     window.localStorage.clear()
     navigate('/')
     setUser(null)
+    blogService.setToken(null)
   }
 
   const login = async (username, password) => {
@@ -48,6 +48,7 @@ const App = () => {
       setUser(user)
       setError(false)
       setNotification(`successfully logged in as ${user.username}`)
+      setTimeout(() => setNotification(null), 5000)
       return true
     } catch (error) {
       console.error(error?.response?.data?.error)
@@ -58,17 +59,20 @@ const App = () => {
     }
   }
 
-  const createBlog = async ({ title, author, url }) => {
+  const createBlog = async (title, author, url) => {
     try {
-      blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create({ title, author, url })
       setBlogs(blogs.concat(returnedBlog))
       setError(false)
       setNotification(`a new blog ${title} by ${author} added`)
+      setTimeout(() => setNotification(null), 5000)
+      return true
     } catch (error) {
       console.error(error?.response?.data?.error)
       setError(true)
       setNotification(error?.response?.data?.error)
+      setTimeout(() => setNotification(null), 5000)
+      return false
     }
   }
 
@@ -110,6 +114,11 @@ const App = () => {
         <Link to='/' style={padding}>
           blogs
         </Link>
+        {user ? (
+          <Link to='/create' style={padding}>
+            new blog
+          </Link>
+        ) : null}
         {!user ? (
           <Link to='/login' style={padding}>
             login
@@ -127,6 +136,7 @@ const App = () => {
         <Route path='/' element={<Blogs blogs={blogs} user={user} like={like} remove={remove} />} />
         <Route path='/login' element={<LoginForm login={login} />} />
         <Route path='/blogs/:id' element={<Blog blog={blog} like={like} remove={remove} user={user} />} />
+        <Route path='/create' element={<BlogForm create={createBlog} />} />
       </Routes>
     </div>
   )
