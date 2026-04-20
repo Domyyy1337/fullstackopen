@@ -1,13 +1,17 @@
 import userEvent from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
-import { beforeEach } from 'vitest'
 import BlogForm from './BlogForm'
+import { MemoryRouter as Router } from 'react-router-dom'
 
 describe('<BlogForm />', () => {
   test('calls the event handler when a blog is created', async () => {
     const createMock = vi.fn()
 
-    render(<BlogForm create={createMock} />)
+    render(
+      <Router>
+        <BlogForm create={createMock} />
+      </Router>,
+    )
 
     const titleInput = screen.getByLabelText('title:')
     const authorInput = screen.getByLabelText('author:')
@@ -22,9 +26,9 @@ describe('<BlogForm />', () => {
     await user.click(submitButton)
 
     const calls = createMock.mock.calls
-    const call = calls[0][0]
+    const call = calls[0]
 
     expect(calls).toHaveLength(1)
-    expect(call).toStrictEqual({ title: 'My First Blog', author: 'Test Author', url: 'https://test.com' })
+    expect(call).toStrictEqual(['My First Blog', 'Test Author', 'https://test.com'])
   })
 })

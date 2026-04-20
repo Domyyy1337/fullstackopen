@@ -7,7 +7,9 @@ const Blogs = ({ blogs }) => {
       <ul>
         {blogs.map(b => (
           <li key={b.id}>
-            <Link to={`/blogs/${b.id}`}>{b.title}</Link>
+            <Link to={`/blogs/${b.id}`}>
+              {b.title} by {b.author}
+            </Link>
           </li>
         ))}
       </ul>
