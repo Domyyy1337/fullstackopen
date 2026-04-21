@@ -1,11 +1,19 @@
+import { Button, Stack } from '@mui/material'
+
 const Form = ({ onSubmit, children, title, buttonText }) => {
   return (
     <div>
-      <h2>{title}</h2>
-      <form onSubmit={onSubmit}>
-        {children}
-        <button type='submit'>{buttonText}</button>
-      </form>
+      <Stack sx={{ alignItems: 'center' }}>
+        <h2>{title}</h2>
+        <form onSubmit={onSubmit}>
+          <Stack spacing={4}>
+            {children}
+            <Button type='submit' variant='contained'>
+              {buttonText}
+            </Button>
+          </Stack>
+        </form>
+      </Stack>
     </div>
   )
 }

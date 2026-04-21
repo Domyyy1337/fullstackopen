@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Form from './Form'
 import FormItem from './FormItem'
 import { useNavigate } from 'react-router-dom'
+import { Button, Container, Stack, TextField } from '@mui/material'
 
 const LoginForm = ({ login }) => {
   const [username, setUsername] = useState('')
@@ -19,12 +20,18 @@ const LoginForm = ({ login }) => {
   }
 
   return (
-    <div>
+    <Container>
       <Form title='Log in to application' onSubmit={handleLogin} buttonText='login'>
-        <FormItem label='username:' value={username} onChange={e => setUsername(e.target.value)} />
-        <FormItem label='password:' type='password' value={password} onChange={e => setPassword(e.target.value)} />
+        <TextField label='username' value={username} onChange={e => setUsername(e.target.value)} variant='standard' />
+        <TextField
+          label='password:'
+          type='password'
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          variant='standard'
+        />
       </Form>
-    </div>
+    </Container>
   )
 }
 
