@@ -6,17 +6,23 @@ import NoteForm from './components/NoteForm'
 import Footer from './components/Footer'
 import Home from './components/Home'
 import Note from './components/Note'
+import { AppBar, Button, Container, Toolbar } from '@mui/material'
+import Notification from './components/Notification'
 
 const App = () => {
   const [notes, setNotes] = useState([])
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     noteService.getAll().then(initialNotes => setNotes(initialNotes))
   }, [])
 
-  const addNote = n => noteService.create(n).then(returnedNote => setNotes(notes.concat(returnedNote)))
-
-  const padding = { padding: 5 }
+  const addNote = n =>
+    noteService.create(n).then(returnedNote => {
+      setNotes(notes.concat(returnedNote))
+      setNotification({ text: `Note ${returnedNote.content} added!`, type: 'success' })
+      setTimeout(() => setNotification(null), 5000)
+    })
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
@@ -28,8 +34,6 @@ const App = () => {
         setNotes(notes.map(note => (note.id === id ? returnedNote : note)))
       })
       .catch(() => {
-        // setErrorMessage(`the note '${note.content}' was already deleted from the server`)
-        // setTimeout(() => setErrorMessage(null), 5000)
         setNotes(notes.filter(n => n.id !== id))
       })
   }
@@ -40,19 +44,25 @@ const App = () => {
 
   const note = match ? notes.find(n => n.id === match.params.id) : null
 
+  const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
+
   return (
-    <div>
-      <div>
-        <Link style={padding} to='/'>
-          home
-        </Link>
-        <Link style={padding} to='/notes'>
-          notes
-        </Link>
-        <Link style={padding} to='/create'>
-          new note
-        </Link>
-      </div>
+    <Container>
+      <AppBar position='static'>
+        <Toolbar>
+          <Button color='inherit' component={Link} to='/' sx={style}>
+            home
+          </Button>
+          <Button color='inherit' component={Link} to='/notes' sx={style}>
+            notes
+          </Button>
+          <Button color='inherit' component={Link} to='/create' sx={style}>
+            new note
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <Notification notification={notification} />
 
       <Routes>
         <Route path='/notes' element={<NoteList notes={notes} />} />
@@ -64,7 +74,7 @@ const App = () => {
         />
       </Routes>
       <Footer />
-    </div>
+    </Container>
   )
 }
 

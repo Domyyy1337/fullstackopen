@@ -47,7 +47,6 @@ const NoteList = ({ notes }) => {
     )
   }
 
-  notes.forEach(n => console.log(n.user))
   return (
     <div>
       <h1>Notes</h1>
