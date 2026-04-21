@@ -17,7 +17,7 @@ notesRouter.get('/', async (req, res) => {
 })
 
 notesRouter.get('/:id', async (req, res) => {
-  const note = await Note.findById(req.params.id)
+  const note = await Note.findById(req.params.id).populate('user', { username: 1, name: 1 })
 
   if (note) {
     res.json(note)
@@ -35,11 +35,7 @@ notesRouter.post('/', async (req, res) => {
 
   if (!user) return res.status(400).json({ error: 'userId missing or not valid' })
 
-  const note = new Note({
-    content: content,
-    important: important,
-    user: user._id,
-  })
+  const note = new Note({ content: content, important: important, user: user._id })
 
   const savedNote = await note.save()
   user.notes = user.notes.concat(savedNote._id)

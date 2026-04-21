@@ -7,9 +7,9 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node --test",
-    "test-users": "cross-env NODE_ENV=test node --test -- tests/user_api.test.js",
-    "test-notes": "cross-env NODE_ENV=test node --test -- tests/note_api.test.js",
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
+    "test-users": "cross-env NODE_ENV=test node --test --test-concurrency=1 -- tests/user_api.test.js",
+    "test-notes": "cross-env NODE_ENV=test node --test --test-concurrency=1 -- tests/note_api.test.js",
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
     "lint": "eslint .",

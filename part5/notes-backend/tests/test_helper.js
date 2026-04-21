@@ -3,25 +3,11 @@ const Note = require('../models/note')
 const User = require('../models/user')
 
 const initialNotes = [
-  {
-    content: 'HTML is easy',
-    important: false,
-    user: '69d7c118b283b9b0b6c4c9ae',
-  },
-  {
-    content: 'Browser can only execute JavaScript',
-    important: true,
-    user: '69d7c118b283b9b0b6c4c9ae',
-  },
+  { content: 'HTML is easy', important: false, user: '69d7c118b283b9b0b6c4c9ae' },
+  { content: 'Browser can only execute JavaScript', important: true, user: '69d7c118b283b9b0b6c4c9ae' },
 ]
 
-const initialUsers = [
-  {
-    username: 'dominik',
-    name: 'Dominik',
-    passwordHash: 'cookies',
-  },
-]
+const initialUsers = [{ username: 'dominik', name: 'Dominik', passwordHash: 'cookies' }]
 
 const initializeDb = async () => {
   await User.deleteMany({})
@@ -48,7 +34,7 @@ const nonExistingId = async () => {
 }
 
 const notesInDb = async () => {
-  const notes = await Note.find({})
+  const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
   return notes.map(note => note.toJSON())
 }
 

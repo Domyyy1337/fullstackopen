@@ -8,6 +8,7 @@ import LoginForm from './LoginForm.jsx'
 import FormItem from './FormItem.jsx'
 import Togglable from './Togglable.jsx'
 import { Link } from 'react-router-dom'
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 const NoteList = ({ notes }) => {
   const [showAll, setShowAll] = useState(true)
@@ -46,6 +47,7 @@ const NoteList = ({ notes }) => {
     )
   }
 
+  notes.forEach(n => console.log(n.user))
   return (
     <div>
       <h1>Notes</h1>
@@ -53,17 +55,28 @@ const NoteList = ({ notes }) => {
 
       {!user && loginForm()}
 
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'important' : 'all'}</button>
-      </div>
-      <ul>
-        {notesToShow.map(note => (
-          <Link key={note.id} to={`/notes/${note.id}`}>
-            {note.content}
-          </Link>
-        ))}
-      </ul>
-      <Footer />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>content</TableCell>
+              <TableCell>user</TableCell>
+              <TableCell>important</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {notes.map(note => (
+              <TableRow key={note.id}>
+                <TableCell>
+                  <Link to={`/notes/${note.id}`}>{note.content}</Link>
+                </TableCell>
+                <TableCell>{note.user.username}</TableCell>
+                <TableCell>{note.important ? 'yes' : ''}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

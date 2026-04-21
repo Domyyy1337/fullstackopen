@@ -3,8 +3,6 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const Note = require('../models/note')
-const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -65,11 +63,7 @@ describe('when there is initially some notes saved', () => {
     test('succeeds with valid data', async () => {
       const user = await helper.getUser()
 
-      const newNote = {
-        content: 'async/await simplifies making async calls',
-        important: true,
-        user: user.id,
-      }
+      const newNote = { content: 'async/await simplifies making async calls', important: true, user: user.id }
 
       await api
         .post('/api/notes')
@@ -86,9 +80,7 @@ describe('when there is initially some notes saved', () => {
     })
 
     test('fails with status code 400 if data invalid', async () => {
-      const newNote = {
-        important: true,
-      }
+      const newNote = { important: true }
 
       await api.post('/api/notes').set('Authorization', `Bearer ${token}`).send(newNote).expect(400)
 
