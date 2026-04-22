@@ -5,7 +5,7 @@ const Form = ({ onSubmit, children, title, buttonText }) => {
     <div>
       <Stack sx={{ alignItems: 'center' }}>
         <h2>{title}</h2>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} style={{ minWidth: '30vw' }}>
           <Stack spacing={4}>
             {children}
             <Button type='submit' variant='contained'>
