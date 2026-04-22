@@ -1,10 +1,12 @@
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 
 const Form = ({ onSubmit, children, title, buttonText }) => {
   return (
     <div>
       <Stack sx={{ alignItems: 'center' }}>
-        <h2>{title}</h2>
+        <Typography variant='h2' style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+          {title}
+        </Typography>
         <form onSubmit={onSubmit} style={{ minWidth: '30vw' }}>
           <Stack spacing={4}>
             {children}
