@@ -130,7 +130,9 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      <Notification notification={notification} />
+      <div style={{ minHeight: 50, marginTop: 10, marginBottom: 10 }}>
+        <Notification notification={notification} />
+      </div>
 
       <Routes>
         <Route path='/' element={<Blogs blogs={blogs} user={user} like={like} remove={remove} />} />

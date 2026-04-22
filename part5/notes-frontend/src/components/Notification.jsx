@@ -5,11 +5,7 @@ const Notification = ({ notification }) => {
 
   console.log(notification)
 
-  return (
-    <Alert style={{ marginTop: 10, marginBottom: 10 }} severity={notification.type}>
-      {notification.text}
-    </Alert>
-  )
+  return <Alert severity={notification.type}>{notification.text}</Alert>
 }
 
 export default Notification
