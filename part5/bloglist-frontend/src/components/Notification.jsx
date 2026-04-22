@@ -1,20 +1,13 @@
-const Notification = ({ message, error = false }) => {
-  /**
-   * @type {import("react").CSSProperties}
-   */
-  const style = {
-    color: error ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: '1.2rem',
-    borderStyle: 'solid',
-    borderRadius: '5px',
-    padding: '0.5rem',
-    marginBottom: '0.5rem',
-  }
+import { Alert } from '@mui/material'
 
-  if (message === null) return null
+const Notification = ({ notification }) => {
+  if (!notification) return null
 
-  return <div style={style}>{message}</div>
+  return (
+    <Alert style={{ marginTop: 10, marginBottom: 10 }} severity={notification.type}>
+      {notification.text}
+    </Alert>
+  )
 }
 
 export default Notification
