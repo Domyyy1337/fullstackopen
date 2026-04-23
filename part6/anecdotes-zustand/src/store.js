@@ -17,21 +17,30 @@ const asObject = anecdote => ({
   votes: 0,
 })
 
-const useAnecdoteStore = create(() => ({
+const useAnecdoteStore = create(set => ({
   anecdotes: anecdotesAtStart.map(asObject),
-  actions: {},
+  filter: '',
+  actions: {
+    setFilter(value) {
+      set(() => ({ filter: value }))
+    },
+    vote(id) {
+      set(s => ({ anecdotes: sortByVotes(s.anecdotes.map(a => (a.id === id ? { ...a, votes: a.votes + 1 } : a))) }))
+    },
+    add(a) {
+      set(s => ({ anecdotes: s.anecdotes.concat(asObject(a)) }))
+    },
+  },
 }))
 
 const sortByVotes = anecdotes => anecdotes.toSorted((a, b) => b.votes - a.votes)
 
-export function vote(id) {
-  useAnecdoteStore.setState(s => ({
-    anecdotes: sortByVotes(s.anecdotes.map(a => (a.id === id ? { ...a, votes: a.votes + 1 } : a))),
-  }))
+export function useAnecdotes() {
+  const anecdotes = useAnecdoteStore(s => s.anecdotes)
+  const filter = useAnecdoteStore(s => s.filter)
+  return anecdotes.filter(a => a.content.includes(filter))
 }
 
-export function addAnecdote(anecdote) {
-  useAnecdoteStore.setState(s => ({ anecdotes: s.anecdotes.concat(asObject(anecdote)) }))
-}
-
-export const useAnecdotes = () => useAnecdoteStore(state => state.anecdotes)
+// export const useAnecdotes = () => useAnecdoteStore(s => s.anecdotes)
+export const useFilter = () => useAnecdoteStore(s => s.filter)
+export const useAnecdoteActions = () => useAnecdoteStore(s => s.actions)

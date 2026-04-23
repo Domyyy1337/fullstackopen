@@ -1,8 +1,9 @@
 import React from 'react'
-import { useAnecdotes, vote } from '../store'
+import { useAnecdoteActions, useAnecdotes } from '../store'
 
 export default function AnecdoteList() {
   const anecdotes = useAnecdotes()
+  const { vote } = useAnecdoteActions()
 
   return (
     <div>

@@ -1,11 +1,13 @@
 import React from 'react'
-import { addAnecdote } from '../store'
+import { useAnecdoteActions } from '../store'
 
 export default function AnecdoteForm() {
+  const { add } = useAnecdoteActions()
+
   function handleAddAnecdote(e) {
     e.preventDefault()
     const anecdote = e.target.anecdote.value
-    addAnecdote(anecdote)
+    add(anecdote)
     e.target.reset()
   }
 
