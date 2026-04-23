@@ -23,9 +23,14 @@ const useAnecdoteStore = create(() => ({
 }))
 
 export function vote(id) {
-  useAnecdoteStore.setState(s => ({
-    anecdotes: s.anecdotes.map(a => (a.id === id ? { ...a, votes: a.votes + 1 } : a)),
-  }))
+  const newVotes = useAnecdoteStore
+    .getState()
+    .anecdotes.map(a => (a.id === id ? { ...a, votes: a.votes + 1 } : a))
+    .toSorted((a, b) => b.votes - a.votes)
+
+  console.log(newVotes)
+
+  useAnecdoteStore.setState(() => ({ anecdotes: newVotes }))
 }
 
 export function addAnecdote(anecdote) {
