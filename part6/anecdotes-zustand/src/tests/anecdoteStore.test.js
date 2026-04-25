@@ -32,7 +32,7 @@ describe('useAnecdoteActions', () => {
 })
 
 describe('useAnecdotes', () => {
-  it('sorts anecdotes by votes', async () => {
+  it('sorts anecdotes by votes', () => {
     const mockAnecdotes = [
       { id: 1, votes: 2, content: 'A' },
       { id: 2, votes: 3, content: 'B' },
@@ -43,5 +43,20 @@ describe('useAnecdotes', () => {
     const { result } = renderHook(() => useAnecdotes())
 
     expect(result.current).toStrictEqual(mockAnecdotes.toSorted((a, b) => b.votes - a.votes))
+  })
+
+  it('properly filters list of anecdotes', () => {
+    const mockAnecdotes = [
+      { id: 1, votes: 2, content: 'Hello' },
+      { id: 2, votes: 3, content: 'Maddening' },
+      { id: 3, votes: 1, content: 'My Guy' },
+    ]
+    useAnecdoteStore.setState({ anecdotes: mockAnecdotes, filter: 'e' })
+
+    const { result } = renderHook(() => useAnecdotes())
+
+    expect(result.current).toContainEqual(mockAnecdotes[0])
+    expect(result.current).toContainEqual(mockAnecdotes[1])
+    expect(result.current).not.toContainEqual(mockAnecdotes[2])
   })
 })
