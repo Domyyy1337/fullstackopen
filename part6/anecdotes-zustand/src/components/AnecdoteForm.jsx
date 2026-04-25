@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAnecdoteActions } from '../store'
+import { useAnecdoteActions } from '../store/anecdoteStore'
 
 export default function AnecdoteForm() {
   const { add } = useAnecdoteActions()

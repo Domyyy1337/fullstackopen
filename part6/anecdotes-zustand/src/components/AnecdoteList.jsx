@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAnecdoteActions, useAnecdotes } from '../store'
+import { useAnecdoteActions, useAnecdotes } from '../store/anecdoteStore'
 
 export default function AnecdoteList() {
   const anecdotes = useAnecdotes()
