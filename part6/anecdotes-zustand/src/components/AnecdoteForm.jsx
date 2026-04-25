@@ -1,13 +1,16 @@
 import React from 'react'
 import { useAnecdoteActions } from '../store/anecdoteStore'
+import { useNotificationActions } from '../store/notificationStore'
 
 export default function AnecdoteForm() {
   const { add } = useAnecdoteActions()
+  const { setNotification } = useNotificationActions()
 
   function handleAddAnecdote(e) {
     e.preventDefault()
     const anecdote = e.target.anecdote.value
     add(anecdote)
+    setNotification(`'${anecdote}' created`)
     e.target.reset()
   }
 
