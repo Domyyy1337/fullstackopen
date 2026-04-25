@@ -9,7 +9,7 @@ export default function VisibilityFilter() {
       all
       <input type='radio' name='filter' onChange={() => setFilter('important')} />
       important
-      <input type='radio' name='filter' onChange={() => setFilter('notimportant')} />
+      <input type='radio' name='filter' onChange={() => setFilter('nonimportant')} />
       not important
     </div>
   )

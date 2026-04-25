@@ -41,8 +41,10 @@ export function useNotes() {
   const notes = useNoteStore(s => s.notes)
   const filter = useNoteStore(s => s.filter)
   if (filter === 'important') return notes.filter(n => n.important)
-  if (filter === 'notimportant') return notes.filter(n => !n.important)
+  if (filter === 'nonimportant') return notes.filter(n => !n.important)
   return notes
 }
 export const useFilter = () => useNoteStore(state => state.filter)
 export const useNoteActions = () => useNoteStore(state => state.actions)
+
+export default useNoteStore
