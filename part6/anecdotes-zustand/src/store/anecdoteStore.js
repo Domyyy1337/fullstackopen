@@ -22,6 +22,15 @@ const useAnecdoteStore = create((set, get) => ({
       const newAnecdote = await anecdoteService.create(content)
       set(s => ({ anecdotes: s.anecdotes.concat(newAnecdote) }))
     },
+    async removeUnpopular() {
+      const unpopular = get().anecdotes.filter(a => a.votes === 0)
+
+      for (const anecdote of unpopular) {
+        await anecdoteService.remove(anecdote.id)
+      }
+      set(s => ({ anecdotes: s.anecdotes.filter(a => a.votes > 0) }))
+      return unpopular.length
+    },
   },
 }))
 
