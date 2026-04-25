@@ -8,6 +8,22 @@ async function getAll() {
   return await response.json()
 }
 
+async function create(content) {
+  const anecdote = {
+    content: content,
+    id: crypto.randomUUID(),
+    votes: 0,
+  }
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(anecdote),
+    headers: { 'Content-Type': 'application/json' },
+  }
+  const response = await fetch(baseUrl, options)
 
+  if (!response.ok) throw new Error('Failed creating anecdote')
 
-export default { getAll }
+  return await response.json()
+}
+
+export default { getAll, create }
