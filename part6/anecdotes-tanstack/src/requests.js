@@ -18,3 +18,15 @@ export async function addAnecdote(anecdote) {
 
   return await response.json()
 }
+
+export async function updateAnecdote(anecdote) {
+  const options = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(anecdote),
+  }
+
+  const response = await fetch(`${baseUrl}/${anecdote.id}`, options)
+
+  return await response.json()
+}
