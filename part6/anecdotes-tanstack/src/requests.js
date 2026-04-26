@@ -6,3 +6,15 @@ export async function getAnecdotes() {
 
   return await response.json()
 }
+
+export async function addAnecdote(anecdote) {
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(anecdote),
+  }
+
+  const response = await fetch(baseUrl, options)
+
+  return await response.json()
+}
