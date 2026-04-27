@@ -1,4 +1,4 @@
-import useNotification from '../hooks/useNotification'
+import useNotification from '../hooks/useNotify'
 
 const Notification = () => {
   const style = {

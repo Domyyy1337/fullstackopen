@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAnecdotes } from '../hooks/useAnecdotes'
-import useNotification from '../hooks/useNotification'
+import useNotification from '../hooks/useNotify'
 
 export default function AnecdoteList() {
   const { anecdotes, vote } = useAnecdotes()

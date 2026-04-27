@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { addAnecdote, getAnecdotes, updateAnecdote } from '../requests'
+import useNotification from './useNotify'
 
 export function useAnecdotes() {
   const queryClient = useQueryClient()
+  const { setNotification } = useNotification()
 
   const result = useQuery({
     queryKey: ['anecdotes'],
@@ -19,6 +21,7 @@ export function useAnecdotes() {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
     },
+    onError: () => setNotification('too short anecdote, must be at least length of 5'),
   })
 
   const updateAnecdoteMutation = useMutation({
