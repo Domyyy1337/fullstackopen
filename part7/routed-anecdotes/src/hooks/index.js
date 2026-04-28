@@ -4,6 +4,9 @@ export function useField(type = 'text') {
   const [value, setValue] = useState('')
 
   const onChange = e => setValue(e.target.value)
+  const reset = () => setValue('')
 
-  return { type, value, onChange }
+  const props = { type, value, onChange }
+
+  return { props, reset }
 }
