@@ -24,5 +24,10 @@ export function useAnecdotes() {
     setAnecdotes(anecdotes.concat(newAnecdote))
   }
 
-  return { anecdotes, addAnecdote }
+  async function deleteAnecdote(anecdote) {
+    await anecdoteService.remove(anecdote.id)
+    setAnecdotes(anecdotes.filter(a => a.id !== anecdote.id))
+  }
+
+  return { anecdotes, addAnecdote, deleteAnecdote }
 }
