@@ -1,0 +1,11 @@
+// Add valid blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlcmN1bGVzIiwiaWQiOiI2OWRhMzQzNDdiMTVlOTFkMTRiNzkwNmEiLCJpYXQiOjE3NzYyNzUwMTJ9.YlKUSyf-6C6WQhsPUF6Ybz9OZLPpUAVh43JjDYH59tY
+
+{
+  "title": "Test Blog with ID",
+  "author": "Domyyy",
+  "url": "https://google.com",
+  "likes": 10
+}

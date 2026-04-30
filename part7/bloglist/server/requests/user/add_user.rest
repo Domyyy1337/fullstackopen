@@ -1,0 +1,32 @@
+// add valid user
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "hercules",
+  "name": "Hercules",
+  "password": "security"
+}
+
+###
+
+// add user without password
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "hercules",
+  "name": "Hercules"
+}
+
+###
+
+// add valid user
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "hercules2",
+  "name": "Hercules",
+  "password": "security"
+}

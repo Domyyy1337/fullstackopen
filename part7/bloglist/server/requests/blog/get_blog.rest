@@ -1,0 +1,2 @@
+// Get valid blog
+GET http://localhost:3003/api/blogs/69d3680ebdbb716e3ac8bfd7
