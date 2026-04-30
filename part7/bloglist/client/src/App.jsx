@@ -12,6 +12,7 @@ import { Link, Route, Routes, useMatch, useNavigate } from 'react-router-dom'
 import Blog from './components/Blog'
 import { Container, Toolbar, Button, AppBar, Typography, Box } from '@mui/material'
 import ErrorBoundary from './components/ErrorBoundary'
+import NotFound from './components/NotFound'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -141,6 +142,7 @@ const App = () => {
           <Route path='/login' element={<LoginForm login={login} />} />
           <Route path='/blogs/:id' element={<Blog blog={blog} like={like} remove={remove} user={user} />} />
           <Route path='/create' element={<BlogForm create={createBlog} />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </ErrorBoundary>
     </Container>
