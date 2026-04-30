@@ -11,6 +11,7 @@ import LoginForm from './components/LoginForm'
 import { Link, Route, Routes, useMatch, useNavigate } from 'react-router-dom'
 import Blog from './components/Blog'
 import { Container, Toolbar, Button, AppBar, Typography, Box } from '@mui/material'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -134,12 +135,14 @@ const App = () => {
         <Notification notification={notification} />
       </div>
 
-      <Routes>
-        <Route path='/' element={<Blogs blogs={blogs} user={user} like={like} remove={remove} />} />
-        <Route path='/login' element={<LoginForm login={login} />} />
-        <Route path='/blogs/:id' element={<Blog blog={blog} like={like} remove={remove} user={user} />} />
-        <Route path='/create' element={<BlogForm create={createBlog} />} />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path='/' element={<Blogs blogs={blogs} user={user} like={like} remove={remove} />} />
+          <Route path='/login' element={<LoginForm login={login} />} />
+          <Route path='/blogs/:id' element={<Blog blog={blog} like={like} remove={remove} user={user} />} />
+          <Route path='/create' element={<BlogForm create={createBlog} />} />
+        </Routes>
+      </ErrorBoundary>
     </Container>
   )
 }
