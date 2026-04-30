@@ -24,7 +24,7 @@ const LoginForm = ({ login }) => {
       <Form title='Log in to application' onSubmit={handleLogin} buttonText='login'>
         <TextField label='username' value={username} onChange={e => setUsername(e.target.value)} variant='standard' />
         <TextField
-          label='password:'
+          label='password'
           type='password'
           value={password}
           onChange={e => setPassword(e.target.value)}

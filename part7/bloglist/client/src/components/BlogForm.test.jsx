@@ -13,9 +13,9 @@ describe('<BlogForm />', () => {
       </Router>,
     )
 
-    const titleInput = screen.getByLabelText('title:')
-    const authorInput = screen.getByLabelText('author:')
-    const urlInput = screen.getByLabelText('url:')
+    const titleInput = screen.getByLabelText('title')
+    const authorInput = screen.getByLabelText('author')
+    const urlInput = screen.getByLabelText('url')
     const submitButton = screen.getByText('create')
 
     const user = userEvent.setup()

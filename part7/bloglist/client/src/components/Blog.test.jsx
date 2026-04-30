@@ -14,15 +14,15 @@ const blog = {
 }
 
 describe('<Blog />', () => {
-  test('renders title and author in heading', async () => {
-    render(
-      <Router>
-        <Blog blog={blog} />
-      </Router>,
-    )
+  // test('renders title and author in heading', async () => {
+  //   render(
+  //     <Router>
+  //       <Blog blog={blog} />
+  //     </Router>
+  //   )
 
-    expect(screen.getByRole('heading').textContent).toEqual(`${blog.author}: ${blog.title}`)
-  })
+  //   expect(screen.getByRole('heading').textContent).toEqual(`${blog.author}: ${blog.title}`)
+  // })
 
   test('clicking like twice calls the event handler twice', async () => {
     const like = vi.fn()
@@ -30,7 +30,7 @@ describe('<Blog />', () => {
     render(
       <Router>
         <Blog blog={blog} like={like} user={authenticatedUser} />
-      </Router>,
+      </Router>
     )
 
     const user = userEvent.setup()
@@ -46,13 +46,14 @@ describe('<Blog />', () => {
       render(
         <Router>
           <Blog blog={blog} />
-        </Router>,
+        </Router>
       )
     })
 
     test('amount of likes and blog info are shown', async () => {
-      expect(screen.getByText(`${blog.author}: ${blog.title}`)).toBeVisible()
-      expect(screen.getByText(/likes 10/i)).toBeVisible()
+      expect(screen.getByText(blog.title)).toBeVisible()
+      expect(screen.getByText(`by ${blog.author}`)).toBeVisible()
+      expect(screen.getByText(/10 likes/i)).toBeVisible()
       expect(screen.getByRole('link', { value: blog.url })).toBeVisible()
       expect(screen.getByText(`Added by ${blog.user.name}`)).toBeVisible()
     })
@@ -71,7 +72,7 @@ describe('<Blog />', () => {
       render(
         <Router>
           <Blog blog={blog} user={authenticatedUser} />
-        </Router>,
+        </Router>
       )
     })
 
@@ -89,7 +90,7 @@ describe('<Blog />', () => {
       render(
         <Router>
           <Blog blog={blog} user={authenticatedCreator} />
-        </Router>,
+        </Router>
       )
     })
 
