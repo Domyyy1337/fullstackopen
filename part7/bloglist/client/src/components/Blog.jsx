@@ -1,15 +1,28 @@
-import { Box, Button, Card, Link, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  Link,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import useBlog from '../hooks/useBlog'
 import { useParams } from 'react-router-dom'
 import { useNotificationActions } from '../stores/notificationStore'
 import CircleIcon from '@mui/icons-material/Circle'
+import useField from '../hooks/useField'
 
 const Blog = ({ user }) => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { blog, likeBlog, isPending, isError, removeBlog } = useBlog(id)
+  const { blog, likeBlog, isPending, isError, removeBlog, addComment } = useBlog(id)
   const { setNotification } = useNotificationActions()
+  const comment = useField()
 
   if (isPending) return <p>loading blog...</p>
   if (isError) return <p>an error occurred while loading the blog</p>
@@ -19,11 +32,17 @@ const Blog = ({ user }) => {
    */
   // const blogStyle = { paddingTop: 10, paddingLeft: 2, marginBottom: 5 }
 
-  const handleRemove = () => {
+  function handleRemove() {
     if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) return
     removeBlog(blog)
     navigate('/')
     setNotification({ text: 'Blog successfully removed!', type: 'success' })
+  }
+
+  function handleAddComment() {
+    addComment(comment.props.value)
+    comment.reset()
+    setNotification({ text: 'Comment added', type: 'success' })
   }
 
   return (
@@ -55,16 +74,24 @@ const Blog = ({ user }) => {
           {blog.comments.length === 0 ? (
             <Typography variant='body1'>No comments yet</Typography>
           ) : (
-            <List>
-              {blog.comments.map(comment => (
-                <ListItem>
-                  <ListItemIcon>
-                    <CircleIcon />
-                  </ListItemIcon>
-                  <ListItemText>{comment.text}</ListItemText>
-                </ListItem>
-              ))}
-            </List>
+            <Box>
+              <Box sx={{ display: 'flex', gap: '2rem' }}>
+                <TextField label='add a comment' variant='outlined' {...comment.props}></TextField>
+                <Button variant='contained' onClick={handleAddComment}>
+                  Add Comment
+                </Button>
+              </Box>
+              <List>
+                {blog.comments.map(comment => (
+                  <ListItem>
+                    <ListItemIcon>
+                      <CircleIcon />
+                    </ListItemIcon>
+                    <ListItemText>{comment.text}</ListItemText>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           )}
         </Box>
       </Box>
