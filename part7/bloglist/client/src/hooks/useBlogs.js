@@ -12,12 +12,9 @@ export default function useBlogs() {
     mutationFn: blogService.create,
   })
 
-
-
   return {
-    blogs: result.data,
+    blogs: result.data?.sort((a, b) => b.likes - a.likes),
     isPending: result.isPending,
     addBlog: blog => newBlogMutation.mutate(blog),
-
   }
 }

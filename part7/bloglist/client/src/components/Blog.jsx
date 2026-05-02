@@ -1,8 +1,11 @@
 import { Box, Button, Card, Link, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import useBlog from '../hooks/useBlog'
+import { useParams } from 'react-router-dom'
 
-const Blog = ({ id, user }) => {
+const Blog = ({ user }) => {
+  const { id } = useParams()
+
   const navigate = useNavigate()
 
   const { blog, likeBlog, isPending, isError, removeBlog } = useBlog(id)

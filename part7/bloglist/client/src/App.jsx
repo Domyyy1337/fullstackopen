@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import blogService from './services/blogs'
 import Blogs from './components/Blogs'
 import FormItem from './components/FormItem'
@@ -8,29 +8,19 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
-import { Link, Route, Routes, useMatch, useNavigate } from 'react-router-dom'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import Blog from './components/Blog'
 import { Container, Toolbar, Button, AppBar, Typography, Box } from '@mui/material'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './components/NotFound'
 import { useNotificationActions } from './stores/notificationStore'
-import useBlogs from './hooks/useBlogs'
+import { useUser, useUserActions } from './stores/userStore'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(() => {
-    const savedUser = window.localStorage.getItem('savedBlogsUser')
-    return savedUser ? JSON.parse(savedUser) : null
-  })
+  const user = useUser()
+  const { setUser, logout } = useUserActions()
   const { setNotification } = useNotificationActions()
-  const { likeBlog } = useBlogs()
-
   const navigate = useNavigate()
-  const match = useMatch('/blogs/:id')
-
-  useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
-  }, [])
 
   useEffect(() => {
     if (!user) return
@@ -38,9 +28,8 @@ const App = () => {
   }, [user])
 
   const handleLogout = async () => {
-    window.localStorage.clear()
+    logout()
     navigate('/')
-    setUser(null)
     blogService.setToken(null)
   }
 
@@ -50,6 +39,8 @@ const App = () => {
 
       window.localStorage.setItem('savedBlogsUser', JSON.stringify(user))
       blogService.setToken(user.token)
+      console.log(user)
+
       setUser(user)
       setNotification({ text: `successfully logged in as ${user.username}`, type: 'success' })
       return true
@@ -59,31 +50,6 @@ const App = () => {
       return false
     }
   }
-
-  const createBlog = async (title, author, url) => {
-    try {
-      const returnedBlog = await blogService.create({ title, author, url })
-      setBlogs(blogs.concat(returnedBlog))
-      setNotification({ text: `a new blog ${title} by ${author} added`, type: 'success' })
-      return true
-    } catch (error) {
-      console.error(error?.response?.data?.error)
-      setNotification({ text: error?.response?.data?.error, type: 'error' })
-      return false
-    }
-  }
-
-  const remove = async blog => {
-    try {
-      await blogService.remove(blog.id)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
-    } catch (error) {
-      console.error(error?.response?.data?.error)
-      setNotification({ text: error?.response?.data?.error, type: 'error' })
-    }
-  }
-
-  const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
 
   const buttonStyle = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
 
@@ -122,10 +88,10 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
-          <Route path='/' element={<Blogs user={user} remove={remove} />} />
+          <Route path='/' element={<Blogs user={user} />} />
           <Route path='/login' element={<LoginForm login={login} />} />
-          <Route path='/blogs/:id' element={<Blog id={blog?.id} user={user} />} />
-          <Route path='/create' element={<BlogForm create={createBlog} />} />
+          <Route path='/blogs/:id' element={<Blog user={user} />} />
+          <Route path='/create' element={<BlogForm />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </ErrorBoundary>

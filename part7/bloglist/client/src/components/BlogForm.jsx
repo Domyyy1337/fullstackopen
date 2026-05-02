@@ -3,23 +3,23 @@ import FormItem from './FormItem'
 import Form from './Form'
 import { useNavigate } from 'react-router-dom'
 import { Container, TextField } from '@mui/material'
+import useBlogs from '../hooks/useBlogs'
 
-const BlogForm = ({ create }) => {
+export default function BlogForm() {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const { addBlog } = useBlogs()
 
   const navigate = useNavigate()
 
   const handleCreate = async event => {
     event.preventDefault()
-    const successful = await create(title, author, url)
-    if (successful) {
-      navigate('/')
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    }
+    await addBlog({ title, author, url })
+    navigate('/')
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
@@ -32,5 +32,3 @@ const BlogForm = ({ create }) => {
     </Container>
   )
 }
-
-export default BlogForm
