@@ -8,4 +8,10 @@ async function getAll() {
   return response.data
 }
 
-export default { getAll }
+async function get(id) {
+  const request = axios.get(`${baseUrl}/${id}`)
+  const response = await request
+  return response.data
+}
+
+export default { getAll, get }

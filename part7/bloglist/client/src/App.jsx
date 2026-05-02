@@ -11,6 +11,7 @@ import NotFound from './components/NotFound'
 import { useUser, useUserActions } from './stores/userStore'
 import { useNotificationActions } from './stores/notificationStore'
 import Users from './components/Users'
+import User from './components/User'
 
 const App = () => {
   const user = useUser()
@@ -67,6 +68,7 @@ const App = () => {
           <Route path='/' element={<Blogs user={user} />} />
           <Route path='/login' element={<LoginForm />} />
           <Route path='/users' element={<Users />} />
+          <Route path='/users/:id' element={<User />} />
           <Route path='/blogs/:id' element={<Blog user={user} />} />
           <Route path='/create' element={<BlogForm />} />
           <Route path='*' element={<NotFound />} />

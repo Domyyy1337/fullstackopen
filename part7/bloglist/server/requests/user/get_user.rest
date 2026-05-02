@@ -1,5 +1,10 @@
+// Get all
+GET http://localhost:3003/api/users
+
+###
+
 // Get user with valid ID
-GET http://localhost:3003/api/users/69da27fafa55b19c2ca87482
+GET http://localhost:3003/api/users/69da34347b15e91d14b7906a
 
 ###
 

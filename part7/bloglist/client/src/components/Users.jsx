@@ -22,8 +22,8 @@ export default function Users() {
         </TableHead>
         <TableBody>
           {users.map(user => (
-            <TableRow key={user.id} onClick={() => navigate(`/users/${user.id}`)}>
-              <TableCell>{user.name}</TableCell>
+            <TableRow key={user.id}>
+              <TableCell onClick={() => navigate(`/users/${user.id}`)}>{user.name}</TableCell>
               <TableCell>{user.username}</TableCell>
               <TableCell>{user.blogs ? user.blogs.length : 0}</TableCell>
             </TableRow>
