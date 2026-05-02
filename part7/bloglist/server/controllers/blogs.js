@@ -3,6 +3,7 @@ const Blog = require('../models/blog')
 const config = require('../utils/config')
 const { expressjwt: jwt } = require('express-jwt')
 const middleware = require('../utils/middleware')
+const Comment = require('../models/comment')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -25,7 +26,9 @@ blogsRouter.post('/', jwt(config.JWT_CONFIG), middleware.userExtractor, async (r
 })
 
 blogsRouter.get('/:id', async (req, res) => {
-  const blog = await Blog.findById(req.params.id).populate('user', { username: 1, name: 1 })
+  const blog = await Blog.findById(req.params.id)
+    .populate('user', { username: 1, name: 1 })
+    .populate('comments', { text: 1 })
 
   if (blog) {
     res.json(blog)
@@ -64,6 +67,20 @@ blogsRouter.put('/:id', async (req, res) => {
   const updatedBlog = await blog.save()
 
   res.json(updatedBlog)
+})
+
+blogsRouter.post('/:id/comments', async (req, res) => {
+  const { text } = req.body
+
+  const blog = await Blog.findById(req.params.id)
+  const comment = new Comment({ text, blog: blog._id })
+
+  blog.comments = blog.comments.concat(comment._id)
+
+  await comment.save()
+  await blog.save()
+
+  res.status(201).json(comment)
 })
 
 module.exports = blogsRouter

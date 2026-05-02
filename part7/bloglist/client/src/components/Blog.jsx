@@ -1,8 +1,9 @@
-import { Box, Button, Card, Link, Typography } from '@mui/material'
+import { Box, Button, Card, Link, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import useBlog from '../hooks/useBlog'
 import { useParams } from 'react-router-dom'
 import { useNotificationActions } from '../stores/notificationStore'
+import CircleIcon from '@mui/icons-material/Circle'
 
 const Blog = ({ user }) => {
   const { id } = useParams()
@@ -27,7 +28,7 @@ const Blog = ({ user }) => {
 
   return (
     <Card data-testid='blog' sx={{ margin: '2rem', padding: '1rem' }}>
-      <Typography variant='caption' sx={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+      <Typography variant='caption' sx={{ marginBottom: '1rem' }}>
         {blog.title}
       </Typography>
       <Typography variant='body1' sx={{ marginBottom: '1rem' }}>
@@ -48,6 +49,23 @@ const Blog = ({ user }) => {
               remove
             </Button>
           ) : null}
+        </Box>
+        <Box sx={{ marginTop: '2rem' }}>
+          <Typography variant='h3'>Comments</Typography>
+          {blog.comments.length === 0 ? (
+            <Typography variant='body1'>No comments yet</Typography>
+          ) : (
+            <List>
+              {blog.comments.map(comment => (
+                <ListItem>
+                  <ListItemIcon>
+                    <CircleIcon />
+                  </ListItemIcon>
+                  <ListItemText>{comment.text}</ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          )}
         </Box>
       </Box>
     </Card>

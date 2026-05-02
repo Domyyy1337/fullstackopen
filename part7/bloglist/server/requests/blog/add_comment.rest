@@ -1,0 +1,15 @@
+// Get all Blogs
+GET http://localhost:3003/api/blogs
+
+###
+
+// Get the specific blog
+GET http://localhost:3003/api/blogs/69f5f27609fa93102d3b01bd
+
+###
+POST http://localhost:3003/api/blogs/69f5f27609fa93102d3b01bd/comments
+Content-Type: application/json
+
+{
+  "text": "this is a comment"
+}
