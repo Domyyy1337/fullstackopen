@@ -1,14 +1,13 @@
-import { useState } from 'react'
 import Form from './Form'
-import FormItem from './FormItem'
 import { useNavigate } from 'react-router-dom'
 import { Button, Container, Stack, TextField } from '@mui/material'
 import { useNotificationActions } from '../stores/notificationStore'
 import { useUserActions } from '../stores/userStore'
+import useField from '../hooks/useField'
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField()
+  const password = useField('password')
   const navigate = useNavigate()
   const { setNotification } = useNotificationActions()
   const { login } = useUserActions()
@@ -16,11 +15,9 @@ const LoginForm = () => {
   const handleLogin = async event => {
     event.preventDefault()
     try {
-      const user = await login(username, password)
+      const user = await login(username.props.value, password.props.value)
       setNotification({ text: `successfully logged in as ${user.username}`, type: 'success' })
       navigate('/')
-      setUsername('')
-      setPassword('')
     } catch (error) {
       console.error(error?.response?.data?.error)
       setNotification({ text: error?.response?.data?.error, type: 'error' })
@@ -30,14 +27,8 @@ const LoginForm = () => {
   return (
     <Container>
       <Form title='Log in to application' onSubmit={handleLogin} buttonText='login'>
-        <TextField label='username' value={username} onChange={e => setUsername(e.target.value)} variant='standard' />
-        <TextField
-          label='password'
-          type='password'
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          variant='standard'
-        />
+        <TextField label='username' variant='standard' {...username.props} />
+        <TextField label='password' variant='standard' {...password.props} />
       </Form>
     </Container>
   )

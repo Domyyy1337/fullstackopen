@@ -1,14 +1,14 @@
 import { create } from 'zustand'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import { getUser, saveUser, removeUser } from '../services/persistentUser'
 
 const useUserStore = create(set => ({
   user: (() => {
-    const savedUser = window.localStorage.getItem('savedBlogsUser')
+    const savedUser = getUser()
     if (savedUser) {
-      const parsedUser = JSON.parse(savedUser)
-      blogService.setToken(parsedUser.token)
-      return parsedUser
+      blogService.setToken(savedUser.token)
+      return savedUser
     }
     return null
   })(),
@@ -17,13 +17,13 @@ const useUserStore = create(set => ({
       set({ user })
     },
     logout() {
-      window.localStorage.clear()
+      removeUser()
       set({ user: null })
       blogService.setToken(null)
     },
     async login(username, password) {
       const loginUser = await loginService.login({ username, password })
-      window.localStorage.setItem('savedBlogsUser', JSON.stringify(loginUser))
+      saveUser(loginUser)
       set({ user: loginUser })
       blogService.setToken(loginUser.token)
       return loginUser

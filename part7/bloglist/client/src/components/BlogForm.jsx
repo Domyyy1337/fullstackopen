@@ -1,33 +1,29 @@
-import { useState } from 'react'
-import FormItem from './FormItem'
 import Form from './Form'
 import { useNavigate } from 'react-router-dom'
 import { Container, TextField } from '@mui/material'
 import useBlogs from '../hooks/useBlogs'
+import useField from '../hooks/useField'
 
 export default function BlogForm() {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField()
+  const author = useField()
+  const url = useField()
   const { addBlog } = useBlogs()
 
   const navigate = useNavigate()
 
   const handleCreate = async event => {
     event.preventDefault()
-    await addBlog({ title, author, url })
+    await addBlog({ title: title.props.value, author, url })
     navigate('/')
-    setTitle('')
-    setAuthor('')
-    setUrl('')
   }
 
   return (
     <Container>
       <Form onSubmit={handleCreate} buttonText='create' title='create new blog'>
-        <TextField label='title' value={title} onChange={e => setTitle(e.target.value)} />
-        <TextField label='author' value={author} onChange={e => setAuthor(e.target.value)} />
-        <TextField label='url' value={url} onChange={e => setUrl(e.target.value)} />
+        <TextField label='title' {...title.props} />
+        <TextField label='author' {...author.props} />
+        <TextField label='url' {...author.props} />
       </Form>
     </Container>
   )
