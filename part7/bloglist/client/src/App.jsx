@@ -10,6 +10,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './components/NotFound'
 import { useUser, useUserActions } from './stores/userStore'
 import { useNotificationActions } from './stores/notificationStore'
+import Users from './components/Users'
 
 const App = () => {
   const user = useUser()
@@ -35,6 +36,9 @@ const App = () => {
           <Box>
             <Button color='inherit' component={Link} to='/' sx={buttonStyle}>
               blogs
+            </Button>
+            <Button color='inherit' component={Link} to='/users' sx={buttonStyle}>
+              users
             </Button>
             {user ? (
               <Button color='inherit' component={Link} to='/create' sx={buttonStyle}>
@@ -62,6 +66,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Blogs user={user} />} />
           <Route path='/login' element={<LoginForm />} />
+          <Route path='/users' element={<Users />} />
           <Route path='/blogs/:id' element={<Blog user={user} />} />
           <Route path='/create' element={<BlogForm />} />
           <Route path='*' element={<NotFound />} />
