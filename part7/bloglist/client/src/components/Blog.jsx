@@ -1,19 +1,23 @@
 import { Box, Button, Card, Link, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import useBlog from '../hooks/useBlog'
 
-const Blog = ({ blog, like, remove, user }) => {
+const Blog = ({ id, user }) => {
   const navigate = useNavigate()
 
-  if (!blog) return null
+  const { blog, likeBlog, isPending, isError, removeBlog } = useBlog(id)
+
+  if (isPending) return <p>loading blog...</p>
+  if (isError) return <p>an error occurred while loading the blog</p>
 
   /**
    * @type {import("react").CSSProperties}
    */
   // const blogStyle = { paddingTop: 10, paddingLeft: 2, marginBottom: 5 }
 
-  const removeBlog = () => {
+  const handleRemove = () => {
     if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) return
-    remove(blog)
+    removeBlog(blog)
     navigate('/')
   }
 
@@ -31,12 +35,12 @@ const Blog = ({ blog, like, remove, user }) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <Typography sx={{ fontWeight: 500 }}>{blog.likes} likes</Typography>
           {user ? (
-            <Button onClick={() => like(blog)} variant='outlined' color='success'>
+            <Button onClick={() => likeBlog(blog)} variant='outlined' color='success'>
               like
             </Button>
           ) : null}
           {user && user.username === blog.user.username ? (
-            <Button onClick={removeBlog} variant='outlined' color='error'>
+            <Button onClick={handleRemove} variant='outlined' color='error'>
               remove
             </Button>
           ) : null}

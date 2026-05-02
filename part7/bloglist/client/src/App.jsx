@@ -13,6 +13,8 @@ import Blog from './components/Blog'
 import { Container, Toolbar, Button, AppBar, Typography, Box } from '@mui/material'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './components/NotFound'
+import { useNotificationActions } from './stores/notificationStore'
+import useBlogs from './hooks/useBlogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,7 +22,8 @@ const App = () => {
     const savedUser = window.localStorage.getItem('savedBlogsUser')
     return savedUser ? JSON.parse(savedUser) : null
   })
-  const [notification, setNotification] = useState(null)
+  const { setNotification } = useNotificationActions()
+  const { likeBlog } = useBlogs()
 
   const navigate = useNavigate()
   const match = useMatch('/blogs/:id')
@@ -49,12 +52,10 @@ const App = () => {
       blogService.setToken(user.token)
       setUser(user)
       setNotification({ text: `successfully logged in as ${user.username}`, type: 'success' })
-      setTimeout(() => setNotification(null), 5000)
       return true
     } catch (error) {
       console.error(error?.response?.data?.error)
       setNotification({ text: error?.response?.data?.error, type: 'error' })
-      setTimeout(() => setNotification(null), 5000)
       return false
     }
   }
@@ -64,28 +65,12 @@ const App = () => {
       const returnedBlog = await blogService.create({ title, author, url })
       setBlogs(blogs.concat(returnedBlog))
       setNotification({ text: `a new blog ${title} by ${author} added`, type: 'success' })
-      setTimeout(() => setNotification(null), 5000)
       return true
     } catch (error) {
       console.error(error?.response?.data?.error)
       setNotification({ text: error?.response?.data?.error, type: 'error' })
-      setTimeout(() => setNotification(null), 5000)
       return false
     }
-  }
-
-  const like = async blog => {
-    try {
-      const newBlog = { ...blog, likes: blog.likes + 1 }
-      await blogService.update(blog.id, newBlog)
-      const newBlogs = blogs.map(b => (b.id === blog.id ? newBlog : b))
-      setBlogs(newBlogs.sort((a, b) => b.likes - a.likes))
-      setNotification({ text: `You liked ${blog.title} by ${blog.author}`, type: 'success' })
-    } catch (error) {
-      console.error(error?.response?.data?.error)
-      setNotification({ text: error?.response?.data?.error, type: 'error' })
-    }
-    setTimeout(() => setNotification(null), 5000)
   }
 
   const remove = async blog => {
@@ -96,7 +81,6 @@ const App = () => {
       console.error(error?.response?.data?.error)
       setNotification({ text: error?.response?.data?.error, type: 'error' })
     }
-    setTimeout(() => setNotification(null), 5000)
   }
 
   const blog = match ? blogs.find(blog => blog.id === match.params.id) : null
@@ -133,14 +117,14 @@ const App = () => {
       </AppBar>
 
       <div style={{ minHeight: 50, marginTop: 10, marginBottom: 10 }}>
-        <Notification notification={notification} />
+        <Notification />
       </div>
 
       <ErrorBoundary>
         <Routes>
-          <Route path='/' element={<Blogs blogs={blogs} user={user} like={like} remove={remove} />} />
+          <Route path='/' element={<Blogs user={user} remove={remove} />} />
           <Route path='/login' element={<LoginForm login={login} />} />
-          <Route path='/blogs/:id' element={<Blog blog={blog} like={like} remove={remove} user={user} />} />
+          <Route path='/blogs/:id' element={<Blog id={blog?.id} user={user} />} />
           <Route path='/create' element={<BlogForm create={createBlog} />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
