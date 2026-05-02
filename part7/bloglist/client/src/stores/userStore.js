@@ -1,10 +1,16 @@
 import { create } from 'zustand'
 import loginService from '../services/login'
+import blogService from '../services/blogs'
 
 const useUserStore = create(set => ({
   user: (() => {
     const savedUser = window.localStorage.getItem('savedBlogsUser')
-    return savedUser ? savedUser : null
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser)
+      blogService.setToken(parsedUser.token)
+      return parsedUser
+    }
+    return null
   })(),
   actions: {
     setUser(user) {
@@ -13,12 +19,14 @@ const useUserStore = create(set => ({
     logout() {
       window.localStorage.clear()
       set({ user: null })
+      blogService.setToken(null)
     },
     async login(username, password) {
       const loginUser = await loginService.login({ username, password })
-      if (!loginUser) throw new Error(`Could not login as ${username}`)
       window.localStorage.setItem('savedBlogsUser', JSON.stringify(loginUser))
       set({ user: loginUser })
+      blogService.setToken(loginUser.token)
+      return loginUser
     },
   },
 }))

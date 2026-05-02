@@ -2,13 +2,13 @@ import { Box, Button, Card, Link, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import useBlog from '../hooks/useBlog'
 import { useParams } from 'react-router-dom'
+import { useNotificationActions } from '../stores/notificationStore'
 
 const Blog = ({ user }) => {
   const { id } = useParams()
-
   const navigate = useNavigate()
-
   const { blog, likeBlog, isPending, isError, removeBlog } = useBlog(id)
+  const { setNotification } = useNotificationActions()
 
   if (isPending) return <p>loading blog...</p>
   if (isError) return <p>an error occurred while loading the blog</p>
@@ -22,6 +22,7 @@ const Blog = ({ user }) => {
     if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) return
     removeBlog(blog)
     navigate('/')
+    setNotification({ text: 'Blog successfully removed!', type: 'success' })
   }
 
   return (

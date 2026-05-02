@@ -3,19 +3,27 @@ import Form from './Form'
 import FormItem from './FormItem'
 import { useNavigate } from 'react-router-dom'
 import { Button, Container, Stack, TextField } from '@mui/material'
+import { useNotificationActions } from '../stores/notificationStore'
+import { useUserActions } from '../stores/userStore'
 
-const LoginForm = ({ login }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
+  const { setNotification } = useNotificationActions()
+  const { login } = useUserActions()
 
   const handleLogin = async event => {
     event.preventDefault()
-    const successful = await login(username, password)
-    if (successful) {
+    try {
+      const user = await login(username, password)
+      setNotification({ text: `successfully logged in as ${user.username}`, type: 'success' })
       navigate('/')
       setUsername('')
       setPassword('')
+    } catch (error) {
+      console.error(error?.response?.data?.error)
+      setNotification({ text: error?.response?.data?.error, type: 'error' })
     }
   }
 

@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
-    "checkJs": false
-  },
-  "include": ["src", "testSetup.js", "vite.config.js"]
-}
