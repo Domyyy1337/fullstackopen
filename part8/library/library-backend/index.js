@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { GraphQLError } = require('graphql')
 
 let authors = [
   {
@@ -114,6 +115,7 @@ const typeDefs = /* GraphQL */ `
 
   type Mutation {
     addBook(title: String!, author: String!, published: Int!, genres: [String!]!): Book
+    editAuthor(name: String!, setBornTo: Int!): Author
   }
 `
 
@@ -145,6 +147,14 @@ const resolvers = {
 
       books = books.concat(book)
       return book
+    },
+    editAuthor: (root, { name, setBornTo }) => {
+      const author = authors.find(a => a.name === name)
+      if (!author) return null
+
+      author.born = setBornTo
+
+      return author
     },
   },
 }
