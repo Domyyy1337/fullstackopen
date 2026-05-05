@@ -1,8 +1,12 @@
+const connectToDatabase = require('./db')
 const startServer = require('./server')
 
-startServer()
+const MONGODB_URI = process.env.MONGODB_URI
+const PORT = process.env.port || 4000
 
+async function main() {
+  await connectToDatabase(MONGODB_URI)
+  startServer(PORT)
+}
 
-
-
-
+main()
