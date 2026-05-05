@@ -1,3 +1,6 @@
+const Author = require('./models/author')
+const Book = require('./models/book')
+
 let authors = [
   {
     name: 'Robert Martin',
@@ -78,38 +81,45 @@ let books = [
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, { author, genre }) => {
-      let filteredBooks = books
-      if (author) filteredBooks = filteredBooks.filter(b => b.author === author)
-      if (genre) filteredBooks = filteredBooks.filter(b => b.genres.includes(genre))
+    bookCount: () => Book.collection.countDocuments(),
+    authorCount: () => Author.collection.countDocuments(),
+    allBooks: async (root, { author, genre }) => {
+      const books = await Book.find({
+        // author: { $regex: author, $options: "i" },
+        genres: genre ? genre : /.*/,
+      })
 
-      return filteredBooks
+      return books
     },
-    allAuthors: () => authors,
+    allAuthors: async () => await Author.find({}),
   },
   Book: {
     author: book => book.author,
   },
   Author: {
-    bookCount: author => books.filter(b => b.author === author.name).length,
+    bookCount: author => Book.collection.countDocuments({ author: author._id }),
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: crypto.randomUUID() }
-      const author = authors.find(a => a.name === args.name)
+    addBook: async (root, args) => {
+      let author = await Author.findOne({ name: args.author })
+      if (!author) {
+        author = new Author({ name: args.author })
+      }
 
-      if (!author) authors = authors.concat({ name: args.author, id: crypto.randomUUID() })
+      const book = new Book({ ...args, author: author._id })
 
-      books = books.concat(book)
-      return book
+      await book.save()
+      await author.save()
+
+      return book.populate('author')
     },
-    editAuthor: (root, { name, setBornTo }) => {
-      const author = authors.find(a => a.name === name)
+    editAuthor: async (root, { name, setBornTo }) => {
+      const author = await Author.findOne({ name })
       if (!author) return null
 
       author.born = setBornTo
+
+      await author.save()
 
       return author
     },
