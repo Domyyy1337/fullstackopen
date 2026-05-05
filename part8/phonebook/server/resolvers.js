@@ -1,0 +1,74 @@
+const { Query } = require('mongoose')
+const Person = require('./models/person')
+const { GraphQLError } = require('graphql/error')
+const User = require('./models/user')
+const jwt = require('jsonwebtoken')
+
+const resolvers = {
+  Query: {
+    personCount: async () => Person.collection.countDocuments(),
+    allPersons: async (root, args) => {
+      if (!args.phone) return Person.find({})
+
+      return Person.find({ phone: { $exists: args.phone === 'YES' } })
+    },
+    findPerson: async (root, args) => Person.findOne({ name: args.name }),
+    me: (root, args, context) => context.currentUser,
+  },
+  Person: {
+    address: ({ street, city }) => ({ street, city }),
+  },
+
+  Mutation: {
+    addPerson: async (root, args) => {
+      const nameExists = await Person.exists({ name: args.name })
+
+      if (nameExists)
+        throw new GraphQLError(`Name must be unique: ${args.name}`, {
+          extensions: { code: 'BAS_USER_INPUT', invalidArgs: args.name },
+        })
+
+      const person = new Person({ ...args })
+
+      return person.save().catch(error => {
+        throw new GraphQLError(`Saving person failed: ${error.message}`, {
+          extensions: { code: 'BAD_USER_INPUT', invalidArgs: args.name, error },
+        })
+      })
+    },
+    editNumber: async (root, args) => {
+      const person = await Person.findOne({ name: args.name })
+
+      if (!person) return null
+
+      person.phone = args.phone
+
+      return person.save().catch(error => {
+        throw new GraphQLError(`Saving number failed: ${error.message}`, {
+          extensions: { code: 'BAD_USER_INPUT', invalidArgs: args.name, error },
+        })
+      })
+    },
+    createUser: async (root, args) => {
+      const user = new User({ username: args.username })
+
+      return user.save().catch(error => {
+        throw new GraphQLError(`Creating the user failed: ${error.message}`, {
+          extensions: { code: 'BAD_USER_INPUT', invalidArgs: args.username, error },
+        })
+      })
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if (!user || args.password !== 'secret')
+        throw new GraphQLError('wrong credentials', { extensions: { code: 'BAD_USER_INPUT' } })
+
+      const userForToken = { username: user.username, id: user._id }
+
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    },
+  },
+}
+
+module.exports = resolvers
