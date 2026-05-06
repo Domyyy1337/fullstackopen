@@ -1,6 +1,12 @@
 const Author = require('./models/author')
 const Book = require('./models/book')
 const { GraphQLError } = require('graphql/error')
+const User = require('./models/user')
+const jwt = require('jsonwebtoken')
+
+async function userExists(username) {
+  return await User.exists({ username })
+}
 
 const resolvers = {
   Query: {
@@ -64,6 +70,29 @@ const resolvers = {
       })
 
       return author
+    },
+    createUser: async (root, args) => {
+      if (await userExists(args.username))
+        throw new GraphQLError(`User with this username already exists`, {
+          extensions: { code: 'BAD_USER_INPUT', invalidArgs: args.username },
+        })
+
+      const user = new User({ ...args })
+
+      await user.save()
+
+      return user
+    },
+    login: async (root, { username, password }) => {
+      if (!userExists(username) || password !== 'secret')
+        throw new GraphQLError(`invalid credentials`, {
+          extensions: { code: 'BAD_USER_INPUT' },
+        })
+
+      const user = await User.find({ username })
+      const token = jwt.sign({ username, id: user._id }, process.env.JWT_SECRET)
+
+      return { value: token }
     },
   },
 }
