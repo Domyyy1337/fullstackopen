@@ -1,5 +1,6 @@
 const Author = require('./models/author')
 const Book = require('./models/book')
+const { GraphQLError } = require('graphql/error')
 
 const resolvers = {
   Query: {
@@ -27,10 +28,26 @@ const resolvers = {
         author = new Author({ name: args.author })
       }
 
+      const bookExists = await Book.exists({ ...args, author: author._id })
+
+      if (bookExists)
+        throw new GraphQLError(`This book already exists`, {
+          extensions: { code: 'BAD_USER_INPUT' },
+        })
+
       const book = new Book({ ...args, author: author._id })
 
-      await book.save()
-      await author.save()
+      await book.save().catch(error => {
+        throw new GraphQLError(`Saving book failed: ${error.message}`, {
+          extensions: { code: 'BAD_USER_INPUT', error },
+        })
+      })
+
+      await author.save().catch(error => {
+        throw new GraphQLError(`Saving author failed: ${error.message}`, {
+          extensions: { code: 'BAD_USER_INPUT', error },
+        })
+      })
 
       return book.populate('author')
     },
@@ -40,7 +57,11 @@ const resolvers = {
 
       author.born = setBornTo
 
-      await author.save()
+      await author.save().catch(error => {
+        throw new GraphQLError(`Saving author failed: ${error.message}`, {
+          extensions: { code: 'BAD_USER_INPUT', error, invalidArgs: setBornTo },
+        })
+      })
 
       return author
     },
