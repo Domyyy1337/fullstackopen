@@ -3,6 +3,7 @@ const Book = require('./models/book')
 const { GraphQLError } = require('graphql/error')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
+const { signToken } = require('./utils/jwt')
 
 async function userExists(username) {
   return await User.exists({ username })
@@ -20,6 +21,7 @@ const resolvers = {
       return books
     },
     allAuthors: async () => await Author.find({}),
+    me: async (root, args, { currentUser }) => currentUser,
   },
   Book: {
     author: book => book.author,
@@ -28,7 +30,9 @@ const resolvers = {
     bookCount: author => Book.collection.countDocuments({ author: author._id }),
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, { currentUser }) => {
+      if (!currentUser) throw new GraphQLError('not authenticated', { extensions: { code: 'UNAUTHENTICATED' } })
+
       let author = await Author.findOne({ name: args.author })
       if (!author) {
         author = new Author({ name: args.author })
@@ -57,7 +61,9 @@ const resolvers = {
 
       return book.populate('author')
     },
-    editAuthor: async (root, { name, setBornTo }) => {
+    editAuthor: async (root, { name, setBornTo }, { currentUser }) => {
+      if (!currentUser) throw new GraphQLError('not authenticated', { extensions: { code: 'UNAUTHENTICATED' } })
+
       const author = await Author.findOne({ name })
       if (!author) return null
 
@@ -89,10 +95,9 @@ const resolvers = {
           extensions: { code: 'BAD_USER_INPUT' },
         })
 
-      const user = await User.find({ username })
-      const token = jwt.sign({ username, id: user._id }, process.env.JWT_SECRET)
+      const user = await User.findOne({ username })
 
-      return { value: token }
+      return { value: signToken(user) }
     },
   },
 }

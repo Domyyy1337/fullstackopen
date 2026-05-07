@@ -2,15 +2,20 @@ const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
+const { getUserFromAutHeader } = require('./utils/jwt')
 
 function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
   })
-  
+
   startStandaloneServer(server, {
     listen: { port: 4000 },
+    context: async ({ req }) => {
+      const currentUser = await getUserFromAutHeader(req.headers.authorization)
+      return { currentUser }
+    },
   }).then(({ url }) => {
     console.log(`Server ready at ${url}`)
   })
