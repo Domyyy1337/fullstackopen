@@ -16,7 +16,7 @@ const resolvers = {
     allBooks: async (root, { author, genre }) => {
       const books = await Book.find({
         ...(genre && { genres: genre }),
-      })
+      }).populate('author')
 
       return books
     },
@@ -98,6 +98,14 @@ const resolvers = {
       const user = await User.findOne({ username })
 
       return { value: signToken(user) }
+    },
+    _resetDatabase: async () => {
+      if (process.env.NODE_ENV !== 'test') throw new GraphQLError('_resetDatabase is only available in test mode')
+
+      await Author.deleteMany({})
+      await Book.deleteMany({})
+      await User.deleteMany({})
+      return true
     },
   },
 }
