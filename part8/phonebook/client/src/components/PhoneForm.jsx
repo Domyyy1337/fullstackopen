@@ -12,9 +12,15 @@ export default function PhoneForm({ setError }) {
     },
   })
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault()
-    changeNumber({ variables: { name, phone } })
+
+    try {
+      await changeNumber({ variables: { name, phone } })
+    } catch (error) {
+      console.error(error.message)
+      setError(error.message)
+    }
 
     setName('')
     setPhone('')

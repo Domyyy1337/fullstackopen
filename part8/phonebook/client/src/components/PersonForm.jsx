@@ -9,13 +9,16 @@ export default function PersonForm({ setError }) {
   const [city, setCity] = useState('')
 
   const [createPerson] = useMutation(CREATE_PERSON, {
-    refetchQueries: [{ query: ALL_PERSONS }],
     onError: error => setError(error.message),
+    update: (cache, response) =>
+      cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => ({
+        allPersons: allPersons.concat(response.data.addPerson),
+      })),
   })
 
   function submit(e) {
     e.preventDefault()
-    createPerson({ variables: { name, phone, street, city } })
+    createPerson({ variables: { name, phone: phone.length > 0 ? phone : undefined, street, city } })
     setName('')
     setPhone('')
     setStreet('')

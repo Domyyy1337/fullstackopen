@@ -6,7 +6,7 @@ const typeDefs = /* GraphQL */ `
 
   type Person {
     name: String!
-    phone: String!
+    phone: String
     address: Address!
     id: ID!
   }
@@ -34,7 +34,7 @@ const typeDefs = /* GraphQL */ `
   }
 
   type Mutation {
-    addPerson(name: String!, phone: String!, street: String!, city: String!): Person
+    addPerson(name: String!, phone: String, street: String!, city: String!): Person
     editNumber(name: String!, phone: String!): Person
     createUser(username: String!): User
     login(username: String!, password: String!): Token
