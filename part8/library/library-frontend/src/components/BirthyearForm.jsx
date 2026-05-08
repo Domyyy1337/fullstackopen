@@ -3,13 +3,15 @@ import { useState } from 'react'
 import { ALL_AUTHOR_NAMES, ALL_AUTHORS, EDIT_BIRTHYEAR } from '../queries'
 import useField from '../hooks/useField'
 
-export default function BirthyearForm() {
+export default function BirthyearForm({show}) {
   const authors = useQuery(ALL_AUTHOR_NAMES)
   const names = authors.data.allAuthors.map(a => a.name)
   const [editBirthYear] = useMutation(EDIT_BIRTHYEAR, { refetchQueries: [{ query: ALL_AUTHORS }] })
 
   const born = useField('number')
   const [selectedAuthor, setSelectedAuthor] = useState(names ? names[0] : null)
+
+  if (!show) return null
 
   function submit(e) {
     e.preventDefault()
