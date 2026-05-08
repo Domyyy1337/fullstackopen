@@ -27,7 +27,9 @@ const Books = props => {
       <h2>books</h2>
       <div>
         {genres.map(g => (
-          <button onClick={() => setGenre(g)}>{g}</button>
+          <button onClick={() => setGenre(g)} key={g}>
+            {g}
+          </button>
         ))}
         <button onClick={() => setGenre(null)}>all genres</button>
       </div>

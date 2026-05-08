@@ -4,6 +4,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
 import { useApolloClient } from '@apollo/client/react'
+import Recommend from './components/Recommend'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -22,15 +23,14 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         {token && <button onClick={() => setPage('add')}>add book</button>}
+        {token && <button onClick={() => setPage('recommend')}>recommend</button>}
         {!token ? <button onClick={() => setPage('login')}>login</button> : <button onClick={logout}>logout</button>}
       </div>
 
       <Authors show={page === 'authors'} token={token} />
-
       <Books show={page === 'books'} />
-
       <NewBook show={page === 'add'} />
-
+      <Recommend show={page === 'recommend'} />
       <Login show={page === 'login'} setToken={setToken} />
     </div>
   )
