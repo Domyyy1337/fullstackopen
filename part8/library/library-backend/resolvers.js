@@ -21,6 +21,7 @@ const resolvers = {
       return books
     },
     allAuthors: async () => await Author.find({}),
+    allGenres: async () => await Book.collection.distinct("genres"),
     me: async (root, args, { currentUser }) => currentUser,
   },
   Book: {
