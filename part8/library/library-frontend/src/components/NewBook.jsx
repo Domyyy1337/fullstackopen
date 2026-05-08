@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client/react'
 import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from '../queries'
+import useField from '../hooks/useField'
 
 const NewBook = props => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [published, setPublished] = useState('')
-  const [genre, setGenre] = useState('')
+  const title = useField()
+  const author = useField()
+  const published = useField('number')
+  const genre = useField()
   const [genres, setGenres] = useState([])
 
   const [createBook] = useMutation(CREATE_BOOK, {
@@ -20,37 +21,41 @@ const NewBook = props => {
   const submit = async event => {
     event.preventDefault()
 
-    createBook({ variables: { title, author, published: Number(published), genres } })
+    createBook({
+      variables: {
+        title: title.props.value,
+        author: author.props.value,
+        published: Number(published.props.value),
+        genres,
+      },
+    })
 
-    setTitle('')
-    setPublished('')
-    setAuthor('')
+    title.reset()
+    author.reset()
+    published.reset()
+    genre.reset()
     setGenres([])
-    setGenre('')
   }
 
   const addGenre = () => {
-    setGenres(genres.concat(genre))
-    setGenre('')
+    setGenres(genres.concat(genre.props.value))
+    genre.reset()
   }
 
   return (
     <div>
       <form onSubmit={submit}>
         <div>
-          title
-          <input value={title} onChange={({ target }) => setTitle(target.value)} />
+          title <input {...title.props} />
         </div>
         <div>
-          author
-          <input value={author} onChange={({ target }) => setAuthor(target.value)} />
+          author <input {...author.props} />
         </div>
         <div>
-          published
-          <input type='number' value={published} onChange={({ target }) => setPublished(target.value)} />
+          published <input {...published.props} />
         </div>
         <div>
-          <input value={genre} onChange={({ target }) => setGenre(target.value)} />
+          <input {...genre.props} />
           <button onClick={addGenre} type='button'>
             add genre
           </button>

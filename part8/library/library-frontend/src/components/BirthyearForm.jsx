@@ -1,19 +1,20 @@
 import { useMutation, useQuery } from '@apollo/client/react'
 import { useState } from 'react'
 import { ALL_AUTHOR_NAMES, ALL_AUTHORS, EDIT_BIRTHYEAR } from '../queries'
+import useField from '../hooks/useField'
 
 export default function BirthyearForm() {
   const authors = useQuery(ALL_AUTHOR_NAMES)
   const names = authors.data.allAuthors.map(a => a.name)
   const [editBirthYear] = useMutation(EDIT_BIRTHYEAR, { refetchQueries: [{ query: ALL_AUTHORS }] })
 
-  const [born, setBorn] = useState('')
+  const born = useField('number')
   const [selectedAuthor, setSelectedAuthor] = useState(names ? names[0] : null)
 
   function submit(e) {
     e.preventDefault()
-    editBirthYear({ variables: { name: selectedAuthor, setBornTo: Number(born) } })
-    setBorn('')
+    editBirthYear({ variables: { name: selectedAuthor, setBornTo: Number(born.props.value) } })
+    born.reset()
   }
 
   return (
@@ -28,7 +29,7 @@ export default function BirthyearForm() {
           ))}
         </select>
         <div>
-          born <input value={born} onChange={e => setBorn(e.target.value)} />
+          born <input {...born.props} />
         </div>
         <button type='submit'>update author</button>
       </form>
