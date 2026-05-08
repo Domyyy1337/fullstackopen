@@ -22,7 +22,9 @@ export default function BirthyearForm() {
       <form onSubmit={submit}>
         <select value={selectedAuthor} onChange={e => setSelectedAuthor(e.target.value)}>
           {names.map(n => (
-            <option value={n}>{n}</option>
+            <option value={n} key={n}>
+              {n}
+            </option>
           ))}
         </select>
         <div>
