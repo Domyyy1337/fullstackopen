@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 async function signToken(user) {
-  console.log(user)
-
   return jwt.sign({ username: user.username, id: user._id }, process.env.JWT_SECRET)
 }
 

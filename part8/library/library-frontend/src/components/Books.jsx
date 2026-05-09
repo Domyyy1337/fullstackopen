@@ -28,7 +28,7 @@ const Books = props => {
         <button onClick={() => setGenre(null)}>all genres</button>
       </div>
       <p>
-        in <b>{genre ? genre : 'all genres'}</b>
+        in genre <b>{genre ? genre : 'all genres'}</b>
       </p>
       <table>
         <tbody>

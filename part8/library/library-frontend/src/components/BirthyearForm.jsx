@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { ALL_AUTHOR_NAMES, ALL_AUTHORS, EDIT_BIRTHYEAR } from '../queries'
 import useField from '../hooks/useField'
 
-export default function BirthyearForm({show}) {
+export default function BirthyearForm({ show }) {
   const authors = useQuery(ALL_AUTHOR_NAMES)
   const names = authors.data.allAuthors.map(a => a.name)
   const [editBirthYear] = useMutation(EDIT_BIRTHYEAR, { refetchQueries: [{ query: ALL_AUTHORS }] })
@@ -23,16 +23,16 @@ export default function BirthyearForm({show}) {
     <div>
       <h2>Set birthyear</h2>
       <form onSubmit={submit}>
-        <select value={selectedAuthor} onChange={e => setSelectedAuthor(e.target.value)}>
+        <select value={selectedAuthor} onChange={e => setSelectedAuthor(e.target.value)} name='name'>
           {names.map(n => (
             <option value={n} key={n}>
               {n}
             </option>
           ))}
         </select>
-        <div>
+        <label>
           born <input {...born.props} />
-        </div>
+        </label>
         <button type='submit'>update author</button>
       </form>
     </div>

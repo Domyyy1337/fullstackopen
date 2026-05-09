@@ -1,11 +1,17 @@
 import { useMutation } from '@apollo/client/react'
 import useField from '../hooks/useField'
-import { LOGIN } from '../queries'
+import { LOGIN, ME } from '../queries'
 
 export default function Login({ show, setToken, setPage, setError }) {
   const username = useField()
   const password = useField('password')
   const [login] = useMutation(LOGIN, {
+    update: (cache, response) => {
+      cache.writeQuery({
+        query: ME,
+        data: { me: response.data.login.user },
+      })
+    },
     onCompleted: data => {
       const token = data.login.value
       setToken(token)

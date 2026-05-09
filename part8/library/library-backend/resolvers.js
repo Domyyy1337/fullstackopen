@@ -21,7 +21,7 @@ const resolvers = {
       return books
     },
     allAuthors: async () => await Author.find({}),
-    allGenres: async () => await Book.collection.distinct("genres"),
+    allGenres: async () => await Book.collection.distinct('genres'),
     me: async (root, args, { currentUser }) => currentUser,
   },
   Book: {
@@ -48,14 +48,14 @@ const resolvers = {
 
       const book = new Book({ ...args, author: author._id })
 
-      await book.save().catch(error => {
-        throw new GraphQLError(`Saving book failed: ${error.message}`, {
+      await author.save().catch(error => {
+        throw new GraphQLError(`Saving author failed: ${error.message}`, {
           extensions: { code: 'BAD_USER_INPUT', error },
         })
       })
 
-      await author.save().catch(error => {
-        throw new GraphQLError(`Saving author failed: ${error.message}`, {
+      await book.save().catch(error => {
+        throw new GraphQLError(`Saving book failed: ${error.message}`, {
           extensions: { code: 'BAD_USER_INPUT', error },
         })
       })
