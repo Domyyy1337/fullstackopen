@@ -32,13 +32,15 @@ export function calculateBmi(height: number, weight: number): string {
   throw new Error('invalid BMI')
 }
 
-try {
-  const { height, weight } = parseArguments(process.argv)
-  console.log(calculateBmi(height, weight))
-} catch (error: unknown) {
-  let errorMessage = 'Something bad happened'
-  if (error instanceof Error) {
-    errorMessage += 'Error: ' + error.message
+if (process.argv[1] === import.meta.filename) {
+  try {
+    const { height, weight } = parseArguments(process.argv)
+    console.log(calculateBmi(height, weight))
+  } catch (error: unknown) {
+    let errorMessage = 'Something bad happened'
+    if (error instanceof Error) {
+      errorMessage += 'Error: ' + error.message
+    }
+    console.log(errorMessage)
   }
-  console.log(errorMessage)
 }

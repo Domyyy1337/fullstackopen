@@ -53,13 +53,15 @@ function describeRating(rating: number): string {
   return 'very poor. Start exercising now.'
 }
 
-try {
-  const { dailyExerciseHours, dailyTargetAmount } = parseArguments(process.argv)
-  console.log(calculateExercises(dailyExerciseHours, dailyTargetAmount))
-} catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
-  if (error instanceof Error) {
-    errorMessage += 'Error: ' + error.message
+if (process.argv[1] === import.meta.filename) {
+  try {
+    const { dailyExerciseHours, dailyTargetAmount } = parseArguments(process.argv)
+    console.log(calculateExercises(dailyExerciseHours, dailyTargetAmount))
+  } catch (error: unknown) {
+    let errorMessage = 'Something bad happened.'
+    if (error instanceof Error) {
+      errorMessage += 'Error: ' + error.message
+    }
+    console.log(errorMessage)
   }
-  console.log(errorMessage)
 }
