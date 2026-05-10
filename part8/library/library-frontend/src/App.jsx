@@ -7,6 +7,7 @@ import { useApolloClient, useSubscription } from '@apollo/client/react'
 import Recommend from './components/Recommend'
 import Notification from './components/Notification'
 import { BOOK_ADDED } from './queries'
+import { addBookToCache } from './utils/apolloCache'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -18,6 +19,7 @@ const App = () => {
     onData: ({ data }) => {
       const addedBook = data.data.bookAdded
       window.alert(`${addedBook.title} added`)
+      addBookToCache(client.cache, addedBook)
     },
   })
 
@@ -46,7 +48,7 @@ const App = () => {
 
       <Authors show={page === 'authors'} token={token} />
       <Books show={page === 'books'} />
-      <NewBook show={page === 'add'} />
+      <NewBook show={page === 'add'} setError={notify} />
       <Recommend show={page === 'recommend'} />
       <Login show={page === 'login'} setToken={setToken} setPage={setPage} setError={notify} />
     </div>

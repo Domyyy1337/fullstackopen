@@ -6,7 +6,10 @@ const Books = props => {
   const [genre, setGenre] = useState(null)
   const genresResult = useQuery(ALL_GENRES)
   const allGenres = genresResult.data?.allGenres
-  const booksResult = useQuery(ALL_BOOKS, { variables: { genre }, skip: !allGenres })
+  const booksResult = useQuery(ALL_BOOKS, { 
+    variables: genre ? { genre } : undefined, 
+    skip: !allGenres 
+  })
 
   if (!props.show) {
     return null
