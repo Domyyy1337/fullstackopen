@@ -1,16 +1,20 @@
 const { Query } = require('mongoose')
-const Person = require('./models/person')
 const { GraphQLError } = require('graphql/error')
-const User = require('./models/user')
+const { PubSub } = require('graphql-subscriptions')
 const jwt = require('jsonwebtoken')
+
+const Person = require('./models/person')
+const User = require('./models/user')
+
+const pubsub = new PubSub()
 
 const resolvers = {
   Query: {
     personCount: async () => Person.collection.countDocuments(),
     allPersons: async (root, args) => {
-      if (!args.phone) return Person.find({})
+      if (!args.phone) return Person.find({}).populate('friendOf')
 
-      return Person.find({ phone: { $exists: args.phone === 'YES' } })
+      return Person.find({ phone: { $exists: args.phone === 'YES' } }).populate('friendOf')
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
     me: (root, args, context) => context.currentUser,
@@ -41,6 +45,8 @@ const resolvers = {
           extensions: { code: 'BAD_USER_INPUT', invalidArgs: args.name, error },
         })
       }
+
+      pubsub.publish('PERSON_ADDED', { personAdded: person })
 
       return person
     },
@@ -94,6 +100,11 @@ const resolvers = {
       await currentUser.save()
 
       return currentUser
+    },
+  },
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('PERSON_ADDED'),
     },
   },
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client/react'
 import { ALL_PERSONS, CREATE_PERSON } from '../queries'
+import { addPersonToCache } from '../utils/apolloCache'
 
 export default function PersonForm({ setError }) {
   const [name, setName] = useState('')
@@ -10,10 +11,7 @@ export default function PersonForm({ setError }) {
 
   const [createPerson] = useMutation(CREATE_PERSON, {
     onError: error => setError(error.message),
-    update: (cache, response) =>
-      cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => ({
-        allPersons: allPersons.concat(response.data.addPerson),
-      })),
+    update: (cache, response) => addPersonToCache(cache, response.data.addPerson),
   })
 
   function submit(e) {
