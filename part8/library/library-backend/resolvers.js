@@ -6,7 +6,6 @@ const { signToken } = require('./utils/jwt')
 const Book = require('./models/book')
 const User = require('./models/user')
 const { PubSub } = require('graphql-subscriptions')
-const { Subscription } = require('../../phonebook/server/resolvers')
 
 const pubsub = new PubSub()
 
@@ -118,9 +117,9 @@ const resolvers = {
   },
   Subscription: {
     bookAdded: {
-      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED')
-    }
-  }
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED'),
+    },
+  },
 }
 
 module.exports = resolvers
