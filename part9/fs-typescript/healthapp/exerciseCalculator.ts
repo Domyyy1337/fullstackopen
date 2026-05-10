@@ -30,7 +30,7 @@ function parseArguments(args: string[]): ExerciseInput {
 }
 
 export function calculateExercises(dailyExerciseHours: number[], dailyTargetAmount: number): ExerciseResult {
-  const average = dailyExerciseHours.reduce((total, x) => (total += x), 0) / dailyExerciseHours.length
+  const average = dailyExerciseHours.reduce((total, x) => (total + x), 0) / dailyExerciseHours.length
   const success = average >= dailyTargetAmount
   const baseRating = Math.floor((average / dailyTargetAmount) * 3)
   const rating = baseRating > 3 ? 3 : baseRating

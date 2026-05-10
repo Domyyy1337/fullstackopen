@@ -8,7 +8,6 @@
     "module": "nodenext",
     "esModuleInterop": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "types": ["node", "express"]
+    "noEmit": true
   }
 }
