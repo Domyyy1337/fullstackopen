@@ -1,5 +1,24 @@
-function calculateBmi(height: number, weight: number) {
-  const bmi = weight / ((height / 100) ** 2)
+interface BmiInputs {
+  height: number
+  weight: number
+}
+
+function parseArguments(args: string[]): BmiInputs {
+  if (args.length < 4) throw new Error('Not enough arguments')
+  if (args.length > 4) throw new Error('Too many arguments')
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      height: Number(args[2]),
+      weight: Number(args[3]),
+    }
+  }
+
+  throw new Error('Provided values were not numbers!')
+}
+
+export function calculateBmi(height: number, weight: number): string {
+  const bmi = weight / (height / 100) ** 2
 
   if (bmi < 16) return 'Underweight (Severe thinness)'
   if (bmi < 17) return 'Underweight (Moderate thinness)'
@@ -9,6 +28,17 @@ function calculateBmi(height: number, weight: number) {
   if (bmi < 35) return 'Obese (Class I)'
   if (bmi < 40) return 'Obese (Class II)'
   if (bmi >= 40) return 'Obese (Class III)'
+
+  throw new Error('invalid BMI')
 }
 
-console.log(calculateBmi(180, 74))
+try {
+  const { height, weight } = parseArguments(process.argv)
+  console.log(calculateBmi(height, weight))
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened'
+  if (error instanceof Error) {
+    errorMessage += 'Error: ' + error.message
+  }
+  console.log(errorMessage)
+}
