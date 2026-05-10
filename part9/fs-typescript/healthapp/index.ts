@@ -3,7 +3,7 @@ import { calculateBmi } from './bmiCalculator.ts'
 import { calculateExercises } from './exerciseCalculator.ts'
 
 const app = express()
-const PORT = 3003
+const PORT = 3000
 
 app.use(express.json())
 
@@ -13,7 +13,7 @@ app.get('/bmi', (req, res) => {
   const height = Number(req.query.height)
   const weight = Number(req.query.weight)
 
-  if (isNaN(height) || isNaN(weight)) return res.json({ error: 'malformatted parameters' })
+  if (isNaN(height) || isNaN(weight)) return res.status(400).json({ error: 'malformatted parameters' })
 
   return res.json({
     weight,
