@@ -9,6 +9,6 @@
     "module": "nodenext",
     "esModuleInterop": true,
     "allowImportingTsExtensions": true,
-    "types": ["node", "express"]
+    "types": ["node"]
   },
 }

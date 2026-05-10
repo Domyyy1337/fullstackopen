@@ -1,6 +1,6 @@
-type Operation = 'multiply' | 'add' | 'divide'
+export type Operation = 'multiply' | 'add' | 'divide'
 
-function calculator(a: number, b: number, op: Operation): number {
+export function calculator(a: number, b: number, op: Operation): number {
   switch (op) {
     case 'multiply':
       return a * b
@@ -14,12 +14,14 @@ function calculator(a: number, b: number, op: Operation): number {
   }
 }
 
-try {
-  console.log(calculator(1, 5, 'divide'))
-} catch (error: unknown) {
-  let errorMessage = 'Something went wrong: '
-  if (error instanceof Error) {
-    errorMessage += error.message
+if (process.argv[1] === import.meta.filename) {
+  try {
+    console.log(calculator(1, 5, 'divide'))
+  } catch (error: unknown) {
+    let errorMessage = 'Something went wrong: '
+    if (error instanceof Error) {
+      errorMessage += error.message
+    }
+    console.log(errorMessage)
   }
-  console.log(errorMessage)
 }
