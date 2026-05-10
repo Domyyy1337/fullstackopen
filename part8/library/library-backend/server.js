@@ -3,22 +3,53 @@ const { startStandaloneServer } = require('@apollo/server/standalone')
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
 const { getUserFromAutHeader } = require('./utils/jwt')
+const express = require('express')
+const http = require('http')
+const { WebSocketServer } = require('ws')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const { useServer } = require('graphql-ws/use/ws')
+const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer')
+const { expressMiddleware } = require('@as-integrations/express5')
+const cors = require('cors')
 
-function startServer() {
+async function startServer(port) {
+  const app = express()
+  const httpServer = http.createServer(app)
+  const wsServer = new WebSocketServer({ server: httpServer, path: '/' })
+  const schema = makeExecutableSchema({ typeDefs, resolvers })
+  const serverCleanup = useServer({ schema }, wsServer)
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose()
+            },
+          }
+        },
+      },
+    ],
   })
 
-  startStandaloneServer(server, {
-    listen: { port: 4000 },
-    context: async ({ req }) => {
-      const currentUser = await getUserFromAutHeader(req.headers.authorization)
-      return { currentUser }
-    },
-  }).then(({ url }) => {
-    console.log(`Server ready at ${url}`)
-  })
+  await server.start()
+
+  app.use(
+    '/',
+    cors(),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const auth = req.headers.authorization
+        const currentUser = await getUserFromAutHeader(auth)
+        return { currentUser }
+      },
+    })
+  )
+
+  httpServer.listen(port, () => console.log(`Server is now running on http://localhost:${port}`))
 }
 
 module.exports = startServer

@@ -1,9 +1,14 @@
 const Author = require('./models/author')
-const Book = require('./models/book')
 const { GraphQLError } = require('graphql/error')
-const User = require('./models/user')
 const jwt = require('jsonwebtoken')
 const { signToken } = require('./utils/jwt')
+
+const Book = require('./models/book')
+const User = require('./models/user')
+const { PubSub } = require('graphql-subscriptions')
+const { Subscription } = require('../../phonebook/server/resolvers')
+
+const pubsub = new PubSub()
 
 async function userExists(username) {
   return await User.exists({ username })
@@ -60,6 +65,8 @@ const resolvers = {
         })
       })
 
+      pubsub.publish('BOOK_ADDED', { bookAdded: book.populate('author') })
+
       return book.populate('author')
     },
     editAuthor: async (root, { name, setBornTo }, { currentUser }) => {
@@ -109,6 +116,11 @@ const resolvers = {
       return true
     },
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED')
+    }
+  }
 }
 
 module.exports = resolvers
