@@ -6,7 +6,6 @@ export default function Recommend({ show }) {
   const favoriteGenre = userResult.data?.me?.favoriteGenre
   const booksResult = useQuery(ALL_BOOKS, { variables: { genre: favoriteGenre }, skip: !favoriteGenre })
   const matchingBooks = booksResult.data?.allBooks
-  console.log((userResult, booksResult))
 
   if (!show) return null
   if (userResult.loading || booksResult.loading) return <div>loading...</div>
