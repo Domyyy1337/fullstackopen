@@ -12,9 +12,11 @@ function newDiaryParser(req: Request, _res: Response, next: NextFunction) {
 }
 
 function errorHandler(error: unknown, _req: Request, res: Response, next: NextFunction) {
-  if (error instanceof z.ZodError) return res.status(400).send({ error: error.issues })
-
-  return next(error)
+  if (error instanceof z.ZodError) {
+    res.status(400).send({ error: error.issues })
+  } else {
+    next(error)
+  }
 }
 
 export default { newDiaryParser, errorHandler }
