@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import type { Note } from './types'
-import axios from 'axios'
 import noteService from './services/noteService'
 
 function App() {
