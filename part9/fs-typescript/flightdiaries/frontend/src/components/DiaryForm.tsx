@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { type NewDiaryEntry, NewEntrySchema } from '../types'
+import { type NewDiaryEntry, NewEntrySchema, Visibility, Weather } from '../types'
 import z from 'zod'
 
 interface DiaryFormProps {
@@ -8,10 +8,13 @@ interface DiaryFormProps {
 }
 
 export default function DiaryForm({ createDiary, setError }: DiaryFormProps) {
-  const [weather, setWeather] = useState('')
-  const [visibility, setVisibility] = useState('')
+  const [weather, setWeather] = useState<Weather>('sunny')
+  const [visibility, setVisibility] = useState<Visibility>('great')
   const [comment, setComment] = useState('')
   const [date, setDate] = useState('')
+
+  const weatherOptions = Object.values(Weather)
+  const visibilityOptions = Object.values(Visibility)
 
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
@@ -36,8 +39,8 @@ export default function DiaryForm({ createDiary, setError }: DiaryFormProps) {
       setError('Something went wrong.')
     }
 
-    setWeather('')
-    setVisibility('')
+    setWeather('sunny')
+    setVisibility('great')
     setComment('')
     setDate('')
   }
@@ -50,14 +53,26 @@ export default function DiaryForm({ createDiary, setError }: DiaryFormProps) {
           date*: <input type='date' value={date} onChange={e => setDate(e.target.value)} />
         </label>
         <label>
-          weather*: <input value={weather} onChange={e => setWeather(e.target.value)} />
-        </label>
-        <label>
-          visibility*: <input value={visibility} onChange={e => setVisibility(e.target.value)} />
-        </label>
-        <label>
           comment: <input value={comment} onChange={e => setComment(e.target.value)} />
         </label>
+        <fieldset>
+          <legend>visibility*</legend>
+          {visibilityOptions.map(o => (
+            <label key={o}>
+              {o}
+              <input type='radio' name='visibility' onChange={() => setVisibility(o)} checked={visibility === o} />
+            </label>
+          ))}
+        </fieldset>
+        <fieldset>
+          <legend>weather*</legend>
+          {weatherOptions.map(o => (
+            <label key={o}>
+              {o}
+              <input type='radio' name='weather' onChange={() => setWeather(o)} checked={weather === o} />
+            </label>
+          ))}
+        </fieldset>
         <button type='submit'>submit</button>
       </form>
     </div>
