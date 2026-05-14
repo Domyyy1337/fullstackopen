@@ -1,0 +1,9 @@
+.part p {
+  margin: 0;
+}
+
+.partContainer {
+  display: flex;
+  flex-flow: column wrap;
+  gap: 1rem;
+}
