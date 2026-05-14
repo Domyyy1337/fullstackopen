@@ -1,0 +1,13 @@
+{
+  "notes": [
+    {
+      "id": "1",
+      "content": "I am Groot"
+    },
+    {
+      "content": "Hello",
+      "id": "DsOc0RtSH6s"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
