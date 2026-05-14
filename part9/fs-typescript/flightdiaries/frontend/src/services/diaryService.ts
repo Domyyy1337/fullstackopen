@@ -4,13 +4,21 @@ import { type DiaryEntry, type NewDiaryEntry } from '../types'
 const baseUrl = '/api/diaries'
 
 async function getAll() {
-  const response = await axios.get<DiaryEntry[]>(baseUrl)
-  return response.data
+  try {
+    const response = await axios.get<DiaryEntry[]>(baseUrl)
+    return response.data
+  } catch {
+    throw new Error('Failed fetching data')
+  }
 }
 
 async function create(entry: NewDiaryEntry) {
-  const response = await axios.post<DiaryEntry>(baseUrl, entry)
-  return response.data
+  try {
+    const response = await axios.post<DiaryEntry>(baseUrl, entry)
+    return response.data
+  } catch {
+    throw new Error('Failed fetching entry')
+  }
 }
 
 export default { getAll, create }

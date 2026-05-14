@@ -23,13 +23,16 @@
   align-items: center;
 }
 
-h1, h2 {
+h1,
+h2 {
   text-align: center;
 }
 
 form {
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -47,4 +50,12 @@ button:hover {
 
 :root {
   background-color: aliceblue;
+}
+
+.notification {
+  min-height: 50px;
+  color: red;
+  font-weight: 500;
+  font-size: 1.4rem;
+  text-align: center;
 }
