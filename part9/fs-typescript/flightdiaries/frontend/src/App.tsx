@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react'
-import { type Weather, type DiaryEntry, type Visibility } from './types'
-import entryService from './services/diaryService'
+import { type DiaryEntry, type NewDiaryEntry } from './types'
+import diaryService from './services/diaryService'
 import Header from './components/Header'
 import Diaries from './components/Diaries'
+import DiaryForm from './components/DiaryForm'
 
 function App() {
   const [entries, setEntries] = useState<DiaryEntry[] | undefined>(undefined)
-  // const [weather, setWeather] = useState<Weather | undefined>(undefined)
-  // const [visibility, setVisibility] = useState<Visibility | undefined>(undefined)
-  // const [comment, setComment] = useState('')
-  // const [date, setDate] = useState('')
-
   useEffect(() => {
-    entryService.getAll().then(initialEntries => setEntries(initialEntries))
+    diaryService.getAll().then(initialEntries => setEntries(initialEntries))
   }, [])
+
+  function createDiary(newDiaryEntry: NewDiaryEntry) {
+    diaryService.create(newDiaryEntry).then(createdEntry => {
+      setEntries(entries ? entries.concat(createdEntry) : [createdEntry])
+    })
+  }
 
   if (!entries) return <div>loading ...</div>
 
@@ -21,6 +23,7 @@ function App() {
     <div>
       <Header />
       <Diaries diaries={entries} />
+      <DiaryForm createDiary={createDiary} />
     </div>
   )
 }
