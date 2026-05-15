@@ -5,6 +5,10 @@ function getPatients(): Patient[] {
   return patientData
 }
 
+function getPatientById(id: string) {
+  return patientData.find(p => p.id === id)
+}
+
 function getNonSensitivePatients(): NonSensitivePatient[] {
   return patientData.map(({ id, name, dateOfBirth, gender, occupation }) => ({
     id,
@@ -18,6 +22,7 @@ function getNonSensitivePatients(): NonSensitivePatient[] {
 function addPatient(patient: NewPatient): Patient {
   const newPatient: Patient = {
     id: crypto.randomUUID(),
+    entries: [],
     ...patient,
   }
 
@@ -25,4 +30,4 @@ function addPatient(patient: NewPatient): Patient {
   return newPatient
 }
 
-export default { getPatients, getNonSensitivePatients, addPatient }
+export default { getPatients, getNonSensitivePatients, addPatient, getPatientById }
