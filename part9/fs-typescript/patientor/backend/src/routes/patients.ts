@@ -12,10 +12,7 @@ router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
 
 router.get('/:id', (req, res: Response<Patient>) => {
   const { id } = req.params
-  console.log(id)
-
   const patient = patientService.getPatientById(id)
-  console.log(patient)
 
   if (!patient) throw new NotFoundError('No patient with this id')
 
