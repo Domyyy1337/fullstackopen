@@ -41,11 +41,13 @@ export default function PatientDetail() {
       </Container>
       <Container sx={{ marginTop: '2rem' }}>
         <Typography variant='h3'>entries</Typography>
-        {patient.entries.length > 0 ? (
-          patient.entries.map(e => <PatientEntry key={e.id} entry={e} />)
-        ) : (
-          <Typography variant='body1'>There are no entries for this patient yet.</Typography>
-        )}
+        <Container sx={{ display: 'flex', flexFlow: 'column wrap', gap: '1rem' }}>
+          {patient.entries.length > 0 ? (
+            patient.entries.map(e => <PatientEntry key={e.id} entry={e} />)
+          ) : (
+            <Typography variant='body1'>There are no entries for this patient yet.</Typography>
+          )}
+        </Container>
       </Container>
     </Container>
   )
