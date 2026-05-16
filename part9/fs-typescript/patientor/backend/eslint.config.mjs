@@ -23,6 +23,7 @@ export default tseslint.config({
     '@typescript-eslint/restrict-template-expressions': 'off',
     '@typescript-eslint/restrict-plus-operands': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/consistent-type-imports': 'error'
+    '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
   },
 })
