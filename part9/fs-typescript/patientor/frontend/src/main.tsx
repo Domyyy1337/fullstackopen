@@ -6,6 +6,9 @@ const theme = createTheme({
   typography: {
     h2: {
       fontSize: '1.8rem'
+    },
+    h3: {
+      fontSize: '1.5rem'
     }
   }
 })
