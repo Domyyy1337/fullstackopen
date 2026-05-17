@@ -1,15 +1,14 @@
 import { Alert } from '@mui/material'
+import { useNotification } from '../hooks/useNotification'
 
 export interface NotificationType {
   type: 'success' | 'info' | 'warning' | 'error'
   message: string
 }
 
-interface NotificationProps {
-  notification: NotificationType | null
-}
+export default function Notification() {
+  const notification = useNotification()
 
-export default function Notification({ notification }: NotificationProps) {
   if (!notification) return null
 
   return (

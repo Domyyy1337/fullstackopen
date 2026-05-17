@@ -3,18 +3,19 @@ import { useState } from 'react'
 import Notification, { type NotificationType } from '../Notification'
 import patientService from '../../services/patients'
 import { type EntryWithoutId, HealthCheckRating, type Patient } from '../../types'
+import { useSetNotification } from '../../hooks/useNotification'
 
 interface AddEntryFormProps {
   patient: Patient
 }
 
 export default function AddEntryForm({ patient }: AddEntryFormProps) {
-  const [notification, setNotification] = useState<NotificationType | null>(null)
   const [date, setDate] = useState('')
   const [description, setDescription] = useState('')
   const [specialist, setSpecialist] = useState('')
   const [rating, setRating] = useState(0)
   const [diagnosisCodes, setDiagnosisCodes] = useState('')
+  const notify = useSetNotification()
 
   function resetFields() {
     setDate('')
@@ -22,11 +23,6 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
     setSpecialist('')
     setRating(0)
     setDiagnosisCodes('')
-  }
-
-  function notify(notification: NotificationType) {
-    setNotification(notification)
-    setTimeout(() => setNotification(null), 5000)
   }
 
   function cancel(e: React.SyntheticEvent) {
@@ -72,7 +68,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
         gap: '1rem',
       }}>
       <Typography variant='h2'>New HealthCheck Entry</Typography>
-      {notification && <Notification notification={notification} />}
+      <Notification />
       <Container sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <TextField variant='outlined' label='Date*' value={date} onChange={e => setDate(e.target.value)} />
         <TextField
