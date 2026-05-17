@@ -1,5 +1,5 @@
 import patientData from '../../data/patients.ts'
-import type { NewPatient, NonSensitivePatient, Patient } from '../types.ts'
+import type { NewPatient, NonSensitivePatient, Patient } from '../types/patient.ts'
 
 function getPatients(): Patient[] {
   return patientData

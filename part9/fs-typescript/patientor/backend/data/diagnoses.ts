@@ -1,4 +1,4 @@
-import { type Diagnosis } from "../src/types.ts"
+import { type Diagnosis } from '../src/types/diagnosis.ts'
 
 const data: Diagnosis[] = [
   {

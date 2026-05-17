@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { NewPatientSchema } from '../types.ts'
+import { NewPatientSchema } from '../types/patient.ts'
 import z from 'zod'
 import NotFoundError from '../../errors/NotFoundError.ts'
 

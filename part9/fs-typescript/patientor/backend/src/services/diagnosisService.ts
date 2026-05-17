@@ -1,4 +1,4 @@
-import { type Diagnosis } from '../types.ts'
+import { type Diagnosis } from '../types/diagnosis.ts'
 import diagnosisData from '../../data/diagnoses.ts'
 
 function getDiagnoses(): Diagnosis[] {

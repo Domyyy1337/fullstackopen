@@ -1,5 +1,5 @@
 import express, { type Response } from 'express'
-import { type Diagnosis } from '../types.ts'
+import { type Diagnosis } from '../types/entry.ts'
 import diagnosisService from '../services/diagnosisService.ts'
 
 const router = express.Router()
