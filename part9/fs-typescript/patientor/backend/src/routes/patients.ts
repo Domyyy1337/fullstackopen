@@ -1,9 +1,9 @@
 import express, { type Request, type Response } from 'express'
 import patientService from '../services/patientService.ts'
-// import { NewEntrySchema } from '../types/entry.ts'
 import middleware from '../utils/middleware.ts'
 import NotFoundError from '../../errors/NotFoundError.ts'
 import type { NewPatient, NonSensitivePatient, Patient } from '../types/patient.ts'
+import { type Entry, NewEntrySchema } from '../types/entry.ts'
 
 const router = express.Router()
 
@@ -29,17 +29,16 @@ router.post(
   }
 )
 
-router.post('/:id/entries', (req, res: Response<Patient>) => {
+router.post('/:id/entries', (req, res: Response<Entry>) => {
   const { id } = req.params
   const patient = patientService.getPatientById(id)
 
   if (!patient) throw new NotFoundError('No patient with this id')
 
-  // const entry = NewEntrySchema.parse(req.body)
+  const entry = NewEntrySchema.parse(req.body)
+  const createdEntry = patientService.addEntryToPatient(patient.id, entry)
 
-  // console.log(entry)
-
-  res.json(patient)
+  res.json(createdEntry)
 })
 
 router.use(middleware.errorHandler)

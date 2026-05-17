@@ -1,4 +1,5 @@
 import patientData from '../../data/patients.ts'
+import type { Entry, NewEntry } from '../types/entry.ts'
 import type { NewPatient, NonSensitivePatient, Patient } from '../types/patient.ts'
 
 function getPatients(): Patient[] {
@@ -30,4 +31,17 @@ function addPatient(patient: NewPatient): Patient {
   return newPatient
 }
 
-export default { getPatients, getNonSensitivePatients, addPatient, getPatientById }
+function addEntryToPatient(patientId: Patient['id'], newEntry: NewEntry) {
+  const entry: Entry = {
+    id: crypto.randomUUID(),
+    ...newEntry,
+  }
+  const patient = getPatientById(patientId)
+
+  if (!patient) throw new Error('No patient with this ID found in database')
+
+  patient.entries.push(entry)
+  return entry
+}
+
+export default { getPatients, getNonSensitivePatients, addPatient, getPatientById, addEntryToPatient }

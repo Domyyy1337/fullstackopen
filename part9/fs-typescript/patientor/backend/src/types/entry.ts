@@ -68,6 +68,13 @@ export type NewHealthCheckEntry = z.infer<typeof NewHealthCheckEntrySchema>
 export const NewHospitalEntrySchema = HospitalEntrySchema.omit({id: true})
 export type NewHospitalEntry = z.infer<typeof NewHospitalEntrySchema>
 
+export const NewEntrySchema = z.discriminatedUnion('type', [
+  NewHealthCheckEntrySchema,
+  NewOccupationalHealthcareEntrySchema,
+  NewHospitalEntrySchema,
+])
+export type NewEntry = z.infer<typeof NewEntrySchema>
+
 // Define special omit for unions
 // type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<TaskController, K> : never
 // Define entry without the 'id' property
