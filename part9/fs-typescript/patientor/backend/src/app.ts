@@ -2,9 +2,11 @@ import express, { type Response } from 'express'
 import diagnosisRouter from './routes/diagnoses.ts'
 import patientRouter from './routes/patients.ts'
 import cors from 'cors'
+import morgan from 'morgan'
 
 export const app = express()
 app.use(cors())
+app.use(morgan('tiny'))
 app.use(express.json())
 
 app.get('/api/ping', (_req, res: Response<string>) => {

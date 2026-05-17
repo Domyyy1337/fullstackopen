@@ -1,5 +1,5 @@
 import { Container, Typography } from '@mui/material'
-import { Patient } from '../../types'
+import type { Patient } from '../../types'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import patientService from '../../services/patients'
@@ -7,6 +7,7 @@ import MaleIcon from '@mui/icons-material/Male'
 import FemaleIcon from '@mui/icons-material/Female'
 import TransgenderIcon from '@mui/icons-material/Transgender'
 import PatientEntry from './PatientEntry'
+import AddEntryForm from './AddEntryForm'
 
 export default function PatientDetail() {
   const { id } = useParams()
@@ -38,6 +39,9 @@ export default function PatientDetail() {
         <Typography variant='body1'>ssn: {patient.ssn}</Typography>
         <Typography variant='body1'>occupation: {patient.occupation}</Typography>
         {patient.dateOfBirth && <Typography variant='body1'>date of birth: {patient.dateOfBirth}</Typography>}
+      </Container>
+      <Container>
+        <AddEntryForm patient={patient} />
       </Container>
       <Container sx={{ marginTop: '2rem' }}>
         <Typography variant='h3'>entries</Typography>

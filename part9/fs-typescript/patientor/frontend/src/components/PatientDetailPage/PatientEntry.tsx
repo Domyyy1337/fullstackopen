@@ -1,5 +1,5 @@
 import { Container, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
-import { Entry, HealthCheckEntry } from '../../types'
+import type { Entry, HealthCheckEntry } from '../../types'
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety'
 import { useDiagnosisCodes } from '../../hooks/useDiagnosisCodes'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation'
