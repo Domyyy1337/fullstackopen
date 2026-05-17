@@ -9,15 +9,17 @@ import HealthRatingBar from '../HealthRatingBar'
 
 import patientService from '../../services/patients'
 import { Link } from 'react-router-dom'
+import { usePatients } from '../../hooks/usePatients'
 
-interface Props {
-  patients: Patient[]
-  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
-}
+const PatientListPage = () => {
+  const { isError, isPending, patients } = usePatients()
 
-const PatientListPage = ({ patients, setPatients }: Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [error, setError] = useState<string>()
+
+  if (isPending) return <div>loading patients...</div>
+  if (isError) return <div>error loading patients</div>
+  if (!patients) return <div>no patients found</div>
 
   const openModal = (): void => setModalOpen(true)
 
@@ -29,7 +31,7 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
       const patient = await patientService.create(values)
-      setPatients(patients.concat(patient))
+      // setPatients(patients.concat(patient))
       setModalOpen(false)
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {

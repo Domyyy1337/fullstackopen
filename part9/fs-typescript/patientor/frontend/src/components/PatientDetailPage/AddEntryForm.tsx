@@ -1,9 +1,9 @@
 import { Button, Container, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
-import Notification, { type NotificationType } from '../Notification'
 import patientService from '../../services/patients'
 import { type EntryWithoutId, HealthCheckRating, type Patient } from '../../types'
 import { useSetNotification } from '../../hooks/useNotification'
+import Notification from '../Notification'
 
 interface AddEntryFormProps {
   patient: Patient
