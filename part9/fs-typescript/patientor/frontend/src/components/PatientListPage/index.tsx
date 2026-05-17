@@ -1,18 +1,14 @@
 import { useState } from 'react'
 import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material'
 import axios from 'axios'
-
 import { type PatientFormValues, type Patient } from '../../types'
 import AddPatientModal from '../AddPatientModal'
-
 import HealthRatingBar from '../HealthRatingBar'
-
-import patientService from '../../services/patients'
 import { Link } from 'react-router-dom'
 import { usePatients } from '../../hooks/usePatients'
 
 const PatientListPage = () => {
-  const { isError, isPending, patients } = usePatients()
+  const { isError, isPending, patients, addPatient } = usePatients()
 
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [error, setError] = useState<string>()
@@ -30,8 +26,7 @@ const PatientListPage = () => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      const patient = await patientService.create(values)
-      // setPatients(patients.concat(patient))
+      addPatient(values)
       setModalOpen(false)
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {

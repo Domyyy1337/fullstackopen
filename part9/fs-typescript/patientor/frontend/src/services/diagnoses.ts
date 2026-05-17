@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Diagnosis } from '../types'
+import type { Diagnosis } from '../types'
 import { apiBaseUrl } from '../constants'
 
 async function getAll() {
