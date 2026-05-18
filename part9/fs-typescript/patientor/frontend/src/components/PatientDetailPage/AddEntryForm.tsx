@@ -27,7 +27,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
   const [specialist, setSpecialist] = useState('')
   const [rating, setRating] = useState<HealthCheckRating>(0)
   const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis['code'][]>([])
-  const [type, setType] = useState<EntryType>('Hospital')
+  const [type, setType] = useState<EntryType>('HealthCheck')
   const [employer, setEmployer] = useState('')
   const [discharge, setDischarge] = useState<Discharge>({
     date: today,
@@ -88,7 +88,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
           date,
           diagnosisCodes,
           employerName: employer,
-          sickLeave,
+          ...(sickLeave.startDate && sickLeave.endDate ? { sickLeave } : {}),
         }
         break
       case 'HealthCheck':
@@ -128,7 +128,14 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
       </Select>
       <Notification />
       <Container sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <TextField type='date' variant='outlined' label='Date*' value={date} onChange={e => setDate(e.target.value)} />
+        <TextField
+          slotProps={{ inputLabel: { shrink: true } }}
+          type='date'
+          variant='outlined'
+          label='Date*'
+          value={date}
+          onChange={e => setDate(e.target.value)}
+        />
         <TextField
           variant='outlined'
           label='Description*'
@@ -166,6 +173,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
             />
             <TextField
               type='date'
+              slotProps={{ inputLabel: { shrink: true } }}
               variant='outlined'
               label='Start of sick leave'
               value={sickLeave.startDate}
@@ -173,6 +181,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
             />
             <TextField
               type='date'
+              slotProps={{ inputLabel: { shrink: true } }}
               variant='outlined'
               label='End of sick leave'
               value={sickLeave.endDate}
@@ -184,6 +193,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
           <>
             <TextField
               type='date'
+              slotProps={{ inputLabel: { shrink: true } }}
               value={discharge.date}
               label='Date of discharge'
               onChange={e => setDischarge({ ...discharge, date: e.target.value })}
@@ -224,7 +234,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
 
         <Container sx={{ display: 'flex', gap: '1.5rem' }} disableGutters>
           <Button variant='contained' type='submit' onClick={handleSubmit}>
-            add
+            Add New Entry
           </Button>
           <Button variant='outlined' onClick={handleCancel}>
             cancel
