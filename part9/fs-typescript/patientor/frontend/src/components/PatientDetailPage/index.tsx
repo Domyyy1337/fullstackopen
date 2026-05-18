@@ -1,24 +1,19 @@
 import { Container, Typography } from '@mui/material'
-import type { Patient } from '../../types'
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import patientService from '../../services/patients'
 import MaleIcon from '@mui/icons-material/Male'
 import FemaleIcon from '@mui/icons-material/Female'
 import TransgenderIcon from '@mui/icons-material/Transgender'
 import PatientEntry from './PatientEntry'
 import AddEntryForm from './AddEntryForm'
+import { usePatient } from '../../hooks/usePatient'
 
 export default function PatientDetail() {
   const { id } = useParams()
-  const [patient, setPatient] = useState<Patient | null>(null)
-
-  useEffect(() => {
-    if (!id) return
-    patientService.get(id).then(fetchedPatient => setPatient(fetchedPatient))
-  }, [id])
+  const { isError, isPending, patient } = usePatient(id)
 
   if (!id || !patient) return null
+  if (isError) return <div>error loading patient detail</div>
+  if (isPending) return <div>loading patient detail...</div>
 
   return (
     <Container>

@@ -27,6 +27,16 @@ export default function PatientEntry({ entry }: PatientEntryProps) {
         </Typography>
         {entry.type === 'HealthCheck' && healthLogo(entry.healthCheckRating)}
         <Typography variant='body1'>diagnose by {entry.specialist}</Typography>
+        {entry.type === 'OccupationalHealthcare' && entry.sickLeave && (
+          <Typography variant='body1'>
+            sick leave from {entry.sickLeave.startDate} to {entry.sickLeave.endDate}
+          </Typography>
+        )}
+        {entry.type === 'Hospital' && (
+          <Typography variant='body1'>
+            discharged on {entry.discharge.date} due to the following criteria: {entry.discharge.criteria}
+          </Typography>
+        )}
       </Container>
       <List>
         {entry.diagnosisCodes?.map(d => (

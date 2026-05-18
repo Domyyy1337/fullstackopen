@@ -55,12 +55,12 @@ export interface HospitalEntry extends BaseEntry {
   discharge: Discharge
 }
 
-interface SickLeave {
+export interface SickLeave {
   startDate: string
   endDate: string
 }
 
-interface Discharge {
+export interface Discharge {
   date: string
   criteria: string
 }
@@ -74,6 +74,14 @@ export interface ZodErrorObject {
 }
 
 export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry
+
+export type EntryType = Entry['type']
+
+export const entryTypeOptions: Record<EntryType, string> = {
+  HealthCheck: "Health Check",
+  Hospital: "Hospital",
+  OccupationalHealthcare: "Occupational Healthcare"
+};
 
 // Define special omit for unions
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never

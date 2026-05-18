@@ -33,7 +33,7 @@ async function createEntryForPatient(patientId: Patient['id'], entry: EntryWitho
       if (!validationErrors) throw new Error('Unknown Backend Error')
 
       let errorMessage = 'Error: '
-      errorMessage += validationErrors.error.map((e: ZodErrorObject) => e.message).join(', ')
+      errorMessage += validationErrors.error.map((e: ZodErrorObject) => `${e.path}: ${e.message}`).join(', ')
 
       throw new Error(errorMessage)
     }
