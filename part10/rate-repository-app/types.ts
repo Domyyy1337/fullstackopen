@@ -1,4 +1,11 @@
-export type Test = {
-  man: string
-  house: string
+export type Repository = {
+  id: string
+  fullName: string
+  description: string
+  language: string
+  forksCount: number
+  stargazersCount: number
+  ratingAverage: number
+  reviewCount: number
+  ownerAvatarUrl: string
 }
