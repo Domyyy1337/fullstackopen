@@ -1,18 +1,20 @@
-import { Button, Container, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Box, Button, Chip, Container, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import {
+  type Diagnosis,
   type Discharge,
   type EntryType,
   entryTypeOptions,
   type EntryWithoutId,
   HealthCheckRating,
+  healthCheckRatingOptions,
   type Patient,
   type SickLeave,
 } from '../../types'
-import { useSetNotification } from '../../hooks/useNotification'
 import Notification from '../Notification'
 import { usePatient } from '../../hooks/usePatient'
 import { assertNever } from '../../utils'
+import { useDiagnosisCodes } from '../../hooks/useDiagnosisCodes'
 
 interface AddEntryFormProps {
   patient: Patient
@@ -23,8 +25,8 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
   const [date, setDate] = useState(today)
   const [description, setDescription] = useState('')
   const [specialist, setSpecialist] = useState('')
-  const [rating, setRating] = useState(0)
-  const [diagnosisCodes, setDiagnosisCodes] = useState('')
+  const [rating, setRating] = useState<HealthCheckRating>(0)
+  const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis['code'][]>([])
   const [type, setType] = useState<EntryType>('Hospital')
   const [employer, setEmployer] = useState('')
   const [discharge, setDischarge] = useState<Discharge>({
@@ -35,8 +37,16 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
     startDate: '',
     endDate: '',
   })
-  const notify = useSetNotification()
+
   const { addEntryToPatient } = usePatient(patient.id)
+  const {
+    diagnosisCodes: allDiagnosisCodes,
+    isError: diagnosesIsError,
+    isPending: diagnosesIsPending,
+  } = useDiagnosisCodes()
+
+  if (diagnosesIsError) return <div>error fetching diagnoses codes required for form...</div>
+  if (diagnosesIsPending) return <div>loading diagnoses codes required for form ...</div>
 
   const options = Object.keys(entryTypeOptions) as EntryType[]
 
@@ -45,7 +55,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
     setDescription('')
     setSpecialist('')
     setRating(0)
-    setDiagnosisCodes('')
+    setDiagnosisCodes([])
     setEmployer('')
   }
 
@@ -57,14 +67,6 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
 
-    const validRatings = Object.values(HealthCheckRating)
-    if (!validRatings.includes(rating as HealthCheckRating)) {
-      notify({ message: 'Invalid rating', type: 'error' })
-      return
-    }
-
-    const diagnosisArray = diagnosisCodes.split(', ')
-
     let newEntry: EntryWithoutId
 
     switch (type) {
@@ -74,7 +76,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
           description,
           specialist,
           date,
-          diagnosisCodes: diagnosisArray,
+          diagnosisCodes: diagnosisCodes ? diagnosisCodes : undefined,
           discharge,
         }
         break
@@ -84,7 +86,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
           description,
           specialist,
           date,
-          diagnosisCodes: diagnosisArray,
+          diagnosisCodes,
           employerName: employer,
           sickLeave,
         }
@@ -96,7 +98,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
           specialist,
           date,
           healthCheckRating: rating as HealthCheckRating,
-          diagnosisCodes: diagnosisArray,
+          diagnosisCodes,
         }
         break
       default:
@@ -126,7 +128,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
       </Select>
       <Notification />
       <Container sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <TextField variant='outlined' label='Date*' value={date} onChange={e => setDate(e.target.value)} />
+        <TextField type='date' variant='outlined' label='Date*' value={date} onChange={e => setDate(e.target.value)} />
         <TextField
           variant='outlined'
           label='Description*'
@@ -141,12 +143,18 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
         />
 
         {type === 'HealthCheck' && (
-          <TextField
-            variant='outlined'
-            label='Health Check Rating (0-3)*'
-            value={rating}
-            onChange={e => setRating(Number(e.target.value))}
-          />
+          <>
+            <Select
+              label='Health Check Rating'
+              value={rating}
+              onChange={e => setRating(Number(e.target.value) as HealthCheckRating)}>
+              {Object.values(HealthCheckRating).map(o => (
+                <MenuItem key={o} value={o}>
+                  {healthCheckRatingOptions[o]}
+                </MenuItem>
+              ))}
+            </Select>
+          </>
         )}
         {type === 'OccupationalHealthcare' && (
           <>
@@ -157,12 +165,14 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
               onChange={e => setEmployer(e.target.value)}
             />
             <TextField
+              type='date'
               variant='outlined'
               label='Start of sick leave'
               value={sickLeave.startDate}
               onChange={e => setSickLeave({ ...sickLeave, startDate: e.target.value })}
             />
             <TextField
+              type='date'
               variant='outlined'
               label='End of sick leave'
               value={sickLeave.endDate}
@@ -173,6 +183,7 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
         {type === 'Hospital' && (
           <>
             <TextField
+              type='date'
               value={discharge.date}
               label='Date of discharge'
               onChange={e => setDischarge({ ...discharge, date: e.target.value })}
@@ -184,12 +195,32 @@ export default function AddEntryForm({ patient }: AddEntryFormProps) {
             />
           </>
         )}
-        <TextField
+        <Select
+          multiple
+          value={diagnosisCodes}
+          onChange={e =>
+            setDiagnosisCodes(typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value)
+          }
+          renderValue={selected => (
+            <Box sx={{ display: 'flex', gap: '0.5rem' }}>
+              {selected.map(v => (
+                <Chip key={v} label={v} />
+              ))}
+            </Box>
+          )}>
+          {allDiagnosisCodes &&
+            allDiagnosisCodes.map(d => (
+              <MenuItem key={d.code} value={d.code}>
+                {d.code} - {d.name}
+              </MenuItem>
+            ))}
+        </Select>
+        {/* <TextField
           variant='outlined'
           label='Diagnosis Codes (comma-separated)'
           value={diagnosisCodes}
           onChange={e => setDiagnosisCodes(e.target.value)}
-        />
+        /> */}
 
         <Container sx={{ display: 'flex', gap: '1.5rem' }} disableGutters>
           <Button variant='contained' type='submit' onClick={handleSubmit}>

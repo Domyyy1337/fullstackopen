@@ -37,6 +37,13 @@ export const HealthCheckRating = {
   CriticalRisk: 3,
 } as const
 
+export const healthCheckRatingOptions: Record<HealthCheckRating, string> = {
+  '0': '0 - Healthy',
+  '1': '1 - Low Risk',
+  '2': '2 - High Risk',
+  '3': '3 - Critical Risk',
+}
+
 export type HealthCheckRating = (typeof HealthCheckRating)[keyof typeof HealthCheckRating]
 
 export interface HealthCheckEntry extends BaseEntry {
@@ -78,10 +85,10 @@ export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEnt
 export type EntryType = Entry['type']
 
 export const entryTypeOptions: Record<EntryType, string> = {
-  HealthCheck: "Health Check",
-  Hospital: "Hospital",
-  OccupationalHealthcare: "Occupational Healthcare"
-};
+  HealthCheck: 'Health Check',
+  Hospital: 'Hospital',
+  OccupationalHealthcare: 'Occupational Healthcare',
+}
 
 // Define special omit for unions
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never
