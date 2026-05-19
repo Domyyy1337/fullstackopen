@@ -4,7 +4,9 @@ const theme = {
     textSecondary: '#586069',
     primary: '#0366d6',
     barBackground: '#24292e',
-    textContrast: 'white',
+    mainBackground: '#e1e4e8',
+    cardBackground: 'white',
+    textContrast: 'white'
   },
   fontSizes: {
     body: 14,
