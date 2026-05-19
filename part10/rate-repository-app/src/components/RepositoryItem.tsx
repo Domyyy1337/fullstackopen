@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native'
-import { type Repository } from '../../types'
+import { type Repository } from '../types'
 
 export type RepositoryItemProps = {
   item: Repository

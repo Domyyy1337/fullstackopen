@@ -1,10 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import Constants from 'expo-constants'
 import RepositoryList from './RepositoryList'
+import AppBar from './AppBar'
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Constants.statusBarHeight,
     flex: 1,
   },
 })
@@ -12,6 +11,7 @@ const styles = StyleSheet.create({
 export default function Main() {
   return (
     <View style={styles.container}>
+      <AppBar />
       <Text>Rate Repository Application</Text>
       <RepositoryList />
     </View>
