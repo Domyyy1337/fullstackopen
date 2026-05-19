@@ -6,7 +6,8 @@ const theme = {
     barBackground: '#24292e',
     mainBackground: '#e1e4e8',
     cardBackground: 'white',
-    textContrast: 'white'
+    textContrast: 'white',
+    error: '#d73a4a',
   },
   fontSizes: {
     body: 14,

@@ -3,11 +3,9 @@ import Text from './Text'
 import { useFormik } from 'formik'
 import { Pressable, StyleSheet, TextInput, View } from 'react-native'
 import theme from '../theme'
-
-type FormValues = {
-  username: string
-  password: string
-}
+import * as z from 'zod'
+import FormError from './FormError'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
 
 const initialValues = {
   username: '',
@@ -17,6 +15,13 @@ const initialValues = {
 type SignInProps = {
   onSubmit: (values: FormValues) => void
 }
+
+const validationSchema = z.object({
+  username: z.string({ error: issue => (issue.input === undefined ? 'Username is required' : '') }),
+  password: z.string({ error: issue => (issue.input === undefined ? 'Password is required' : '') }),
+})
+
+type FormValues = z.infer<typeof validationSchema>
 
 const styles = StyleSheet.create({
   container: {
@@ -34,13 +39,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
   },
+  formItemError: {
+    borderColor: theme.colors.error,
+  },
   buttonText: {
     textAlign: 'center',
   },
 })
 
 export default function SignIn({ onSubmit }: SignInProps) {
-  const formik = useFormik({ initialValues, onSubmit })
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+    validationSchema: toFormikValidationSchema(validationSchema),
+  })
+
+  const isUsernameError = formik.touched.username && formik.errors.username
+  const isPasswordError = formik.touched.password && formik.errors.password
 
   return (
     <View style={styles.container}>
@@ -48,15 +63,19 @@ export default function SignIn({ onSubmit }: SignInProps) {
         placeholder='Username'
         value={formik.values.username}
         onChangeText={formik.handleChange('username')}
-        style={styles.formItem}
+        onBlur={formik.handleBlur('username')}
+        style={isUsernameError ? [styles.formItem, styles.formItemError] : styles.formItem}
       />
+      {isUsernameError && <FormError message={formik.errors.username!} />}
       <TextInput
         placeholder='Password'
         secureTextEntry
         value={formik.values.password}
         onChangeText={formik.handleChange('password')}
-        style={styles.formItem}
+        onBlur={formik.handleBlur('password')}
+        style={isPasswordError ? [styles.formItem, styles.formItemError] : styles.formItem}
       />
+      {isPasswordError && <FormError message={formik.errors.password!} />}
       <Pressable style={styles.buttonStyle} onPress={() => formik.handleSubmit()}>
         <Text color='textContrast' fontWeight='bold' style={styles.buttonText}>
           Sign in
