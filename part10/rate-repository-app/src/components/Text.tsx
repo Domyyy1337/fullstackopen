@@ -20,10 +20,13 @@ const styles = StyleSheet.create({
   fontWeightBold: {
     fontWeight: theme.fontWeights.bold,
   },
+  colorContrast: {
+    color: theme.colors.textContrast,
+  },
 })
 
 type CustomTextProps = TextProps & {
-  color?: 'textSecondary' | 'primary'
+  color?: 'textSecondary' | 'primary' | 'textContrast'
   fontSize?: 'subheading'
   fontWeight?: 'bold'
 }
@@ -33,6 +36,7 @@ export default function Text({ color, fontSize, fontWeight, style, ...props }: C
     styles.text,
     color === 'textSecondary' && styles.colorTextSecondary,
     color === 'primary' && styles.colorPrimary,
+    color === 'textContrast' && styles.colorContrast,
     fontSize === 'subheading' && styles.fontSizeSubheading,
     fontWeight === 'bold' && styles.fontWeightBold,
     style,
