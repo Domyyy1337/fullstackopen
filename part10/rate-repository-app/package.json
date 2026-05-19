@@ -16,7 +16,8 @@
     "formik": "^2.4.9",
     "react": "19.2.0",
     "react-native": "0.83.6",
-    "react-router-native": "^6.30.3"
+    "react-router-native": "^6.30.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^25.9.0",
