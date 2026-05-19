@@ -1,22 +1,23 @@
-import { Alert, Pressable, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import Text from './Text'
+import { Link } from 'react-router-native'
 
 const styles = StyleSheet.create({
   appBarItem: {
-    padding: 10,
   },
 })
 
 type AppBarTabProps = {
   name: string
+  to: string
 }
 
-export default function AppBarTab({ name }: AppBarTabProps) {
+export default function AppBarTab({ name, to }: AppBarTabProps) {
   return (
-    <Pressable onPress={() => Alert.alert('You clicked Repositories')} style={styles.appBarItem}>
+    <Link style={styles.appBarItem} to={to}>
       <Text color='textContrast' fontSize='subheading' fontWeight='bold'>
         {name}
       </Text>
-    </Pressable>
+    </Link>
   )
 }
