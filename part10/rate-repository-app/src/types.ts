@@ -18,8 +18,17 @@ export type Statistic = {
 export type RepositoryResponse = {
   totalCount: number
   edges: RepositoryNode[]
+  pageInfo: PageInfo
 }
 
 export type RepositoryNode = {
   node: Repository
+  cursor: string
+}
+
+export type PageInfo = {
+  hasNextPage: boolean
+  hasPreviousPage: boolean
+  startCursor: string
+  endCursor: string
 }
