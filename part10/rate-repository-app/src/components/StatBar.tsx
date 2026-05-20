@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { type Statistic } from '../types'
 import Text from './Text'
-import { shortenStat } from '../utils'
+import shortenStat from '../utils/shortenStat'
 
 const styles = StyleSheet.create({
   container: {

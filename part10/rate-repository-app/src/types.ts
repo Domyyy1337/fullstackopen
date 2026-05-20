@@ -11,6 +11,15 @@ export type Repository = {
 }
 
 export type Statistic = {
-  name: string,
-  amount: number,
+  name: string
+  amount: number
+}
+
+export type RepositoryResponse = {
+  totalCount: number
+  edges: RepositoryNode[]
+}
+
+export type RepositoryNode = {
+  node: Repository
 }
