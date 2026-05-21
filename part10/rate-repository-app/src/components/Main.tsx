@@ -18,7 +18,7 @@ export default function Main() {
       <AppBar />
       <Routes>
         <Route path='/' element={<RepositoryList />} />
-        <Route path='/signin' element={<SignIn onSubmit={values => console.log(values)} />} />
+        <Route path='/signin' element={<SignIn />} />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </View>

@@ -3,25 +3,15 @@ import Text from './Text'
 import { useFormik } from 'formik'
 import { Pressable, StyleSheet, TextInput, View } from 'react-native'
 import theme from '../theme'
-import * as z from 'zod'
 import FormError from './FormError'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
+import useSignIn from '../hooks/useSignIn'
+import { SignInSchema, type SignInType } from '../types'
 
 const initialValues = {
   username: '',
   password: '',
 }
-
-type SignInProps = {
-  onSubmit: (values: FormValues) => void
-}
-
-const validationSchema = z.object({
-  username: z.string({ error: issue => (issue.input === undefined ? 'Username is required' : '') }),
-  password: z.string({ error: issue => (issue.input === undefined ? 'Password is required' : '') }),
-})
-
-type FormValues = z.infer<typeof validationSchema>
 
 const styles = StyleSheet.create({
   container: {
@@ -47,12 +37,25 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function SignIn({ onSubmit }: SignInProps) {
+export default function SignIn() {
+  const [signIn] = useSignIn()
   const formik = useFormik({
     initialValues,
     onSubmit,
-    validationSchema: toFormikValidationSchema(validationSchema),
+    validationSchema: toFormikValidationSchema(SignInSchema),
   })
+
+  async function onSubmit(values: SignInType) {
+    const { username, password } = values
+
+    try {
+      const { data } = await signIn({ username, password })
+      if (!data) throw new Error('No data received from server')
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const isUsernameError = formik.touched.username && formik.errors.username
   const isPasswordError = formik.touched.password && formik.errors.password

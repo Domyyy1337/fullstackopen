@@ -1,3 +1,5 @@
+import * as z from "zod"
+
 export type Repository = {
   id: string
   fullName: string
@@ -31,4 +33,24 @@ export type PageInfo = {
   hasPreviousPage: boolean
   startCursor: string
   endCursor: string
+}
+
+export const SignInSchema = z.object({
+  username: z.string({ error: issue => (issue.input === undefined ? 'Username is required' : '') }),
+  password: z.string({ error: issue => (issue.input === undefined ? 'Password is required' : '') }),
+})
+export type SignInType = z.infer<typeof SignInSchema>
+
+export type AuthenticateInput = {
+  credentials: {
+    username: string
+    password: string
+  }
+}
+
+export type AuthenticateData = {
+  authenticate: {
+    accessToken: string
+    expiresAt: string
+  }
 }
