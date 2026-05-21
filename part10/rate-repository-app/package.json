@@ -2,6 +2,7 @@
   "name": "rate-repository-app",
   "version": "1.0.0",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "@apollo/client": "^4.1.9",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~55.0.24",
     "expo-constants": "~55.0.16",
     "expo-status-bar": "~55.0.6",
