@@ -1,15 +1,16 @@
 import expoConfig from 'eslint-config-expo/flat.js'
-import tseslint from 'typescript-eslint'
+import * as tseslint from 'typescript-eslint'
 import eslint from '@eslint/js'
+import { defineConfig } from 'eslint/config'
 
-export default tseslint.config(
+export default defineConfig([
   { ignores: ['dist/*', 'node_modules/*'] },
+  ...expoConfig,
   {
     files: ['**/*.ts', '**/*.tsx'],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
-      expoConfig,
       ...tseslint.configs.stylisticTypeChecked,
     ],
     languageOptions: {
@@ -30,5 +31,5 @@ export default tseslint.config(
       '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     },
-  }
-)
+  },
+])
