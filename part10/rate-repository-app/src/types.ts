@@ -1,4 +1,4 @@
-import * as z from "zod"
+import * as z from 'zod'
 
 export type Repository = {
   id: string
@@ -53,4 +53,13 @@ export type AuthenticateData = {
     accessToken: string
     expiresAt: string
   }
+}
+
+export type MeQuery = {
+  me: Me | null
+}
+
+export type Me = {
+  id: string
+  username: string
 }

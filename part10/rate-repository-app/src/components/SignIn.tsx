@@ -7,6 +7,7 @@ import FormError from './FormError'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import useSignIn from '../hooks/useSignIn'
 import { SignInSchema, type SignInType } from '../types'
+import { useNavigate } from 'react-router-native'
 
 const initialValues = {
   username: '',
@@ -44,14 +45,15 @@ export default function SignIn() {
     onSubmit,
     validationSchema: toFormikValidationSchema(SignInSchema),
   })
+  const navigate = useNavigate()
 
   async function onSubmit(values: SignInType) {
     const { username, password } = values
 
     try {
-      const { data } = await signIn({ username, password })
-      if (!data) throw new Error('No data received from server')
+      const data = await signIn({ username, password })
       console.log(data)
+      navigate('/')
     } catch (error) {
       console.log(error)
     }
