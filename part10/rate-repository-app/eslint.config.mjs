@@ -2,6 +2,7 @@ import expoConfig from 'eslint-config-expo/flat.js'
 import * as tseslint from 'typescript-eslint'
 import eslint from '@eslint/js'
 import { defineConfig } from 'eslint/config'
+import pluginJest from 'eslint-plugin-jest'
 
 export default defineConfig([
   { ignores: ['dist/*', 'node_modules/*'] },
@@ -31,5 +32,9 @@ export default defineConfig([
       '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     },
+  },
+  {
+    files: ['**/*.test.js', '**/*.spec.js'],
+    ...pluginJest.configs['flat/recommended'],
   },
 ])

@@ -1,6 +1,7 @@
 import { FlatList, View, StyleSheet } from 'react-native'
 import RepositoryItem from './RepositoryItem'
 import useRepositories from '../hooks/useRepositories'
+import { type RepositoryResponse } from '../types'
 
 const styles = StyleSheet.create({
   separator: {
@@ -8,11 +9,13 @@ const styles = StyleSheet.create({
   },
 })
 
+type RepositoryListContainerProps = {
+  repositories: RepositoryResponse | undefined
+}
+
 const ItemSeparator = () => <View style={styles.separator} />
 
-export default function RepositoryList() {
-  const { repositories } = useRepositories()
-
+function RepositoryListContainer({ repositories }: RepositoryListContainerProps) {
   const repositoryNodes = repositories ? repositories.edges.map(edge => edge.node) : []
 
   return (
@@ -22,4 +25,10 @@ export default function RepositoryList() {
       renderItem={({ item }) => <RepositoryItem item={item} />}
     />
   )
+}
+
+export default function RepositoryList() {
+  const { repositories } = useRepositories()
+
+  return <RepositoryListContainer repositories={repositories} />
 }
