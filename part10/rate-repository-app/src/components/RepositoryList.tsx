@@ -15,7 +15,7 @@ type RepositoryListContainerProps = {
 
 const ItemSeparator = () => <View style={styles.separator} />
 
-function RepositoryListContainer({ repositories }: RepositoryListContainerProps) {
+export function RepositoryListContainer({ repositories }: RepositoryListContainerProps) {
   const repositoryNodes = repositories ? repositories.edges.map(edge => edge.node) : []
 
   return (

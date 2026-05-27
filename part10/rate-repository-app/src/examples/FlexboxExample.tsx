@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
   },
 })
 
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function FlexboxExample() {
   return (
     <View style={styles.flexContainer}>

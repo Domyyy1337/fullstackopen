@@ -30,7 +30,7 @@ export type RepositoryNode = {
 
 export type PageInfo = {
   hasNextPage: boolean
-  hasPreviousPage: boolean
+  hasPreviousPage?: boolean
   startCursor: string
   endCursor: string
 }

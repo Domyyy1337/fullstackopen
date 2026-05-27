@@ -27,6 +27,7 @@ function FancyText({ children, isBlue = false, isBig = false }: FancyTextProps) 
   return <Text style={textStyles}>{children}</Text>
 }
 
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Main() {
   return (
     <>

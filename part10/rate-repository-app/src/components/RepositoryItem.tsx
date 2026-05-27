@@ -20,15 +20,15 @@ export type RepositoryItemProps = {
 export default function RepositoryItem({ item }: RepositoryItemProps) {
   const statisticArray: Statistic[] = [
     {
-      name: 'Stars',
+      name: item.stargazersCount === 1 ? 'Star' : 'Stars',
       amount: item.stargazersCount,
     },
     {
-      name: 'Forks',
+      name: item.forksCount === 1 ? 'Fork' : 'Forks',
       amount: item.forksCount,
     },
     {
-      name: 'Review',
+      name: item.ratingAverage === 1 ? 'Review' : 'Reviews',
       amount: item.reviewCount,
     },
     {
@@ -38,7 +38,7 @@ export default function RepositoryItem({ item }: RepositoryItemProps) {
   ]
 
   return (
-    <View style={styles.itemCard}>
+    <View style={styles.itemCard} testID='repositoryItem'>
       <RepositoryTop repository={item} />
       <StatBar statistics={statisticArray} />
     </View>
