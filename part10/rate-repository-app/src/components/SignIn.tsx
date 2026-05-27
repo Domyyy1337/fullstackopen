@@ -38,26 +38,16 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function SignIn() {
-  const [signIn] = useSignIn()
+type SignInContainerProps = {
+  onSubmit: (values: SignInType) => Promise<void>
+}
+
+export function SignInContainer({ onSubmit }: SignInContainerProps) {
   const formik = useFormik({
     initialValues,
     onSubmit,
     validationSchema: toFormikValidationSchema(SignInSchema),
   })
-  const navigate = useNavigate()
-
-  async function onSubmit(values: SignInType) {
-    const { username, password } = values
-
-    try {
-      const data = await signIn({ username, password })
-      console.log(data)
-      navigate('/')
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const isUsernameError = formik.touched.username && formik.errors.username
   const isPasswordError = formik.touched.password && formik.errors.password
@@ -81,11 +71,30 @@ export default function SignIn() {
         style={isPasswordError ? [styles.formItem, styles.formItemError] : styles.formItem}
       />
       {isPasswordError && <FormError message={formik.errors.password!} />}
-      <Pressable style={styles.buttonStyle} onPress={() => formik.handleSubmit()}>
+      <Pressable style={styles.buttonStyle} onPress={() => formik.handleSubmit()} accessibilityRole='button'>
         <Text color='textContrast' fontWeight='bold' style={styles.buttonText}>
           Sign in
         </Text>
       </Pressable>
     </View>
   )
+}
+
+export default function SignIn() {
+  const [signIn] = useSignIn()
+  const navigate = useNavigate()
+
+  async function onSubmit(values: SignInType) {
+    const { username, password } = values
+
+    try {
+      const data = await signIn({ username, password })
+      console.log(data)
+      navigate('/')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return <SignInContainer onSubmit={onSubmit} />
 }
