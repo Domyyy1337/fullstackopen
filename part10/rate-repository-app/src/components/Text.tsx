@@ -23,15 +23,19 @@ const styles = StyleSheet.create({
   colorContrast: {
     color: theme.colors.textContrast,
   },
+  alignment: {
+    textAlign: 'center',
+  },
 })
 
 type CustomTextProps = TextProps & {
   color?: 'textSecondary' | 'primary' | 'textContrast'
   fontSize?: 'subheading'
   fontWeight?: 'bold'
+  alignment?: 'center'
 }
 
-export default function Text({ color, fontSize, fontWeight, style, ...props }: CustomTextProps) {
+export default function Text({ color, fontSize, fontWeight, alignment, style, ...props }: CustomTextProps) {
   const textStyle = [
     styles.text,
     color === 'textSecondary' && styles.colorTextSecondary,
@@ -39,6 +43,7 @@ export default function Text({ color, fontSize, fontWeight, style, ...props }: C
     color === 'textContrast' && styles.colorContrast,
     fontSize === 'subheading' && styles.fontSizeSubheading,
     fontWeight === 'bold' && styles.fontWeightBold,
+    alignment === 'center' && styles.alignment,
     style,
   ]
 

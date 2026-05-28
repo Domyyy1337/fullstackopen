@@ -10,6 +10,7 @@ export type Repository = {
   ratingAverage: number
   reviewCount: number
   ownerAvatarUrl: string
+  url: string
 }
 
 export type Statistic = {

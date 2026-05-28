@@ -26,6 +26,9 @@ const theme = {
     normal: '400',
     bold: '700',
   },
+  measurements: {
+    pressableRadius: 5,
+  }
 } as const
 
 export default theme

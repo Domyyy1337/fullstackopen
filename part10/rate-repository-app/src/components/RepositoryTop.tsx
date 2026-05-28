@@ -5,9 +5,9 @@ import Text from './Text'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     gap: 20,
     flexDirection: 'row',
+    padding: 10,
   },
   repoLogo: {
     width: 50,
