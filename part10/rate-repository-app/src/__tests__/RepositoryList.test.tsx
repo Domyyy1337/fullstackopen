@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react-native'
 import { RepositoryListContainer } from '../components/RepositoryList'
-import { type RepositoryResponse } from '../types'
+import { type RepositoriesResponse } from '../types'
 
 describe('RepositoryList', () => {
   describe('RepositoryListContainer', () => {
     it('renders repository information correctly', () => {
-      const repositories: RepositoryResponse = {
+      const repositories: RepositoriesResponse = {
         totalCount: 8,
         pageInfo: {
           hasNextPage: true,

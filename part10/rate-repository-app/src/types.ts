@@ -17,10 +17,14 @@ export type Statistic = {
   amount: number
 }
 
-export type RepositoryResponse = {
+export type RepositoriesResponse = {
   totalCount: number
   edges: RepositoryNode[]
   pageInfo: PageInfo
+}
+
+export type RepositoryResponse = {
+  repository: Repository
 }
 
 export type RepositoryNode = {

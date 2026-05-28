@@ -1,8 +1,10 @@
-import { StyleSheet, View } from 'react-native'
+import { Pressable, StyleSheet } from 'react-native'
 import { type Statistic, type Repository } from '../types'
 import theme from '../theme'
 import StatBar from './StatBar'
 import RepositoryTop from './RepositoryTop'
+import Text from './Text'
+import { useNavigate } from 'react-router-native'
 
 const styles = StyleSheet.create({
   itemCard: {
@@ -15,9 +17,12 @@ const styles = StyleSheet.create({
 
 export type RepositoryItemProps = {
   item: Repository
+  isDetail?: boolean
 }
 
-export default function RepositoryItem({ item }: RepositoryItemProps) {
+export default function RepositoryItem({ item, isDetail = false }: RepositoryItemProps) {
+  const navigate = useNavigate()
+
   const statisticArray: Statistic[] = [
     {
       name: item.stargazersCount === 1 ? 'Star' : 'Stars',
@@ -37,10 +42,17 @@ export default function RepositoryItem({ item }: RepositoryItemProps) {
     },
   ]
 
+  function handlePress() {
+    if (isDetail) return
+
+    navigate(`/repositories/${item.id}`)
+  }
+
   return (
-    <View style={styles.itemCard} testID='repositoryItem'>
+    <Pressable style={styles.itemCard} testID='repositoryItem' onPress={handlePress}>
       <RepositoryTop repository={item} />
       <StatBar statistics={statisticArray} />
-    </View>
+      {isDetail && <Text>Detail</Text>}
+    </Pressable>
   )
 }
