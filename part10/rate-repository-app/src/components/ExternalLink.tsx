@@ -17,14 +17,14 @@ type ExternalLinkProps = {
   link: Repository['url']
 }
 
-export default function ExternalLink({link}: ExternalLinkProps) {
+export default function ExternalLink({ link }: ExternalLinkProps) {
   function handlePress() {
     void Linking.openURL(link)
   }
 
   return (
     <Pressable onPress={handlePress} style={styles.visitButton}>
-      <Text alignment='center' color='textContrast'>
+      <Text alignment='center' color='textContrast' fontWeight='bold'>
         Open in GitHub
       </Text>
     </Pressable>

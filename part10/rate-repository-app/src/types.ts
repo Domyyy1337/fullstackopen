@@ -25,7 +25,15 @@ export type RepositoriesResponse = {
 }
 
 export type RepositoryResponse = {
-  repository: Repository
+  repository: Repository & {
+    reviews: {
+      edges: ReviewNode[]
+    }
+  }
+}
+
+export type ReviewNode = {
+  node: Review
 }
 
 export type RepositoryNode = {
@@ -65,6 +73,19 @@ export type MeQuery = {
 }
 
 export type Me = {
+  id: string
+  username: string
+}
+
+export type Review = {
+  id: string
+  text: string
+  rating: number
+  createdAt: string
+  user: User
+}
+
+export type User = {
   id: string
   username: string
 }
