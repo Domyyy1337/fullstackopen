@@ -37,13 +37,16 @@ export default function AppBar() {
       <ScrollView horizontal contentContainerStyle={styles.contentContainer}>
         <AppBarTab name='Repositories' to='/' type='link' />
         {me.data?.me ? (
-          <AppBarTab
-            name='Sign-Out'
-            onPress={() => {
-              void handleSignOut()
-            }}
-            type='pressable'
-          />
+          <>
+            <AppBarTab name='Create a review' type='link' to='/create-review' />
+            <AppBarTab
+              name='Sign-Out'
+              onPress={() => {
+                void handleSignOut()
+              }}
+              type='pressable'
+            />
+          </>
         ) : (
           <AppBarTab name='Sign-In' to='/signin' type='link' />
         )}

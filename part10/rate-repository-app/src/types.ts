@@ -54,6 +54,14 @@ export const SignInSchema = z.object({
 })
 export type SignInType = z.infer<typeof SignInSchema>
 
+export const NewReviewSchema = z.object({
+  ownerUsername: z.string({ error: i => (i.input === undefined ? 'Username is required' : '') }),
+  repositoryName: z.string({ error: i => (i.input === undefined ? 'Repository Name is required' : '') }),
+  rating: z.number().positive().lte(100),
+  review: z.string().optional(),
+})
+export type NewReviewType = z.infer<typeof NewReviewSchema>
+
 export type AuthenticateInput = {
   credentials: {
     username: string

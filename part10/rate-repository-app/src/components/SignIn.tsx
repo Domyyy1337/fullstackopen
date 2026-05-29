@@ -25,14 +25,8 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
   },
-  formItem: {
-    borderColor: theme.colors.textPrimary,
-    borderRadius: 5,
-    borderWidth: 1,
-  },
-  formItemError: {
-    borderColor: theme.colors.error,
-  },
+  formItem: theme.components.formItem,
+  formItemError: theme.components.formItemError,
   buttonText: {
     textAlign: 'center',
   },
