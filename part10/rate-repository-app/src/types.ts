@@ -56,11 +56,15 @@ export type SignInType = z.infer<typeof SignInSchema>
 
 export const NewReviewSchema = z.object({
   ownerUsername: z.string({ error: i => (i.input === undefined ? 'Username is required' : '') }),
-  repositoryName: z.string({ error: i => (i.input === undefined ? 'Repository Name is required' : '') }),
-  rating: z.number().positive().lte(100),
+  repositoryName: z.string({ error: i => (i.input === undefined ? 'Repository name is required' : '') }),
+  rating: z.coerce.number().gte(0).lte(100),
   review: z.string().optional(),
 })
 export type NewReviewType = z.infer<typeof NewReviewSchema>
+
+export type ReviewFormValues = Omit<NewReviewType, 'rating'> & {
+  rating: string
+}
 
 export type AuthenticateInput = {
   credentials: {

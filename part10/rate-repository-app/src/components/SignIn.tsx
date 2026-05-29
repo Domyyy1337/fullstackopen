@@ -9,7 +9,7 @@ import useSignIn from '../hooks/useSignIn'
 import { SignInSchema, type SignInType } from '../types'
 import { useNavigate } from 'react-router-native'
 
-const initialValues = {
+const initialValues: SignInType = {
   username: '',
   password: '',
 }
