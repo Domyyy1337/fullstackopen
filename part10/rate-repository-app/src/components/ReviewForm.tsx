@@ -1,11 +1,13 @@
 import { Pressable, StyleSheet, TextInput, View } from 'react-native'
 import Text from './Text'
 import theme from '../theme'
-import { NewReviewSchema, type ReviewFormValues, type NewReviewType } from '../types'
-import { useFormik } from 'formik'
+import { NewReviewSchema, type NewReviewType, type ReviewFormValues } from '../types'
+import { ErrorMessage, useFormik } from 'formik'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import FormError from './FormError'
 import { useNavigate } from 'react-router-native'
+import useReview from '../hooks/useReview'
+import React, { useState } from 'react'
 
 const styles = StyleSheet.create({
   formItem: theme.components.formItem,
@@ -23,48 +25,66 @@ const styles = StyleSheet.create({
 })
 
 const initialValues: ReviewFormValues = {
-  ownerUsername: '',
+  ownerName: '',
   rating: '',
   repositoryName: '',
-  review: '',
+  text: '',
 }
 
 export default function ReviewForm() {
   const navigate = useNavigate()
+  const [createReview] = useReview()
+  const [errorMessage, setErrorMessage] = useState('')
 
   async function handleSubmit(values: ReviewFormValues) {
-    void navigate('/')
+    const formattedReview: NewReviewType = { ...values, rating: Number(values.rating) }
+
+    try {
+      const data = await createReview({ review: formattedReview })
+      void navigate(`/repositories/${data.createReview.repositoryId}`)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message)
+        setErrorMessage(error.message)
+      }
+    }
   }
 
-  return <ReviewFormContainer onSubmit={handleSubmit} />
+  return (
+    <View>
+      <ReviewFormContainer onSubmit={handleSubmit}>
+        {errorMessage !== '' && <FormError message={errorMessage} />}
+      </ReviewFormContainer>
+    </View>
+  )
 }
 
-type ReviewFormContainerProps = {
+type ReviewFormContainerProps = React.PropsWithChildren & {
   onSubmit: (values: ReviewFormValues) => Promise<void>
 }
 
-export function ReviewFormContainer({ onSubmit }: ReviewFormContainerProps) {
+export function ReviewFormContainer({ onSubmit, children }: ReviewFormContainerProps) {
   const formik = useFormik({
     initialValues,
     onSubmit,
     validationSchema: toFormikValidationSchema(NewReviewSchema),
   })
 
-  const isUsernameError = formik.touched.ownerUsername && formik.errors.ownerUsername
+  const isUsernameError = formik.touched.ownerName && formik.errors.ownerName
   const isRepositoryError = formik.touched.repositoryName && formik.errors.repositoryName
   const isRatingError = formik.touched.rating && formik.errors.rating
-  const isReviewError = formik.touched.review && formik.errors.review
+  const isReviewError = formik.touched.text && formik.errors.text
 
   return (
     <View style={styles.container}>
       <TextInput
         placeholder='Repository owner name'
-        value={formik.values.ownerUsername}
-        onChangeText={formik.handleChange('ownerUsername')}
-        onBlur={formik.handleBlur('ownerUsername')}
+        value={formik.values.ownerName}
+        onChangeText={formik.handleChange('ownerName')}
+        onBlur={formik.handleBlur('ownerName')}
         style={isUsernameError ? [styles.formItem, styles.formItemError] : styles.formItem}
       />
-      {isUsernameError && <FormError message={formik.errors.ownerUsername!} />}
+      {isUsernameError && <FormError message={formik.errors.ownerName!} />}
       <TextInput
         placeholder='Repository name'
         value={formik.values.repositoryName}
@@ -85,17 +105,18 @@ export function ReviewFormContainer({ onSubmit }: ReviewFormContainerProps) {
         placeholder='Review'
         multiline
         numberOfLines={10}
-        value={formik.values.review}
-        onChangeText={formik.handleChange('review')}
-        onBlur={formik.handleBlur('review')}
+        value={formik.values.text}
+        onChangeText={formik.handleChange('text')}
+        onBlur={formik.handleBlur('text')}
         style={isReviewError ? [styles.formItem, styles.formItemError] : styles.formItem}
       />
-      {isReviewError && <FormError message={formik.errors.review!} />}
+      {isReviewError && <FormError message={formik.errors.text!} />}
       <Pressable style={styles.button} onPress={() => formik.handleSubmit()} accessibilityRole='button'>
         <Text fontWeight='bold' color='textContrast' alignment='center'>
           Create a review
         </Text>
       </Pressable>
+      {children}
     </View>
   )
 }
