@@ -66,7 +66,6 @@ export const SignUpSchema = z
   })
 export type SignUpType = z.infer<typeof SignUpSchema>
 
-
 export const NewReviewSchema = z.object({
   ownerName: z.string({ error: i => (i.input === undefined ? 'Username is required' : '') }),
   repositoryName: z.string({ error: i => (i.input === undefined ? 'Repository name is required' : '') }),
@@ -108,6 +107,7 @@ export type Review = {
   rating: number
   createdAt: string
   user: User
+  repository: Repository
 }
 
 export type User = {
@@ -115,20 +115,6 @@ export type User = {
   username: string
 }
 
-/**
- * {
-  "data": {
-    "createReview": {
-      "createdAt": "2026-05-30T12:24:38.602Z",
-      "id": "bbe42984-051b-4a01-b45d-b8d29c32200c.rzwitserloot.lombok",
-      "rating": 99,
-      "repositoryId": "rzwitserloot.lombok",
-      "text": "I love it",
-      "userId": "bbe42984-051b-4a01-b45d-b8d29c32200c"
-    }
-  }
-}
- */
 export type CreateReviewData = {
   createReview: {
     createdAt: string
@@ -151,6 +137,14 @@ export type CreateUserInput = {
 export type CreateUserData = {
   createUser: {
     id: string
+  }
+}
+
+export type UserReviewsResponse = {
+  me: {
+    reviews: {
+      edges: ReviewNode[]
+    }
   }
 }
 

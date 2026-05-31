@@ -16,6 +16,24 @@ export const REPOSITORY_DETAILS = gql`
   }
 `
 
+export const REVIEW_DETAILS = gql`
+  fragment ReviewDetails on Review {
+    id
+    text
+    rating
+    createdAt
+    user {
+      id
+      username
+    }
+    repository {
+      ...RepositoryDetails
+    }
+  }
+
+  ${REPOSITORY_DETAILS}
+`
+
 export const GET_REPOSITORIES = gql`
   query Repositories($orderDirection: OrderDirection, $orderBy: AllRepositoriesOrderBy, $searchKeyword: String) {
     repositories(orderDirection: $orderDirection, orderBy: $orderBy, searchKeyword: $searchKeyword) {
@@ -37,14 +55,7 @@ export const GET_REPOSITORY = gql`
       reviews {
         edges {
           node {
-            id
-            text
-            rating
-            createdAt
-            user {
-              id
-              username
-            }
+            ...ReviewDetails
           }
         }
       }
@@ -52,6 +63,7 @@ export const GET_REPOSITORY = gql`
   }
 
   ${REPOSITORY_DETAILS}
+  ${REVIEW_DETAILS}
 `
 
 export const ME = gql`
@@ -61,4 +73,20 @@ export const ME = gql`
       username
     }
   }
+`
+
+export const GET_USER_REVIEWS = gql`
+  query Me {
+    me {
+      reviews {
+        edges {
+          node {
+            ...ReviewDetails
+          }
+        }
+      }
+    }
+  }
+
+  ${REVIEW_DETAILS}
 `

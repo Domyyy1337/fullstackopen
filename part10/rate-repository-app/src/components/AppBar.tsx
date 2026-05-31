@@ -39,6 +39,7 @@ export default function AppBar() {
         {me.data?.me ? (
           <>
             <AppBarTab name='Create a review' type='link' to='/create-review' />
+            <AppBarTab name='My reviews' type='link' to='/my-reviews' />
             <AppBarTab
               name='Sign-Out'
               onPress={() => {

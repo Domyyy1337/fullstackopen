@@ -38,9 +38,10 @@ const styles = StyleSheet.create({
 
 export type ReviewItemProps = {
   item: Review
+  showUser?: boolean
 }
 
-export default function ReviewItem({ item }: ReviewItemProps) {
+export default function ReviewItem({ item, showUser = true }: ReviewItemProps) {
   const date = new Date(item.createdAt)
   const formattedDate = format(date, 'd LLL yyyy')
 
@@ -53,7 +54,7 @@ export default function ReviewItem({ item }: ReviewItemProps) {
       </View>
       <View style={styles.mainPart}>
         <View>
-          <Text fontWeight='bold'>{item.user.username}</Text>
+          <Text fontWeight='bold'>{showUser ? item.user.username : item.repository.fullName}</Text>
           <Text>{formattedDate}</Text>
         </View>
         <View>
