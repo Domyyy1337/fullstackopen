@@ -1,11 +1,29 @@
 import { useQuery } from '@apollo/client/react'
 import { GET_REPOSITORIES } from '../graphql/queries'
-import { type RepositoriesResponse } from '../types'
+import type { SortingOptions, RepositoriesResponse } from '../types'
 
-export default function useRepositories() {
+type RepositoriesHookType = {
+  sorting: SortingOptions
+}
+
+export default function useRepositories({ sorting = 'latest' }: RepositoriesHookType) {
   const result = useQuery<{ repositories: RepositoriesResponse }>(GET_REPOSITORIES, {
     fetchPolicy: 'cache-and-network',
+    variables: getOrderVariables(sorting),
   })
 
   return { repositories: result.data?.repositories, loading: result.loading, refetch: result.refetch }
+}
+
+type OrderVariables = {
+  orderDirection: 'ASC' | 'DESC'
+  orderBy: 'CREATED_AT' | 'RATING_AVERAGE'
+}
+
+function getOrderVariables(sorting: SortingOptions) {
+  const orderVariables: OrderVariables = {
+    orderDirection: sorting === 'lowest' ? 'ASC' : 'DESC',
+    orderBy: sorting === 'latest' ? 'CREATED_AT' : 'RATING_AVERAGE',
+  }
+  return orderVariables
 }

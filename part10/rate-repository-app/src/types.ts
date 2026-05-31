@@ -153,3 +153,5 @@ export type CreateUserData = {
     id: string
   }
 }
+
+export type SortingOptions = 'latest' | 'highest' | 'lowest' | undefined
