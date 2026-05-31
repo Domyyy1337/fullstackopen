@@ -54,6 +54,19 @@ export const SignInSchema = z.object({
 })
 export type SignInType = z.infer<typeof SignInSchema>
 
+export const SignUpSchema = z
+  .object({
+    username: z.string().min(5).max(30),
+    password: z.string().min(5).max(50),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    error: 'Passwords have to match!',
+    path: ['confirmPassword'],
+  })
+export type SignUpType = z.infer<typeof SignUpSchema>
+
+
 export const NewReviewSchema = z.object({
   ownerName: z.string({ error: i => (i.input === undefined ? 'Username is required' : '') }),
   repositoryName: z.string({ error: i => (i.input === undefined ? 'Repository name is required' : '') }),
@@ -129,4 +142,14 @@ export type CreateReviewData = {
 
 export type CreateReviewInput = {
   review: NewReviewType
+}
+
+export type CreateUserInput = {
+  user: SignInType
+}
+
+export type CreateUserData = {
+  createUser: {
+    id: string
+  }
 }

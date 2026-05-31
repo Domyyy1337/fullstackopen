@@ -48,7 +48,10 @@ export default function AppBar() {
             />
           </>
         ) : (
-          <AppBarTab name='Sign-In' to='/signin' type='link' />
+          <>
+            <AppBarTab name='Sign-In' to='/signin' type='link' />
+            <AppBarTab name='Sign-Up' to='/signup' type='link' />
+          </>
         )}
       </ScrollView>
     </View>

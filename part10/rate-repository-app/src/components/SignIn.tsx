@@ -15,21 +15,10 @@ const initialValues: SignInType = {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 15,
-    gap: 20,
-    backgroundColor: theme.colors.cardBackground,
-  },
-  buttonStyle: {
-    backgroundColor: theme.colors.primary,
-    padding: 15,
-    borderRadius: 5,
-  },
+  container: theme.components.formContainer,
+  buttonStyle: theme.components.formButton,
   formItem: theme.components.formItem,
   formItemError: theme.components.formItemError,
-  buttonText: {
-    textAlign: 'center',
-  },
 })
 
 type SignInContainerProps = {
@@ -66,7 +55,7 @@ export function SignInContainer({ onSubmit }: SignInContainerProps) {
       />
       {isPasswordError && <FormError message={formik.errors.password!} />}
       <Pressable style={styles.buttonStyle} onPress={() => formik.handleSubmit()} accessibilityRole='button'>
-        <Text color='textContrast' fontWeight='bold' style={styles.buttonText}>
+        <Text color='textContrast' fontWeight='bold' alignment='center'>
           Sign in
         </Text>
       </Pressable>

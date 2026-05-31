@@ -40,6 +40,16 @@ const theme = {
     formItemError: {
       borderColor: colors.error,
     },
+    formContainer: {
+      padding: 15,
+      gap: 20,
+      backgroundColor: colors.cardBackground,
+    },
+    formButton: {
+      backgroundColor: colors.primary,
+      padding: 15,
+      borderRadius: 5,
+    },
   },
 } as const
 
