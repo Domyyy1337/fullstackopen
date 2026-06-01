@@ -14,6 +14,7 @@ type RepositoryListContainerProps = {
   setSelectedSorting: React.Dispatch<React.SetStateAction<SortingOptions>>
   searchQuery: string
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>
+  onEndReached: ((info: { distanceFromEnd: number }) => void) | null | undefined
 }
 
 export function RepositoryListContainer({
@@ -22,6 +23,7 @@ export function RepositoryListContainer({
   setSelectedSorting,
   searchQuery,
   setSearchQuery,
+  onEndReached,
 }: RepositoryListContainerProps) {
   const repositoryNodes = repositories ? repositories.edges.map(edge => edge.node) : []
 
@@ -29,6 +31,8 @@ export function RepositoryListContainer({
     <FlatList
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
       ListHeaderComponent={
         <View>
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -45,7 +49,11 @@ export default function RepositoryList() {
   const [selectedSorting, setSelectedSorting] = useState<SortingOptions>('latest')
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500)
-  const { repositories } = useRepositories({ sorting: selectedSorting, searchQuery: debouncedSearchQuery })
+  const { repositories, fetchMore } = useRepositories({
+    sorting: selectedSorting,
+    searchQuery: debouncedSearchQuery,
+    first: 5,
+  })
 
   return (
     <RepositoryListContainer
@@ -54,6 +62,7 @@ export default function RepositoryList() {
       setSelectedSorting={setSelectedSorting}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
+      onEndReached={() => void fetchMore()}
     />
   )
 }

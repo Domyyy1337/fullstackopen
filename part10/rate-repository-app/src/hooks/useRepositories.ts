@@ -5,15 +5,25 @@ import type { SortingOptions, RepositoriesResponse } from '../types'
 type RepositoriesHookType = {
   sorting: SortingOptions
   searchQuery: string
+  first: number
 }
 
-export default function useRepositories({ sorting = 'latest', searchQuery = '' }: RepositoriesHookType) {
-  const result = useQuery<{ repositories: RepositoriesResponse }>(GET_REPOSITORIES, {
+export default function useRepositories({ sorting = 'latest', searchQuery = '', first }: RepositoriesHookType) {
+  const variables = { ...getOrderVariables(sorting), searchKeyword: searchQuery, first }
+  const { data, loading, fetchMore, ...result } = useQuery<{ repositories: RepositoriesResponse }>(GET_REPOSITORIES, {
     fetchPolicy: 'cache-and-network',
-    variables: { ...getOrderVariables(sorting), searchKeyword: searchQuery },
+    variables,
   })
 
-  return { repositories: result.data?.repositories, loading: result.loading, refetch: result.refetch }
+  async function handleFetchMore() {
+    const canFetchMore = !loading && data?.repositories?.pageInfo?.hasNextPage
+
+    if (!canFetchMore) return
+
+    await fetchMore({ variables: { after: data.repositories.pageInfo.endCursor, ...variables } })
+  }
+
+  return { repositories: data?.repositories, loading, refetch: result.refetch, fetchMore: handleFetchMore }
 }
 
 type OrderVariables = {
